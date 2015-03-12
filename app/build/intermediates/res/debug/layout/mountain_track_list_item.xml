@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="left|center_vertical"
+    android:orientation="horizontal" 
+    android:background="#2c5da9">
+
+    <ImageView
+        android:id="@+id/mountain_track_list_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Marcaj"
+        android:src="@drawable/banda_rosie" 
+        android:layout_centerVertical="true">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/mountain_track_list_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@+id/mountain_track_list_pic"
+        android:paddingBottom="5dp"
+        android:paddingLeft = "5dp"
+        android:textSize="22sp" 
+        android:text="asd"
+        android:textColor="#ffffff"/>
+    
+    <TextView 
+        android:id="@+id/mountain_track_list_diff_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mountain_track_list_text"
+        android:layout_toRightOf="@+id/mountain_track_list_pic"
+        android:paddingLeft="5dp"
+        android:textSize="18sp"
+        android:text="Dificultate:" 
+        android:textColor="#ffffff"/>
+
+    <TextView
+        android:id="@+id/mountain_track_list_diff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mountain_track_list_text"
+        android:layout_toRightOf="@+id/mountain_track_list_diff_label"
+        android:paddingLeft="5dp"
+        android:textSize="18sp"
+        android:textColor="#ffffff" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/mountain_track_list_length_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/mountain_track_list_pic"
+        android:layout_below="@+id/mountain_track_list_diff_label"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="Durata:"
+        android:textSize="18sp" 
+        android:textColor="#ffffff"/>
+
+    <TextView
+        android:id="@+id/mountain_track_list_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mountain_track_list_diff"
+        android:layout_toRightOf="@+id/mountain_track_list_length_label"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="18sp"
+        android:textColor="#ffffff" />
+
+    <ImageView
+        android:id="@+id/mountain_track_list_item_linie"
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/mountain_track_list_length_label"
+        android:background="@drawable/linie"
+        android:contentDescription="linie" />
+
+</RelativeLayout><!-- From: file:/home/astirb/MountainTracker/app/src/main/res/layout/mountain_track_list_item.xml -->

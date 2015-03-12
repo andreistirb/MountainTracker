@@ -2,46 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Andrei\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-7552f528a2b697c1fa08c594306420aa65bfd1ec.jar" />
-    </item>
-    <item
-        jar="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\libs\osmdroid-android-3.0.8.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4992d81fdbbb2065483d2c9ea063f4a539e7309d">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\osmdroid-android-3.0.8-b4758357cfc7309cbcf375be9eefb12f97e86386.jar" />
-    </item>
-    <item
-        jar="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\libs\sqliteassethelper-2.0.1.jar"
+        jar="/home/astirb/MountainTracker/app/libs/sqliteassethelper-2.0.1.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="d5f02e4a4d65ec0fbb339f2e4228723d1540bb9f">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\sqliteassethelper-2.0.1-86a7a163c101541e6268a290795a0c6af742e549.jar" />
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/sqliteassethelper-2.0.1-7faec59dc0f6edb9015130b79b1ad82830f8365a.jar" />
     </item>
     <item
-        jar="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\libs\slf4j-android-1.6.1-RC1.jar"
+        jar="/home/astirb/MountainTracker/app/libs/slf4j-android-1.6.1-RC1.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="a0b527e8aabcc1f1e97d1674dc3f4f0794ec5df1">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\slf4j-android-1.6.1-RC1-93cd69d4060ea1c86d1b25bdfbd3e21ba195be57.jar" />
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/slf4j-android-1.6.1-RC1-c0f8599fdda19cf7c85ee1a6d93f6d35ff9e6ff5.jar" />
     </item>
     <item
-        jar="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\libs\osmdroid-android-4.3-javadoc.jar"
+        jar="/home/astirb/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="7561564ba948773d993daafcae4ec30da8696839">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\osmdroid-android-4.3-javadoc-a8e8761d7fb9d3008a91a2dae5e8153d0439a9b4.jar" />
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-2cd2a7c65aef098c068ec7359ed3a3d13f5d5819.jar" />
     </item>
     <item
-        jar="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\libs\osmdroid-android-4.3.jar"
+        jar="/home/astirb/MountainTracker/app/libs/osmdroid-android-4.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="2fcf7bc3cb27daa6e67c8990ea418d19f6b5b296">
-        <dex dex="C:\Users\Andrei\AndroidstudioProjects\MountainTracker\app\build\intermediates\pre-dexed\debug\osmdroid-android-4.3-dee2dd2bb28de47a0e7783148735d3e909cf4080.jar" />
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/osmdroid-android-4.3-bedbfe1794927630bc5fa1386000e45575b8cc22.jar" />
     </item>
 
 </items>

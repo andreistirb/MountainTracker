@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/astirb/MountainTracker/app/src/main/assets"><file name="databases/Trackpoints.xls" path="/home/astirb/MountainTracker/app/src/main/assets/databases/Trackpoints.xls"/><file name="databases/MountainTracker.s3db" path="/home/astirb/MountainTracker/app/src/main/assets/databases/MountainTracker.s3db"/></source></dataSet><dataSet config="debug"><source path="/home/astirb/MountainTracker/app/src/debug/assets"/></dataSet></merger>

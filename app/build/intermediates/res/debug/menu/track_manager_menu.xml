@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/trackmgr_menu_newtrack"
+		android:title="@string/menu_newtrack"
+		android:icon="@android:drawable/ic_menu_add"
+		android:showAsAction="ifRoom|withText"></item>
+    
+    <!--  <item android:id="@+id/trackmgr_menu_refresh"
+        android:title="@string/menu_refresh"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@android:drawable/ic_menu_send" ></item> -->
+    
+    <item android:id="@+id/trackmgr_menu_delete_all"
+        android:title="@string/menu_delete_all"
+        android:showAsAction="never" ></item>
+
+</menu>
+<!-- From: file:/home/astirb/MountainTracker/app/src/main/res/menu/track_manager_menu.xml -->

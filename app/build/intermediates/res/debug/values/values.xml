@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/astirb/MountainTracker/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="activity_mountain_list">Grupe de munti</string>
+    <string name="activity_mountain_tracks_list">Trasee</string>
+    <string name="activity_tracker_manager">My Tracks</string>
+    <string name="app_name">Mountain Tracker</string>
+    <string name="contextmenu_delete_track">Delete track</string>
+    <string name="main_about_btn">Despre noi</string>
+    <string name="main_mountain">Munti</string>
+    <string name="main_tracks_btn">Traseele mele</string>
+    <string name="main_welcome">Mountain Tracker</string>
+    <string name="menu_delete_all">Delete all</string>
+    <string name="menu_newtrack">New Track</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="mountain_list_bucegi">Bucegi</string>
+    <string name="mountain_list_retezat">Retezat</string>
+    <string name="mountain_track_list_contextmenu_details">Detalii</string>
+    <string name="mountain_track_list_contextmenu_show">Arata pe harta</string>
+    <string name="mountain_track_list_contextmenu_try">Incearca traseu</string>
+    <string name="mountain_track_list_menu_sort">Sorteaza</string>
+    <string name="mountain_track_list_menu_sort_diff">Dificultate</string>
+    <string name="mountain_track_list_menu_sort_dur">Durata</string>
+    <string name="mountain_track_list_menu_sort_name">Nume</string>
+    <string name="notification_text">Apasa pentru a intra in aplicatie</string>
+    <string name="notification_ticker_text">Esti pe traseu</string>
+    <string name="notification_title">Esti pe traseu</string>
+    <string name="track_details_availability">Accesibil:</string>
+    <string name="track_details_description">Descriere:</string>
+    <string name="track_details_difficulty">Dificultate:</string>
+    <string name="track_details_duration">Durata traseului:</string>
+    <string name="track_details_mark">Marcaj:</string>
+    <string name="track_details_max_alt">Altitudine maxima:</string>
+    <string name="track_details_min_alt">Altitudine minima:</string>
+    <string name="track_details_title">Titlu:</string>
+    <string name="track_logger_alt">Altitudine</string>
+    <string name="track_logger_details">Detalii</string>
+    <string name="track_logger_gps_disabled">GPS disabled</string>
+    <string name="track_logger_gps_disabled_hint">GPS-ul nu este pornit. Doriti sa-l porniti?</string>
+    <string name="track_logger_lat">Latitudine</string>
+    <string name="track_logger_lon">Longitudine</string>
+    <string name="track_logger_map">Harta</string>
+    <string name="track_logger_speed">Viteza(km/h)</string>
+    <string name="track_logger_start">Incepe traseu</string>
+    <string name="track_logger_stop">Opreste traseu</string>
+    <!-- From: file:/home/astirb/MountainTracker/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="Details">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="informatii">
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="label">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/mountain_track_list_contextmenu_show"
+        android:showAsAction="never"
+        android:title="@string/mountain_track_list_contextmenu_show"/>
+    <item
+        android:id="@+id/mountain_track_list_contextmenu_details"
+        android:showAsAction="never"
+        android:title="@string/mountain_track_list_contextmenu_details"/>
+    <item
+        android:id="@+id/mountain_track_list_contextmenu_try"
+        android:showAsAction="never"
+        android:title="@string/mountain_track_list_contextmenu_try">
+    </item>
+
+</menu><!-- From: file:/home/astirb/MountainTracker/app/src/main/res/menu/mountain_track_list_contextmenu.xml -->
