@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="left|center_vertical"
     android:orientation="horizontal" 
-    android:background="#2c5da9">
+    android:background="@android:color/transparent">
 
     <ImageView
         android:id="@+id/mountain_track_list_pic"

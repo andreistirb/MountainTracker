@@ -20,15 +20,24 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
-public class GPSLogger extends Service implements LocationListener {
+public class GPSLogger extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
-	private static final String TAG = GPSLogger.class.getSimpleName();
+	//database
+    private DatabaseHelper mDatabase;
+
+
+    private static final String TAG = GPSLogger.class.getSimpleName();
+
+
 
 	int mStartMode; // indicates how to behave if the service is killed
 	IBinder mBinder; // interface for clients that bind
@@ -36,34 +45,44 @@ public class GPSLogger extends Service implements LocationListener {
 	private static boolean isTracking; // variabila globala care arata daca
 										// serviciul este pornit sau nu
 	private boolean isGPSEnabled;
-	private LocationManager mLocationManager;
-	private long lastGPSTimestamp = 0;
-	private int gpsLoggingInterval;
-	private DatabaseHelper mDatabase;
+	//private LocationManager mLocationManager;
+	//private long lastGPSTimestamp = 0;
+	//private int gpsLoggingInterval;
+
 	private Integer mTrackNo;
 	private String track_id;
 	private String track_name;
 	int q;
-	private Vibrator vibratie;
-	private Location old_location;
-	private boolean track_number_bool;
-	private float distance;
+	//private Vibrator vibratie;
+	//private Location old_location;
+	//private boolean track_number_bool;
+	//private float distance;
+    private GoogleApiClient mGoogleApiClient;
 
 	// the service is being created
 	@Override
 	public void onCreate() {
 		Integer a;
 		q = 0;
-		gpsLoggingInterval = 3000;
-		a = this.gpsLoggingInterval;
-		Log.v("in gpslogger", a.toString());
-		mLocationManager = (LocationManager) this
-				.getSystemService(Context.LOCATION_SERVICE);
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				gpsLoggingInterval, 5, this);
-		mDatabase = new DatabaseHelper(this.getBaseContext());
-		vibratie = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		distance = 0.0f;
+
+        //database
+        mDatabase = new DatabaseHelper(this.getBaseContext());
+
+        //location
+        buildGoogleApiClient();
+
+        //old implementation
+		//gpsLoggingInterval = 3000;
+		//a = this.gpsLoggingInterval;
+		//Log.v("in gpslogger", a.toString());
+		//mLocationManager = (LocationManager) this
+		//		.getSystemService(Context.LOCATION_SERVICE);
+		//mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+		//		gpsLoggingInterval, 5, this);
+
+		//vibratie = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		//distance = 0.0f;
+
 		super.onCreate();
 	}
 
@@ -71,7 +90,8 @@ public class GPSLogger extends Service implements LocationListener {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// primeste informatii
-		vibratie.vibrate(500);
+
+		//vibratie.vibrate(500);
 		Log.v("in gpslogger", "am primit numele");
 		track_name = intent.getExtras().getString("track_name");
 		mTrackNo = intent.getExtras().getInt("mTrackNo");
@@ -121,9 +141,14 @@ public class GPSLogger extends Service implements LocationListener {
 			stopTracking();
 		}
 
-		mLocationManager.removeUpdates(this);
+		//mLocationManager.removeUpdates(this);
 		stopNotifyBackgroundService();
 	}
+
+    @Override
+    public void onConnected(Bundle connectionHint){
+        mLast
+    }
 
 	private void startTracking() {
 		NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -135,11 +160,19 @@ public class GPSLogger extends Service implements LocationListener {
 
 	private void stopTracking() {
 		isTracking = false;
-		vibratie.vibrate(500);
+		//vibratie.vibrate(500);
 		this.stopSelf();
 	}
 
-	@Override
+    protected synchronized void buildGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+	/*@Override
 	public void onLocationChanged(Location location) {
 
 		float distance_to = 0;
@@ -174,7 +207,9 @@ public class GPSLogger extends Service implements LocationListener {
 		sendBroadcast(notification);
 		Log.v("in sender", "trimit date");
 
-	}
+	} */
+
+
 
 	private Notification getNotification() {
 		Notification n = new Notification(R.drawable.cruce_galbena,
@@ -223,9 +258,9 @@ public class GPSLogger extends Service implements LocationListener {
 		return isTracking;
 	}
 
-	public LocationManager getLocationManager() {
-		return mLocationManager;
-	}
+	//public LocationManager getLocationManager() {
+	//	return mLocationManager;
+	//}
 
 
 
