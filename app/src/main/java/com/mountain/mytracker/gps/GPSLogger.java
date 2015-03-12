@@ -1,39 +1,50 @@
 package com.mountain.mytracker.gps;
 
-import org.osmdroid.util.GeoPoint;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.NewDatabaseHelper;
 
-public class GPSLogger extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener{
+import java.text.DateFormat;
+import java.util.Date;
+
+public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
 	//database
     private DatabaseHelper mDatabase;
 
+    //Google Api
+    protected GoogleApiClient mGoogleApiClient;
+
+    //Location
+    protected Location mLastLocation;
+    protected Location mOldLocation;
+    protected Location mCurrentLocation;
+    protected LocationRequest mLocationRequest;
+
+    private float distance;
+
+    protected String mLastUpdateTime;
+
+    private Intent notification;
 
     private static final String TAG = GPSLogger.class.getSimpleName();
 
@@ -45,43 +56,29 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
 	private static boolean isTracking; // variabila globala care arata daca
 										// serviciul este pornit sau nu
 	private boolean isGPSEnabled;
-	//private LocationManager mLocationManager;
-	//private long lastGPSTimestamp = 0;
-	//private int gpsLoggingInterval;
 
 	private Integer mTrackNo;
-	private String track_id;
 	private String track_name;
-	int q;
-	//private Vibrator vibratie;
-	//private Location old_location;
-	//private boolean track_number_bool;
-	//private float distance;
-    private GoogleApiClient mGoogleApiClient;
+
+    int firstLocation; //pentru a determina prima locatie
+
+	private Vibrator vibratie;
 
 	// the service is being created
 	@Override
 	public void onCreate() {
-		Integer a;
-		q = 0;
+		firstLocation = 0;
 
         //database
         mDatabase = new DatabaseHelper(this.getBaseContext());
 
         //location
         buildGoogleApiClient();
+        distance = 0.0f;
 
-        //old implementation
-		//gpsLoggingInterval = 3000;
-		//a = this.gpsLoggingInterval;
-		//Log.v("in gpslogger", a.toString());
-		//mLocationManager = (LocationManager) this
-		//		.getSystemService(Context.LOCATION_SERVICE);
-		//mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-		//		gpsLoggingInterval, 5, this);
+        //Vibrator
+		vibratie = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		//vibratie = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		//distance = 0.0f;
 
 		super.onCreate();
 	}
@@ -89,21 +86,21 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
 	// The service is starting, due to a call to startService()
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// primeste informatii
 
-		//vibratie.vibrate(500);
-		Log.v("in gpslogger", "am primit numele");
+		// primeste informatii
 		track_name = intent.getExtras().getString("track_name");
 		mTrackNo = intent.getExtras().getInt("mTrackNo");
+        Log.v("in gpslogger", "am primit numele");
 
-		q = 0;
+        mGoogleApiClient.connect();
 
 		// incepe tracking
 
 		startTracking();
+
 		Log.v(TAG, "Service onStartCommand(-," + flags + "," + startId + ")");
 		startForeground(1, getNotification());
-		// }
+
 		return Service.START_STICKY;
 	}
 
@@ -141,28 +138,66 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
 			stopTracking();
 		}
 
-		//mLocationManager.removeUpdates(this);
+        if(mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
+
 		stopNotifyBackgroundService();
 	}
 
-    @Override
-    public void onConnected(Bundle connectionHint){
-        mLast
-    }
 
 	private void startTracking() {
+
+        vibratie.vibrate(500);
 		NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nmgr.notify(1, getNotification());
-		q = 0;
+
+        firstLocation = 0;
+
+        startLocationUpdates();
+
 		Log.v("in startTracking()", "notification");
 		isTracking = true;
 	}
 
 	private void stopTracking() {
+        stopLocationUpdates();
 		isTracking = false;
-		//vibratie.vibrate(500);
+		vibratie.vibrate(500);
 		this.stopSelf();
 	}
+
+
+    //Google API - Location
+
+
+    /**
+     * Runs when a GoogleApiClient object successfully connects.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint){
+        // Provides a simple way of getting a device's location and is well suited for
+        // applications that do not require a fine-grained location and that do not need location
+        // updates. Gets the best and most recent location currently available, which may be null
+        // in rare cases when a location is not available.
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        startLocationUpdates();
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result){
+        Log.i(TAG, "Connection failed : ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause){
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+
+        Log.i(TAG, "Connection suspended, trying to reconnect");
+        mGoogleApiClient.connect();
+    }
 
     protected synchronized void buildGoogleApiClient(){
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -172,44 +207,57 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
                 .build();
     }
 
-	/*@Override
-	public void onLocationChanged(Location location) {
+    //Location Request
+    protected void createLocationRequest(){
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
-		float distance_to = 0;
-		double altitude = Math.floor(location.getAltitude() * 1000) / 1000;
-		double longitude = Math.floor(location.getLongitude() * 100000) / 100000;
-		double latitude = Math.floor(location.getLatitude() * 100000) / 100000;
-		double speed = (Math.floor(location.getSpeed() * 10) / 10) * 3.6;
-		
-		lastGPSTimestamp = location.getTime();
-		
-		if(q==0){
-			old_location = location;
-			q++;
-		}
-		else{
-			distance_to = location.distanceTo(old_location);
-			old_location = location;
-		}
-		
-		distance_to = ((float) Math.floor(distance_to))/1000;
-		distance += distance_to;
+    protected void startLocationUpdates(){
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
 
-		// sendNotificationBroadcast!!!!!
-		Intent notification = new Intent("broadcastGPS");
-		notification.putExtra("altitude", altitude);
-		notification.putExtra("mTrackNo", mTrackNo);
-		notification.putExtra("latitude", latitude);
-		notification.putExtra("longitude", longitude);
-		notification.putExtra("speed", speed);
-		notification.putExtra("time", lastGPSTimestamp);
-		notification.putExtra("distance", distance);
-		sendBroadcast(notification);
-		Log.v("in sender", "trimit date");
+    protected void stopLocationUpdates(){
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
 
-	} */
+    @Override
+    public void onLocationChanged(Location location){
+        mCurrentLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        computeDistance(location);
+        buildNotification();
+        sendBroadcast(notification);
+        Log.v("in sender", "trimit date");
+    }
 
+    private void buildNotification(){
+        notification = new Intent("broadcastGPS");
+        notification.putExtra("altitude", mCurrentLocation.getAltitude());
+        notification.putExtra("latitude", mCurrentLocation.getLatitude());
+        notification.putExtra("longitude", mCurrentLocation.getLongitude());
+        notification.putExtra("speed", mCurrentLocation.getSpeed());
+        notification.putExtra("time", mCurrentLocation.getTime());
+        notification.putExtra("mTrackNo", mTrackNo);
+        notification.putExtra("distance", distance);
+    }
 
+    private void computeDistance(Location location){
+        float distance_to = 0;
+        if(firstLocation == 0){
+            mOldLocation = location;
+            firstLocation++;
+        }
+        else{
+            distance_to = location.distanceTo(mOldLocation);
+            mOldLocation = location;
+        }
+
+        distance_to = ((float) Math.floor(distance_to) / 1000);
+        distance += distance_to;
+    }
 
 	private Notification getNotification() {
 		Notification n = new Notification(R.drawable.cruce_galbena,
@@ -235,7 +283,7 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
 		nmgr.cancel(1);
 	}
 
-	@Override
+	/*@Override
 	public void onProviderDisabled(String provider) {
 		isGPSEnabled = false;
 	}
@@ -248,7 +296,7 @@ public class GPSLogger extends Service implements LocationListener, GoogleApiCli
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// Not interested in provider status
-	}
+	}*/
 
 	public boolean isGpsEnabled() {
 		return isGPSEnabled;

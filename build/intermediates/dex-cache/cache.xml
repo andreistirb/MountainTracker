@@ -2,6 +2,20 @@
 <items version="2" >
 
     <item
+        jar="/home/astirb/MountainTracker/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/classes-cf87d3ff26942a6ae0e09f9c3f19263e0025c704.jar" />
+    </item>
+    <item
+        jar="/home/astirb/MountainTracker/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-cefa276185a9299b4b6e307e946b08f39c5a13e6.jar" />
+    </item>
+    <item
         jar="/home/astirb/MountainTracker/app/libs/sqliteassethelper-2.0.1.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -23,25 +37,11 @@
         <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/slf4j-android-1.6.1-RC1-c0f8599fdda19cf7c85ee1a6d93f6d35ff9e6ff5.jar" />
     </item>
     <item
-        jar="/home/astirb/MountainTracker/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
-        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/classes-cf87d3ff26942a6ae0e09f9c3f19263e0025c704.jar" />
-    </item>
-    <item
         jar="/home/astirb/MountainTracker/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
         <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/classes-42326452916b78efda35f4faf88e19dd7b0d6730.jar" />
-    </item>
-    <item
-        jar="/home/astirb/MountainTracker/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
-        <dex dex="/home/astirb/MountainTracker/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-cefa276185a9299b4b6e307e946b08f39c5a13e6.jar" />
     </item>
     <item
         jar="/home/astirb/MountainTracker/app/libs/osmdroid-android-4.3.jar"
