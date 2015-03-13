@@ -6,7 +6,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -14,7 +16,6 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -27,7 +28,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GpsStatus.Listener {
 
 	//database
     private DatabaseHelper mDatabase;
@@ -40,10 +41,13 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
     protected Location mOldLocation;
     protected Location mCurrentLocation;
     protected LocationRequest mLocationRequest;
+    protected LocationManager mLocationManager;
+    private GpsStatus mGpsStatus;
 
     private float distance;
 
     protected String mLastUpdateTime;
+    private boolean allowSendingNotifications = false;
 
     private Intent notification;
 
@@ -76,6 +80,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
         //location
         buildGoogleApiClient();
         distance = 0.0f;
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         //Vibrator
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -87,7 +92,6 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 	// The service is starting, due to a call to startService()
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
 
         mGoogleApiClient.connect();
 
@@ -230,12 +234,15 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 
     @Override
     public void onLocationChanged(Location location){
-        mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        computeDistance(location);
-        buildNotification();
-        sendBroadcast(notification);
-        Log.v("in sender", "trimit date");
+
+        if (allowSendingNotifications){
+            mCurrentLocation = location;
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            computeDistance(location);
+            buildNotification();
+            sendBroadcast(notification);
+            Log.v("in sender", "trimit date");
+        }
     }
 
     private void buildNotification(){
@@ -296,4 +303,24 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 	public static boolean isTracking() {
 		return isTracking;
 	}
+
+    public void onGpsStatusChanged(int event){
+        mLocationManager.getGpsStatus(mGpsStatus);
+        switch (event){
+            case GpsStatus.GPS_EVENT_FIRST_FIX : {
+                allowSendingNotifications = true;
+                Log.v("modificare stare GPS", "primul fix al locatiei");
+                break;
+            }
+            case GpsStatus.GPS_EVENT_STARTED : {
+                Log.v("modificare stare GPS", "serviciul GPS a pornit");
+                break;
+            }
+            case GpsStatus.GPS_EVENT_STOPPED : {
+                allowSendingNotifications = false;
+                Log.v("modificare stare GPS", "serviciul GPS s-a oprit");
+                break;
+            }
+        }
+    }
 };
