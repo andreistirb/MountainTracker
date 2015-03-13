@@ -72,16 +72,16 @@
       <file leaf-file-name="GPSLogger.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mountain/mytracker/gps/GPSLogger.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.403481" vertical-offset="2520" max-vertical-offset="4500">
-              <caret line="210" column="32" selection-start-line="210" selection-start-column="32" selection-end-line="210" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.26107594" vertical-offset="450" max-vertical-offset="4185">
+              <caret line="64" column="31" selection-start-line="64" selection-start-column="31" selection-end-line="64" selection-end-column="31" />
               <folding>
-                <element signature="e#7710#7769#0" expanded="true" />
-                <element signature="e#8278#8331#0" expanded="true" />
-                <element signature="e#8337#8389#0" expanded="true" />
-                <element signature="e#8936#8937#0" expanded="true" />
-                <element signature="e#8962#8963#0" expanded="true" />
-                <element signature="e#9001#9002#0" expanded="true" />
-                <element signature="e#9025#9026#0" expanded="true" />
+                <element signature="e#7714#7773#0" expanded="true" />
+                <element signature="e#8282#8335#0" expanded="true" />
+                <element signature="e#8341#8393#0" expanded="true" />
+                <element signature="e#8630#8631#0" expanded="true" />
+                <element signature="e#8656#8657#0" expanded="true" />
+                <element signature="e#8695#8696#0" expanded="true" />
+                <element signature="e#8719#8720#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1526,16 +1526,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/mountain/mytracker/gps/GPSLogger.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.403481" vertical-offset="2520" max-vertical-offset="4500">
-          <caret line="210" column="32" selection-start-line="210" selection-start-column="32" selection-end-line="210" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.26107594" vertical-offset="450" max-vertical-offset="4185">
+          <caret line="64" column="31" selection-start-line="64" selection-start-column="31" selection-end-line="64" selection-end-column="31" />
           <folding>
-            <element signature="e#7710#7769#0" expanded="true" />
-            <element signature="e#8278#8331#0" expanded="true" />
-            <element signature="e#8337#8389#0" expanded="true" />
-            <element signature="e#8936#8937#0" expanded="true" />
-            <element signature="e#8962#8963#0" expanded="true" />
-            <element signature="e#9001#9002#0" expanded="true" />
-            <element signature="e#9025#9026#0" expanded="true" />
+            <element signature="e#7714#7773#0" expanded="true" />
+            <element signature="e#8282#8335#0" expanded="true" />
+            <element signature="e#8341#8393#0" expanded="true" />
+            <element signature="e#8630#8631#0" expanded="true" />
+            <element signature="e#8656#8657#0" expanded="true" />
+            <element signature="e#8695#8696#0" expanded="true" />
+            <element signature="e#8719#8720#0" expanded="true" />
           </folding>
         </state>
       </provider>
