@@ -87,12 +87,15 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
+
+        mGoogleApiClient.connect();
+
 		// primeste informatii
 		track_name = intent.getExtras().getString("track_name");
 		mTrackNo = intent.getExtras().getInt("mTrackNo");
         Log.v("in gpslogger", "am primit numele");
 
-        mGoogleApiClient.connect();
+
 
 		// incepe tracking
 
@@ -154,7 +157,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 
         firstLocation = 0;
 
-        startLocationUpdates();
+        //startLocationUpdates();
 
 		Log.v("in startTracking()", "notification");
 		isTracking = true;
@@ -205,6 +208,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        createLocationRequest();
     }
 
     //Location Request
