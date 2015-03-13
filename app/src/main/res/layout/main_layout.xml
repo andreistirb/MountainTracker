@@ -6,27 +6,13 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
     <!--"#2c5da9" -> culoare background-->
-    <!--
-          <TextView
-        android:id="@+id/main_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/chenar"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="@string/main_welcome"
-        android:textAlignment="center"
-        android:textColor="#ffffff"
-        android:textSize="30sp" /> -->
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
@@ -38,6 +24,7 @@
             android:layout_margin="10dp"
             android:text="@string/main_mountain"
             android:textColor="#ffffff"
+            android:fontFamily="sans-serif-light"
             android:textSize="25sp" />
 
         <Button
@@ -46,6 +33,7 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:text="@string/main_tracks_btn"
+            android:fontFamily="sans-serif-light"
             android:textColor="#ffffff"
             android:textSize="20sp" >
         </Button>
@@ -53,10 +41,11 @@
         <Button
             android:id="@+id/main_about_btn"
             android:layout_width="165dp"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
             android:layout_weight="0.42"
             android:text="@string/main_about_btn"
+            android:fontFamily="sans-serif-light"
             android:textColor="#ffffff"
             android:textSize="25sp" />
     </LinearLayout>
@@ -68,7 +57,7 @@
         android:layout_above="@+id/linearLayout1"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:contentDescription="Logo"
+        android:contentDescription="@string/main_logo_description"
         android:src="@drawable/logo" />
 
 </RelativeLayout>
