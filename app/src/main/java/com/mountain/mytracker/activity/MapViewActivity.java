@@ -20,6 +20,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
@@ -27,7 +29,7 @@ import com.mountain.mytracker.gps.GPSLogger;
 
 public class MapViewActivity extends Activity {
 
-	private String numeTraseu;
+    private String numeTraseu;
 	private String traseu_id;
 	private MapView harta;
 	private MapController hartaController;
@@ -124,7 +126,8 @@ public class MapViewActivity extends Activity {
 
 	@Override
 	public void onResume() {
-		if (GPSLogger.isTracking()) {
+
+        if (GPSLogger.isTracking()) {
 			SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 			qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
 			Cursor c = qb.query(mDatabase.getReadableDatabase(), null,
