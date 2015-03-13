@@ -63,7 +63,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 
     int firstLocation; //pentru a determina prima locatie
 
-	private Vibrator vibratie;
+	private Vibrator mVibrator;
 
 	// the service is being created
 	@Override
@@ -78,7 +78,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
         distance = 0.0f;
 
         //Vibrator
-		vibratie = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 
 		super.onCreate();
@@ -152,7 +152,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 
 	private void startTracking() {
 
-        vibratie.vibrate(500);
+        mVibrator.vibrate(500);
 		NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nmgr.notify(1, getNotification());
 
@@ -167,7 +167,7 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 	private void stopTracking() {
         stopLocationUpdates();
 		isTracking = false;
-		vibratie.vibrate(500);
+		mVibrator.vibrate(500);
 		this.stopSelf();
 	}
 
@@ -288,20 +288,6 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 		nmgr.cancel(1);
 	}
 
-	/*@Override
-	public void onProviderDisabled(String provider) {
-		isGPSEnabled = false;
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		isGPSEnabled = true;
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// Not interested in provider status
-	}*/
 
 	public boolean isGpsEnabled() {
 		return isGPSEnabled;
@@ -310,11 +296,4 @@ public class GPSLogger extends Service implements  GoogleApiClient.ConnectionCal
 	public static boolean isTracking() {
 		return isTracking;
 	}
-
-	//public LocationManager getLocationManager() {
-	//	return mLocationManager;
-	//}
-
-
-
 };
