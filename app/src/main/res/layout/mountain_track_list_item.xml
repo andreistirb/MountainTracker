@@ -19,7 +19,8 @@
             android:src="@drawable/banda_rosie"
             android:layout_centerVertical="false"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="5dp">
         </ImageView>
 
         <TextView
