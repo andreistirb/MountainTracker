@@ -54,16 +54,13 @@ public class TrackLoggerActivity extends Activity {
 				Double latitude = bundle.getDouble("latitude");
 				Double speeds = bundle.getDouble("speed");
 				Long time = bundle.getLong("time");
+                distance = bundle.getFloat("distance");
+
 				counter++;
-				if (duration == 0){
-					start_time = time;
-					duration = 1;
-				}
-				else{
-					duration = time - start_time;
-					duration /= 1000;
-				}
-				distance = bundle.getFloat("distance");
+
+                duration = computeDuration(time);
+
+
 				if(speeds.compareTo(max_speed) > 0){
 					max_speed = speeds;
 				}
@@ -74,19 +71,35 @@ public class TrackLoggerActivity extends Activity {
 					max_alt = altitude;
 				}
 				avg_speed += speeds;
-				alt.setText(altitude.toString());
-				lon.setText(longitude.toString());
-				lat.setText(latitude.toString());
-				speed.setText(speeds.toString());
-				dist.setText(distance.toString());
-				
-				//aici mai setez sa arate timpul parcurs
-				timp.setText(String.format("%d:%02d:%02d", duration/3600, (duration%3600)/60, (duration%60)));
+
+                listDetails(altitude, latitude, longitude, speeds);
 				insertLocation(latitude, longitude, altitude);
 				Log.v("In receiver", "am primit date");
 			}
 		}
 	};
+
+    private long computeDuration(long mTime){
+        if (duration == 0){
+            start_time = mTime;
+            duration = 1;
+        }
+        else{
+            duration = mTime - start_time;
+            duration /= 1000;
+        }
+
+        return duration;
+    }
+
+    private void listDetails(Double altitude, Double latitude, Double longitude, Double speed){
+        dist.setText(Double.toString(Math.floor(distance * 100) / 100));
+        alt.setText(Double.toString(Math.floor(altitude)));
+        lon.setText(Double.toString(Math.floor(longitude * 100) / 100));
+        lat.setText(Double.toString(Math.floor(latitude * 100) / 100));
+        this.speed.setText(Double.toString(Math.floor(speed * 100) / 100));
+        timp.setText(String.format("%d:%02d:%02d", duration/3600, (duration%3600)/60, (duration%60)));
+    }
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -313,7 +326,7 @@ public class TrackLoggerActivity extends Activity {
 		row.put(DatabaseEntry.COL_TRACK_ID, traseu_id);
 		mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS, null, row);
 		Integer x = mTrackNo;
-		Log.v("cand creeaza o intrare in Db", x.toString());
+		Log.v("creeaza o intrare in Db", x.toString());
 		mDatabase.close();
 	}
 	

@@ -2,6 +2,11 @@ package com.mountain.mytracker.activity;
 
 import java.util.ArrayList;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -32,16 +37,19 @@ public class MapViewActivity extends Activity {
     private String numeTraseu;
 	private String traseu_id;
 	private MapView harta;
-	private MapController hartaController;
+	private IMapController hartaController;
 	private ArrayList<GeoPoint> track;
 	private ArrayList<GeoPoint> mTrack;
-	private PathOverlay pathOverlay;
-	private PathOverlay mTraseu;
+	private Polyline mTraseu;
 	private MyLocationOverlay mLocationOverlay;
 	private NewDatabaseHelper db;
 	private DatabaseHelper mDatabase;
 	private Integer mTrackNo;
 	private boolean has_track;
+    private RoadManager mRoadManager;
+    private Road mRoad;
+    private Polyline mPolyline;
+
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
@@ -52,7 +60,10 @@ public class MapViewActivity extends Activity {
 
 			GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
 					bundle.getDouble("longitude"));
-			mTraseu.addPoint(curent);
+			mTrack.add(curent);
+            mRoad = mRoadManager.getRoad(mTrack);
+            mTraseu = mRoadManager.buildRoadOverlay(mRoad,context);
+
 			hartaController.setCenter(curent);
 			mLocationOverlay.enableMyLocation();
 		}
@@ -60,9 +71,9 @@ public class MapViewActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		has_track = false;
 
-		this.setContentView(R.layout.display_track_map);
+		has_track = false;
+        this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
 		numeTraseu = this.getIntent().getExtras().getString("track_name");
@@ -73,6 +84,8 @@ public class MapViewActivity extends Activity {
 		if(this.getIntent().hasExtra("mTrackNo")){
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 		}
+
+        mRoadManager = new OSRMRoadManager();
 
 		this.setTitle(numeTraseu);
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
@@ -96,27 +109,24 @@ public class MapViewActivity extends Activity {
 			Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
 				null, sortOrder);
 			track = buildGeoPoint(c);
-			pathOverlay = new PathOverlay(Color.BLUE, this);
-		
-			for (int i = 0; i < track.size(); i++) {
-			pathOverlay.addPoint(track.get(i));
-			}
-			harta.getOverlays().add(pathOverlay);
+
+            mRoad = mRoadManager.getRoad(track);
+            mPolyline = RoadManager.buildRoadOverlay(mRoad, this);
+            mPolyline.setColor(Color.GREEN);
+
+			harta.getOverlays().add(mPolyline);
 			hartaController.setZoom(14);
 			hartaController.setCenter(track.get(0));
+            harta.setMultiTouchControls(true);
+            harta.invalidate();
 		}
 		// //////////
 
 		harta.setClickable(true);
 		harta.setBuiltInZoomControls(true);
-
 		
 		hartaController.setZoom(14);
-		
 
-		
-		mTraseu = new PathOverlay(Color.RED, this);
-		
 		harta.getOverlays().add(mTraseu);
 		harta.setMultiTouchControls(true);
 		harta.setTileSource(TileSourceFactory.CYCLEMAP);
@@ -139,7 +149,7 @@ public class MapViewActivity extends Activity {
 				Integer x = c.getCount();
 				Log.v("in mapViewActivitysid", x.toString());
 				do {
-					mTraseu.addPoint(new GeoPoint(c.getDouble(c
+					mTrack.add(new GeoPoint(c.getDouble(c
 							.getColumnIndex(DatabaseEntry.COL_LAT)), c.getDouble(c
 							.getColumnIndex(DatabaseEntry.COL_LON))));
 				} while (c.moveToNext());
