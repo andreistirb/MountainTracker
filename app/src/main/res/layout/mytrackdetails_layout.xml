@@ -2,165 +2,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2c5da9"
+    android:background="@drawable/background"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/mytrackdetails_duration_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Durata:"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:layout_margin="5dp" />
+            style="@style/mytrackdetails_detail"/>
 
         <TextView
             android:id="@+id/mytrackdetails_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="durata"
-            android:textColor="#ffffff"
-            android:textSize="20sp" 
-            android:layout_toRightOf="@+id/mytrackdetails_duration_text"
-            android:layout_margin="5dp"/>
-    </RelativeLayout>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
     
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
         
         <TextView 
             android:id="@+id/mytrackdetails_distance_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:text="Distanta parcursa(km):"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            style="@style/mytrackdetails_detail"/>
         
         <TextView
             android:id="@+id/mytrackdetails_distance"
-            android:layout_toRightOf="@+id/mytrackdetails_distance_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="distanta"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
     
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
         
         <TextView 
             android:id="@+id/mytrackdetails_avg_speed_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:text="Viteza medie(km/h):"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            style="@style/mytrackdetails_detail"/>
         
         <TextView
             android:id="@+id/mytrackdetails_avg_speed"
-            android:layout_toRightOf="@+id/mytrackdetails_avg_speed_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="15 km/h"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
     
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
         
         <TextView 
             android:id="@+id/mytrackdetails_max_speed_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:text="Viteza maxima(km/h):"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            style="@style/mytrackdetails_detail"/>
         
         <TextView
             android:id="@+id/mytrackdetails_max_speed"
-            android:layout_toRightOf="@+id/mytrackdetails_max_speed_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="30 km/h"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
     
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
         
         <TextView 
             android:id="@+id/mytrackdetails_min_alt_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:text="Altitudine minima(m):"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            style="@style/mytrackdetails_detail"/>
         
         <TextView
             android:id="@+id/mytrackdetails_min_alt"
-            android:layout_toRightOf="@+id/mytrackdetails_min_alt_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="1050m"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
     
-    <RelativeLayout
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
         
         <TextView 
             android:id="@+id/mytrackdetails_max_alt_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:text="Altitudine maxima(m):"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            style="@style/mytrackdetails_detail"/>
         
         <TextView
             android:id="@+id/mytrackdetails_max_alt"
-            android:layout_toRightOf="@+id/mytrackdetails_max_alt_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="2405m"
-            android:textColor="#ffffff"
-            android:layout_margin="5dp"
-            android:textSize="20sp"/>
+            android:text="@string/sample_text"
+            style="@style/mytrackdetails_detail"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="30dp">
+
+        <Button
+            android:id="@+id/mytrackdetails_harta"
+            android:text="Harta"
+            style="@style/text_buton"
+            android:layout_marginLeft="64dp"
+            android:layout_marginStart="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/mytrackdetails_export"
+            style="@style/text_buton"
+            android:text="Exporta ca GPX"
+            android:layout_alignTop="@+id/mytrackdetails_harta"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="45dp"
+            android:layout_marginEnd="45dp" />
+
     </RelativeLayout>
-    
-    <Button
-        android:id="@+id/mytrackdetails_harta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Harta"
-        android:textColor="#ffffff"/>
-    
-    <Button 
-        android:id="@+id/mytrackdetails_export"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Exporta ca GPX"
-        android:textColor="#ffffff"/>
+
+
 
 </LinearLayout>
