@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mountain.mytracker.db.DatabaseHelper;
@@ -25,10 +26,10 @@ import com.mountain.mytracker.gps.GPSLogger;
 public class TrackLoggerActivity extends Activity {
 
 	private LocationManager lm;
-	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent;
+	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
 	private GPSLogger gpsLogger;
 	boolean GPSflag = false;
-	private Button start, stop, harta, detalii;
+    private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private String traseu;
 	private String traseu_id;
@@ -119,6 +120,7 @@ public class TrackLoggerActivity extends Activity {
 		GPSLoggerServiceIntent = new Intent(this, GPSLogger.class);
 		MapViewActivityIntent = new Intent(this, MapViewActivity.class);
 		TrackDetailsActivityIntent = new Intent(this, TrackDetailsActivity.class);
+        TrackerManagerActivityIntent = new Intent(this, TrackerManagerActivity.class);
 		alt = (TextView) this.findViewById(R.id.track_logger_alt);
 		lat = (TextView) this.findViewById(R.id.track_logger_lat);
 		lon = (TextView) this.findViewById(R.id.track_logger_lon);
@@ -133,10 +135,11 @@ public class TrackLoggerActivity extends Activity {
 
 	public void onResume() {
 
-		start = (Button) this.findViewById(R.id.track_logger_start);
-		harta = (Button) this.findViewById(R.id.track_logger_map);
-		stop = (Button) this.findViewById(R.id.track_logger_stop);
-		detalii = (Button) this.findViewById(R.id.track_logger_details);
+		start = (ImageButton) this.findViewById(R.id.track_logger_start);
+		harta = (ImageButton) this.findViewById(R.id.track_logger_map);
+		stop = (ImageButton) this.findViewById(R.id.track_logger_stop);
+        trekking = (ImageButton) this.findViewById(R.id.track_logger_trekking);
+		detalii = (ImageButton) this.findViewById(R.id.track_logger_details);
 
 		this.setTitle(traseu);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
@@ -213,6 +216,14 @@ public class TrackLoggerActivity extends Activity {
 				context.startActivity(MapViewActivityIntent);
 			}
 		});
+
+        trekking.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                context.startActivity(TrackerManagerActivityIntent);
+            }
+        });
 		
 		
 
@@ -313,7 +324,7 @@ public class TrackLoggerActivity extends Activity {
 		row.put(DatabaseEntry.COL_TRACK_ID, traseu_id);
 		mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS, null, row);
 		Integer x = mTrackNo;
-		Log.v("cand creeaza o intrare in Db", x.toString());
+		Log.v("creeaza o intrare in Db", x.toString());
 		mDatabase.close();
 	}
 	
