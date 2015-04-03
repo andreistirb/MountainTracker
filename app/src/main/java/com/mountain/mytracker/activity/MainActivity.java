@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
-                myWebLink.setData(Uri.parse("http://cdascalu.com/projects/mountaintracker/index.html"));
+                myWebLink.setData(Uri.parse("https://github.com/andreistirb/MountainTracker/wiki"));//"http://cdascalu.com/projects/mountaintracker/index.html"));
                     startActivity(myWebLink);
 			}
 		});
