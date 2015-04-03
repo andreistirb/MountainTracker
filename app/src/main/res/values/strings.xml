@@ -19,6 +19,7 @@
     <string name="main_about_btn">Despre noi</string>
     <string name="main_mountain">Munti</string>
     <string name="main_tracks_btn">Traseele mele</string>
+    <string name="main_logo_description">Logo</string>
     
     <string name="mountain_list_retezat">Retezat</string>
     <string name="mountain_list_bucegi">Bucegi</string>
@@ -52,5 +53,11 @@
 	<string name="notification_ticker_text">Esti pe traseu</string>
 	<string name="notification_title">Esti pe traseu</string>
 	<string name="notification_text">Apasa pentru a intra in aplicatie</string>
+
+    <string name="new_track_dialog">Traseu nou</string>
+
+    <string name="line_content_description">Linie</string>
+
+    <string name="sample_text">Sample text</string>
 
 </resources>

@@ -14,18 +14,14 @@
 
         <Button
             android:id="@+id/track_logger_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/track_logger_start"
-            android:textColor="#ffffff" />
+            style="@style/text_buton"/>
 
         <Button
             android:id="@+id/track_logger_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/text_buton"
             android:layout_toRightOf="@+id/track_logger_start"
-            android:text="@string/track_logger_stop"
-            android:textColor="#ffffff" />
+            android:text="@string/track_logger_stop" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,12 +49,12 @@
 
             <TextView
                 android:id="@+id/track_logger_alt_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="@string/track_logger_alt" />
 
             <TextView
                 android:id="@+id/track_logger_alt"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_alt_label"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
@@ -71,12 +67,12 @@
 
             <TextView
                 android:id="@+id/track_logger_lat_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="@string/track_logger_lat" />
 
             <TextView
                 android:id="@+id/track_logger_lat"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_lat_label"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
@@ -90,12 +86,12 @@
 
             <TextView
                 android:id="@+id/track_logger_lon_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="@string/track_logger_lon" />
 
             <TextView
                 android:id="@+id/track_logger_lon"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_lon_label"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
@@ -109,7 +105,7 @@
         android:layout_centerHorizontal="true" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/imageView2"
             android:layout_width="300dp"
             android:layout_height="3dp"
             android:layout_centerHorizontal="true"
@@ -125,12 +121,12 @@
 
             <TextView
                 android:id="@+id/track_logger_speed_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="@string/track_logger_speed" />
 
             <TextView
                 android:id="@+id/track_logger_speed"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_speed_label" />
         </RelativeLayout>
 
@@ -143,12 +139,12 @@
 
             <TextView
                 android:id="@+id/track_logger_distance_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="Distanta (km)" />
 
             <TextView
                 android:id="@+id/track_logger_distance"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_distance_label"
                 android:layout_centerHorizontal="true" >
             </TextView>
@@ -163,12 +159,12 @@
 
             <TextView
                 android:id="@+id/track_logger_duration_label"
-                style="@style/label"
+                style="@style/track_logger_layout_label"
                 android:text="Timp" />
 
             <TextView
                 android:id="@+id/track_logger_duration"
-                style="@style/informatii"
+                style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_duration_label"
                 android:layout_centerHorizontal="true" >
             </TextView>
@@ -177,23 +173,19 @@
 
     <Button
         android:id="@+id/track_logger_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="15dp"
         android:text="@string/track_logger_map"
-        android:textColor="#ffffff" />
+        style="@style/text_buton"/>
 
     <Button
         android:id="@+id/track_logger_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/track_logger_map"
         android:layout_alignBottom="@+id/track_logger_map"
         android:layout_alignParentLeft="true"
         android:layout_margin="15dp"
         android:text="@string/track_logger_details"
-        android:textColor="#ffffff" />
+        style="@style/text_buton"/>
 
 </RelativeLayout>

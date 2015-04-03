@@ -6,164 +6,368 @@
     android:orientation="vertical" >
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/track_details_duration_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_duration_label"
-            style="@style/Details"
-            android:text="@string/track_details_duration" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_duration"
-            style="@style/Details"
-            android:layout_toRightOf="@+id/track_details_duration_label" >
-        </TextView>
+            <TextView
+                android:id="@+id/track_details_duration_label"
+                style="@style/Details"
+                android:text="@string/track_details_duration" >
+            </TextView>
 
-        <ImageView
-            android:id="@+id/track_details_duration_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_duration"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_duration"
+                style="@style/Details" >
+            </TextView>
 
-    <RelativeLayout
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_difficulty_label"
-            style="@style/Details"
-            android:text="@string/track_details_difficulty" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_difficulty"
-            style="@style/Details"
-            android:layout_toRightOf="@+id/track_details_difficulty_label" >
-        </TextView>
+            <TextView
+                android:id="@+id/track_details_difficulty_label"
+                style="@style/Details"
+                android:text="@string/track_details_difficulty" >
+            </TextView>
 
-        <ImageView
-            android:id="@+id/track_details_difficulty_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_difficulty"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_difficulty"
+                style="@style/Details" >
+            </TextView>
 
-    <RelativeLayout
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_mark_label"
-            style="@style/Details"
-            android:text="@string/track_details_mark" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_mark"
-            style="@style/Details" 
-            android:layout_toRightOf="@+id/track_details_mark_label">
-        </TextView>
+            <TextView
+                android:id="@+id/track_details_mark_label"
+                style="@style/Details"
+                android:text="@string/track_details_mark" >
+            </TextView>
 
-        <ImageView
-            android:id="@+id/track_details_mark_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_mark"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_mark"
+                style="@style/Details">
+            </TextView>
+        </LinearLayout>
 
-    <RelativeLayout
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_availability_label"
-            style="@style/Details"
-            android:text="@string/track_details_availability" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_availability"
-            style="@style/Details" 
-            android:layout_toRightOf="@+id/track_details_availability_label">
-        </TextView>
+            <TextView
+                android:id="@+id/track_details_availability_label"
+                style="@style/Details"
+                android:text="@string/track_details_availability" >
+            </TextView>
 
-        <ImageView
-            android:id="@+id/track_details_availability_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_availability"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_availability"
+                style="@style/Details">
+            </TextView>
 
-    <RelativeLayout
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_min_alt_label"
-            style="@style/Details"
-            android:text="@string/track_details_min_alt" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_min_alt"
-            style="@style/Details" 
-            android:layout_toRightOf="@+id/track_details_min_alt_label">
-        </TextView>
-        
-        <ImageView
-            android:id="@+id/track_details_min_alt_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_min_alt"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_min_alt_label"
+                style="@style/Details"
+                android:text="@string/track_details_min_alt" >
+            </TextView>
 
-    <RelativeLayout
+            <TextView
+                android:id="@+id/track_details_min_alt"
+                style="@style/Details">
+            </TextView>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/track_details_max_alt_label"
-            style="@style/Details"
-            android:text="@string/track_details_max_alt" >
-        </TextView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/track_details_max_alt"
-            style="@style/Details"
-            android:layout_toRightOf="@+id/track_details_max_alt_label" >
-        </TextView>
-        
-        <ImageView
-            android:id="@+id/track_details_max_alt_line"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@+id/track_details_max_alt"
-            android:background="@drawable/linie"
-            android:contentDescription="linie" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/track_details_max_alt_label"
+                style="@style/Details"
+                android:text="@string/track_details_max_alt" >
+            </TextView>
 
-    <RelativeLayout
+            <TextView
+                android:id="@+id/track_details_max_alt"
+                style="@style/Details" >
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:contentDescription="@string/line_content_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/linie"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="40">
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -176,9 +380,8 @@
 
         <TextView
             android:id="@+id/track_details_description"
-            style="@style/Details"
-            android:layout_toRightOf="@+id/track_details_description_label" >
+            style="@style/Details">
         </TextView>
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

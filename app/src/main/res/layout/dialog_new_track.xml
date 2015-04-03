@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:inputType="text"
-        android:hint="Traseu nou"/>
+        android:hint="@string/new_track_dialog"
+        android:fontFamily="sans-serif-light"/>
     
 
 </LinearLayout>
