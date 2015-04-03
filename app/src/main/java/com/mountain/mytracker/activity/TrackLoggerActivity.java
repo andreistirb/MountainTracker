@@ -68,8 +68,8 @@ public class TrackLoggerActivity extends Activity {
     private void listDetails(Double altitude, Double latitude, Double longitude, Float speeds){
         dist.setText(Double.toString(Math.floor(distance * 100) / 100));
         alt.setText(Double.toString(Math.round(altitude)));
-        lon.setText(Double.toString(Math.floor(longitude * 100) / 100));
-        lat.setText(Double.toString(Math.floor(latitude * 100) / 100));
+        lon.setText(Double.toString(Math.floor(longitude * 10000) / 10000));
+        lat.setText(Double.toString(Math.floor(latitude * 10000) / 10000));
         this.speed.setText(Double.toString(Math.floor(speeds * 100) / 100));
         timp.setText(String.format("%d:%02d:%02d", time/3600, (time%3600)/60, (time%60)));
     }
@@ -116,17 +116,13 @@ public class TrackLoggerActivity extends Activity {
         harta = (ImageButton) this.findViewById(R.id.track_logger_map);
         stop = (ImageButton) this.findViewById(R.id.track_logger_stop);
         detalii = (ImageButton) this.findViewById(R.id.track_logger_details);
+        trekking = (ImageButton) this.findViewById(R.id.track_logger_trekking);
 		
 	}
 
 	public void onResume() {
 
 		this.setTitle(track_name);
-		start = (ImageButton) this.findViewById(R.id.track_logger_start);
-		harta = (ImageButton) this.findViewById(R.id.track_logger_map);
-		stop = (ImageButton) this.findViewById(R.id.track_logger_stop);
-        trekking = (ImageButton) this.findViewById(R.id.track_logger_trekking);
-		detalii = (ImageButton) this.findViewById(R.id.track_logger_details);
 
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
