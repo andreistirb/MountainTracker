@@ -40,15 +40,11 @@ public class MapViewActivity extends Activity {
 	private IMapController hartaController;
 	private ArrayList<GeoPoint> track;
 	private ArrayList<GeoPoint> mTrack;
-	private Polyline mTraseu;
 	private MyLocationOverlay mLocationOverlay;
 	private NewDatabaseHelper db;
 	private DatabaseHelper mDatabase;
 	private Integer mTrackNo;
 	private boolean has_track;
-    private RoadManager mRoadManager;
-    private Road mRoad;
-    private Polyline mPolyline;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -61,9 +57,8 @@ public class MapViewActivity extends Activity {
 			GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
 					bundle.getDouble("longitude"));
 			mTrack.add(curent);
-            mRoad = mRoadManager.getRoad(mTrack);
-            mTraseu = mRoadManager.buildRoadOverlay(mRoad,context);
 
+            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED,3.0f));
 			hartaController.setCenter(curent);
 			mLocationOverlay.enableMyLocation();
 		}
@@ -71,8 +66,8 @@ public class MapViewActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        has_track = false;
 
-		has_track = false;
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
@@ -85,57 +80,40 @@ public class MapViewActivity extends Activity {
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 		}
 
-        mRoadManager = new OSRMRoadManager();
-
-		this.setTitle(numeTraseu);
+        mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = (MapController) harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
-		harta.getOverlays().add(mLocationOverlay);
 		
 		/* ca sa aducem punctele traseului din baza de date */
 		db = new NewDatabaseHelper(this);
 		mDatabase = new DatabaseHelper(this);
 
-		if(has_track){
+        harta.getOverlays().add(mLocationOverlay);
+        setMap();
+        setTitle(numeTraseu);
 
-		// cautam punctele traseului
-			String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
-			String[] selectionArgs = new String[] { traseu_id };
-			Log.v("in map view", traseu_id);
-			String table = DatabaseEntry.TABLE_TRACK_POINTS;
-			String sortOrder = DatabaseEntry.COL_ORD;
-
-			Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
-				null, sortOrder);
-			track = buildGeoPoint(c);
-
-            mRoad = mRoadManager.getRoad(track);
-            mPolyline = RoadManager.buildRoadOverlay(mRoad, this);
-            mPolyline.setColor(Color.GREEN);
-
-			harta.getOverlays().add(mPolyline);
-			hartaController.setZoom(14);
-			hartaController.setCenter(track.get(0));
-            harta.setMultiTouchControls(true);
-            harta.invalidate();
-		}
-		// //////////
-
-		harta.setClickable(true);
-		harta.setBuiltInZoomControls(true);
-		
-		hartaController.setZoom(14);
-
-		harta.getOverlays().add(mTraseu);
-		harta.setMultiTouchControls(true);
-		harta.setTileSource(TileSourceFactory.CYCLEMAP);
-		harta.setTileSource(TileSourceFactory.CYCLEMAP);
-		harta.setTileSource(TileSourceFactory.CYCLEMAP);
 	}
 
 	@Override
 	public void onResume() {
+
+        if(has_track){
+
+            // cautam punctele traseului
+            String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
+            String[] selectionArgs = new String[] { traseu_id };
+            Log.v("in map view", traseu_id);
+            String table = DatabaseEntry.TABLE_TRACK_POINTS;
+            String sortOrder = DatabaseEntry.COL_ORD;
+
+            Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
+                    null, sortOrder);
+            track = buildGeoPoint(c);
+            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE,3.0f));
+            hartaController.setZoom(14);
+            hartaController.setCenter(track.get(0));
+        }
 
         if (GPSLogger.isTracking()) {
 			SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -169,8 +147,23 @@ public class MapViewActivity extends Activity {
 		super.onDestroy();
 	}
 
-	// preia datele din baza de date si creaza un vector de puncte ale traseului
-	public ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
+    private void setMap(){
+        harta.setClickable(true);
+        harta.setBuiltInZoomControls(true);
+        harta.setTileSource(TileSourceFactory.CYCLEMAP);
+        harta.setMultiTouchControls(true);
+    }
+
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+        Polyline track = new Polyline(context);
+        track.setPoints(trackPoints);
+        track.setColor(color);
+        track.setWidth(width);
+        return track;
+    }
+
+	// gets track points from database and builds an ArrayList of GeoPoints
+	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
 		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
 		c.moveToFirst();
 		do {
