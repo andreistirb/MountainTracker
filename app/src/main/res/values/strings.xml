@@ -48,6 +48,7 @@
     <string name="track_logger_lon">Longitudine</string>
     <string name="track_logger_speed">Viteza(km/h)</string>
     <string name="track_logger_details">Detalii</string>
+    <string name="track_logger_trekking">Trasee</string>
     
 
 	<string name="notification_ticker_text">Esti pe traseu</string>

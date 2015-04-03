@@ -3,26 +3,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/track_logger_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" >
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/track_logger_start"
-            android:text="@string/track_logger_start"
-            style="@style/text_buton"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <Button
-            android:id="@+id/track_logger_stop"
-            style="@style/text_buton"
-            android:layout_toRightOf="@+id/track_logger_start"
-            android:text="@string/track_logger_stop" />
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/track_logger_start"
+                style="@style/text_buton"
+                android:text="@string/track_logger_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00ffffff"
+                android:src="@drawable/start_icon"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/track_logger_start"
+                style="@style/text_buton"
+                android:clickable="false"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageButton
+                android:id="@+id/track_logger_stop"
+                style="@style/text_buton"
+                android:text="@string/track_logger_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00ffffff"
+                android:src="@drawable/stop_icon"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/track_logger_stop"
+                style="@style/text_buton"
+                android:clickable="false"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/track_logger_prim_layout"
@@ -30,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/track_logger_button_layout"
         android:layout_centerHorizontal="true"
-        android:paddingTop="40dp" >
+        android:paddingTop="40dp">
 
         <ImageView
             android:id="@+id/imageView1"
@@ -45,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/track_logger_lon_layout"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_alt_label"
@@ -63,7 +110,7 @@
             android:id="@+id/track_logger_lat_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_lat_label"
@@ -82,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/track_logger_lat_layout"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_lon_label"
@@ -102,7 +149,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/track_logger_prim_layout"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -117,7 +164,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_speed_label"
@@ -134,8 +181,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:layout_toRightOf="@+id/track_logger_speed_layout">
+            android:layout_toRightOf="@+id/track_logger_speed_layout"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_distance_label"
@@ -146,16 +193,15 @@
                 android:id="@+id/track_logger_distance"
                 style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_distance_label"
-                android:layout_centerHorizontal="true" >
-            </TextView>
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
-        
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:layout_toLeftOf="@+id/track_logger_speed_layout">
+            android:layout_toLeftOf="@+id/track_logger_speed_layout"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_duration_label"
@@ -166,26 +212,97 @@
                 android:id="@+id/track_logger_duration"
                 style="@style/track_logger_layout_informatii"
                 android:layout_below="@+id/track_logger_duration_label"
-                android:layout_centerHorizontal="true" >
-            </TextView>
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/track_logger_map"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/track_logger_map_btn_layout"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
-        android:text="@string/track_logger_map"
-        style="@style/text_buton"/>
+        android:layout_alignParentEnd="true"
+        android:padding="15dp">
 
-    <Button
-        android:id="@+id/track_logger_details"
-        android:layout_alignBaseline="@+id/track_logger_map"
-        android:layout_alignBottom="@+id/track_logger_map"
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/track_logger_map"
+            android:background="#00ffffff"
+            android:src="@drawable/map_icon"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_logger_map"
+            style="@style/text_buton"
+            android:clickable="false"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="15dp"
-        android:text="@string/track_logger_details"
-        style="@style/text_buton"/>
+        android:layout_alignParentStart="true">
+        <ImageButton
+            android:id="@+id/track_logger_details"
+            style="@style/text_buton"
+            android:text="@string/track_logger_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ffffff"
+            android:src="@drawable/details_icon"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_logger_details"
+            style="@style/text_buton"
+            android:clickable="false"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp"/>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <ImageButton
+            android:id="@+id/track_logger_trekking"
+            style="@style/text_buton"
+            android:text="@string/track_logger_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ffffff"
+            android:src="@drawable/trekking_icon"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_logger_trekking"
+            style="@style/text_buton"
+            android:clickable="false"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp"/>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
