@@ -8,9 +8,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
@@ -50,11 +52,6 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		db = new DatabaseHelper(this);
 
 		table = DatabaseEntry.TABLE_MY_TRACKS;
-
-		c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
-		c.moveToFirst();
-		this.setListAdapter(new TrackListAdapter(TrackerManagerActivity.this,c,1));
-		this.registerForContextMenu(this.getListView());
 		
 		this.mTrackLoggerActivity = new Intent(this,TrackLoggerActivity.class);
 		mTrackLoggerActivity.putExtra("detalii", true);
@@ -101,5 +98,31 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		i.putExtra("track_id",currentTrackId);
 		this.startActivity(i);
 	}
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.track_manager_contextmenu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
+        c.moveToFirst();
+        c.moveToPosition(info.position);
+
+        switch(item.getItemId()){
+            case R.id.contextmenu_delete_track : {
+                deleteTrack(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
+                Log.i("delete row","deleting row");
+                break;
+            }
+        }
+        return true;
+    }
+
+    private void deleteTrack(String track_id){
+        db.getWritableDatabase().delete(DatabaseEntry.TABLE_MY_TRACKS,DatabaseEntry.COL_TRACK_NO + " = " + track_id, null);
+    }
 
 }
