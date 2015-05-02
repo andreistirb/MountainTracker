@@ -7,11 +7,13 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -27,8 +29,12 @@ import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
+import com.mountain.mytracker.db.NewDatabaseHelper;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class GPSLogger extends Service implements GoogleApiClient.ConnectionCallbacks,
@@ -52,6 +58,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
     protected String mLastUpdateTime;
     private boolean allowSendingNotifications = false;
+    private ArrayList<GeoPoint> trackPoints;
+    private NewDatabaseHelper factoryDB;
 
     private Intent notification;
 
@@ -73,6 +81,11 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
     private Vibrator mVibrator;
 
+    //track battery level
+    IntentFilter batteryIntentFilter;
+    Intent batteryStatus;
+    int batteryLevel;
+
     //track data
     long time, first_fix;
     float max_speed, sum_speed, avg_speed;
@@ -87,6 +100,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         //database
         mDatabase = new DatabaseHelper(this.getBaseContext());
+        factoryDB = new NewDatabaseHelper(this.getBaseContext());
 
         //location
         buildGoogleApiClient();
@@ -95,6 +109,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         //Vibrator
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        //Battery
+        batteryIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        batteryStatus = this.registerReceiver(null, batteryIntentFilter);
 
         super.onCreate();
     }
@@ -109,6 +127,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         track_name = intent.getExtras().getString("track_name");
         if (intent.hasExtra("track_id")) {
             track_id = intent.getExtras().getString("track_id");
+            trackPoints = new ArrayList<GeoPoint>();
+            populateTrackPoints();
         }
         Log.v("in gpslogger", "am primit numele");
 
@@ -235,8 +255,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     //Location Request
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(15000);
+        mLocationRequest.setFastestInterval(10000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -261,6 +281,16 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         buildNotification();
         sendBroadcast(notification);
         Log.v("in sender", "trimit date");
+        Log.v("in sender", String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL,-1)));
+        batteryLevel = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        if(batteryLevel > 20 && batteryLevel < 40){
+            mLocationRequest.setInterval(30000);
+            mLocationRequest.setFastestInterval(15000);
+        }
+        else if(batteryLevel <= 20){
+            mLocationRequest.setInterval(60000);
+            mLocationRequest.setFastestInterval(30000);
+        }
     }
 
     public void insertLocation(double latitude, double longitude,
@@ -423,6 +453,27 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         Integer x = mTrackNo;
         Log.v("creeaza o intrare in Db", x.toString());
         mDatabase.close();
+    }
+
+    private void populateTrackPoints(){
+
+        String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
+        String[] selectionArgs = new String[] { track_id };
+        Log.v("in map view", track_id);
+        String table = DatabaseEntry.TABLE_TRACK_POINTS;
+        String sortOrder = DatabaseEntry.COL_ORD;
+
+        Cursor c = factoryDB.myQuery(table, null, selection, selectionArgs, null,
+                null, sortOrder);
+        c.moveToFirst();
+        do {
+            double latitude = c.getDouble(c
+                    .getColumnIndex(DatabaseEntry.COL_LAT));
+            double longitude = c.getDouble(c
+                    .getColumnIndex(DatabaseEntry.COL_LON));
+            trackPoints.add(new GeoPoint(latitude, longitude));
+        } while (c.moveToNext());
+
     }
 
 }
