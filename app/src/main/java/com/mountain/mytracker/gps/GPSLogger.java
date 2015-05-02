@@ -283,7 +283,11 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         Log.v("in sender", "trimit date");
         Log.v("in sender", String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL,-1)));
         batteryLevel = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        if(batteryLevel > 20 && batteryLevel < 40){
+        if(batteryLevel >= 40){
+            mLocationRequest.setInterval(15000);
+            mLocationRequest.setInterval(10000);
+        }
+        else if(batteryLevel > 20 && batteryLevel < 40){
             mLocationRequest.setInterval(30000);
             mLocationRequest.setFastestInterval(15000);
         }
