@@ -1,85 +1,133 @@
 package com.mountain.mytracker.activity;
 
-import android.app.Activity;
-import android.database.Cursor;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
-import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.other.GPXExport;
+import com.mountain.mytracker.db.DatabaseContract;
 
-public class MyTrackDetailsActivity extends Activity {
-	
-	private Integer mTrackNo;
-	private DatabaseHelper db;
-	private TextView duration, distance, avg_speed, max_speed, min_alt, max_alt;
-	Button export_btn;
-	private String track_name;
-	
-	public void onCreate(Bundle savedInstanceState){
-		
-		super.onCreate(savedInstanceState);
-		
-		this.setContentView(R.layout.mytrackdetails_layout);
-		
-		duration = (TextView) this.findViewById(R.id.mytrackdetails_duration);
-		distance = (TextView) this.findViewById(R.id.mytrackdetails_distance);
-		avg_speed = (TextView) this.findViewById(R.id.mytrackdetails_avg_speed);
-		max_speed = (TextView) this.findViewById(R.id.mytrackdetails_max_speed);
-		min_alt = (TextView) this.findViewById(R.id.mytrackdetails_min_alt);
-		max_alt = (TextView) this.findViewById(R.id.mytrackdetails_max_alt);
-		export_btn = (Button) this.findViewById(R.id.mytrackdetails_export);
-		
-		
-		if(this.getIntent().hasExtra(DatabaseEntry.COL_TRACK_NO)){
-			//mTrackNo = this.getIntent().getExtras().getInt(DatabaseEntry.COL_TRACK_NO);
-			mTrackNo = this.getIntent().getExtras().getInt("track_id");
-			Log.v("in detalii", mTrackNo.toString());
-		}
-		
-		db = new DatabaseHelper(this);
-		
-		String selection = DatabaseEntry.COL_TRACK_NO + "=? ";
-		String[] selectionArgs = new String[] {"9"};
-		String table = DatabaseEntry.TABLE_MY_TRACKS;
-		
-		Cursor c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
-		c.moveToFirst();
-		
-		
-		if(c.move(mTrackNo-1)){
-			
-			Integer durationi = c.getInt(c.getColumnIndex(DatabaseEntry.COL_TIME));
-			
-			
-			duration.setText(String.format("%d:%02d:%02d", durationi/3600, (durationi%3600)/60, (durationi%60)));
-			distance.setText(c.getString(c.getColumnIndex(DatabaseEntry.COL_DISTANCE)));
-			avg_speed.setText(c.getString(c.getColumnIndex(DatabaseEntry.COL_MED_SPEED)));
-			max_speed.setText(c.getString(c.getColumnIndex(DatabaseEntry.COL_MAX_SPEED)));
-			min_alt.setText(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_MIN_ALT)));
-			max_alt.setText(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_MAX_ALT)));
-			
-			Log.v("in mytrackdetails", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
-			
-			track_name = c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME));
-			
-			
-			export_btn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					GPXExport gpx = new GPXExport();
-					gpx.createFile(mTrackNo, mTrackNo.toString() + "track.gpx" , track_name, db);
-					Toast.makeText(getApplicationContext(), "Export successful",
-							   Toast.LENGTH_LONG).show();
-				}
-			});
-		}		
-	}
+public class MyTrackDetailsActivity extends FragmentActivity implements ActionBar.TabListener {
+
+    private Integer mTrackNo;
+
+    AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+    ViewPager mViewPager;
+
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        this.setContentView(R.layout.mytrackdetails_layout);
+
+        // Create the adapter that will return a fragment for each of the three primary sections
+        // of the app.
+        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the action bar.
+        final ActionBar actionBar = getActionBar();
+
+        // Specify that the Home/Up button should not be enabled, since there is no hierarchical
+        // parent.
+        actionBar.setHomeButtonEnabled(false);
+
+        // Specify that we will be displaying tabs in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mAppSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+                actionBar.setSelectedNavigationItem(position);
+            }
+        });
+
+        // For each of the sections in the app, add a tab to the action bar.
+        for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(mAppSectionsPagerAdapter.getPageTitle(i))
+                            .setTabListener(this));
+        }
+
+        if (this.getIntent().hasExtra(DatabaseContract.DatabaseEntry.COL_TRACK_NO)) {
+            //mTrackNo = this.getIntent().getExtras().getInt(DatabaseEntry.COL_TRACK_NO);
+            mTrackNo = this.getIntent().getExtras().getInt("track_id");
+            Log.v("in detalii", mTrackNo.toString());
+        }
+
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        // When the given tab is selected, switch to the corresponding page in the ViewPager.
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public AppSectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            switch (i) {
+                case 0: {
+                    Fragment fragment = new MyTrackDetailsTrackFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("track_id", mTrackNo);
+                    fragment.setArguments(args);
+                    return fragment;
+                }
+                default:
+                    Fragment fragment = new MyTrackDetailsMapFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("track_id", mTrackNo);
+                    fragment.setArguments(args);
+                    return fragment;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Detalii traseu ";
+                case 1:
+                    return "Harta";
+                default:
+                    return "Unknown page";
+            }
+        }
+
+    }
 
 }
