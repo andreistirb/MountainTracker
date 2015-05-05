@@ -25,7 +25,9 @@ public class MountainTrackerContentProvider extends ContentProvider {
 			+ AUTHORITY + "/" + DatabaseEntry.TABLE_MOUNTAIN);
 	public static final Uri CONTENT_URI_MOUNTAIN_TRACK = Uri.parse("content://"
 			+ AUTHORITY + "/" + DatabaseEntry.TABLE_MOUNTAIN_TRACK);
-	public static final Uri MAP_VIEW_TRACK = Uri.parse("content://" + AUTHORITY
+    public static final Uri CONTENT_URI_TABLE_TRACK_POINTS = Uri.parse("content://"
+            + AUTHORITY + "/" + DatabaseEntry.TABLE_TRACK_POINTS);
+    public static final Uri MAP_VIEW_TRACK = Uri.parse("content://" + AUTHORITY
 			+ "/" + DatabaseEntry.TABLE_MOUNTAIN_TRACK);
 
 	private static final UriMatcher uriMatcher = new UriMatcher(
@@ -38,10 +40,6 @@ public class MountainTrackerContentProvider extends ContentProvider {
 
 	/*
 	 * partea pentru baza de date
-	 */
-	/**
-	 * @uml.property  name="mDBHelper"
-	 * @uml.associationEnd  
 	 */
 	private NewDatabaseHelper mDBHelper;
 
@@ -137,6 +135,10 @@ public class MountainTrackerContentProvider extends ContentProvider {
 				groupBy = DatabaseEntry.COL_TRACK_NAME;
 			break;
 		}
+        case 4: {
+            table = DatabaseEntry.TABLE_TRACK_POINTS;
+            break;
+        }
 		}
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(table);

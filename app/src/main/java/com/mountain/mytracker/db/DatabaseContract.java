@@ -1,5 +1,6 @@
 package com.mountain.mytracker.db;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class DatabaseContract {
@@ -9,6 +10,15 @@ public class DatabaseContract {
 
 	public static abstract class DatabaseEntry implements BaseColumns {
 		public static final String TABLE_TRACK = "track"; // nefolosita deocamdata
+
+        // The URI scheme used for content URIs
+        public static final String SCHEME = "content";
+
+        // The provider's authority
+        public static final String AUTHORITY = "com.mountain.mytracker.activity";
+
+        public static final Uri CONTENT_URI = Uri.parse(SCHEME + "://" + AUTHORITY);
+
 
 		public static final String TABLE_TRACK_POINTS = "Trackpoints";
 		public static final String TABLE_MOUNTAIN_TRACK = "Tracks";
