@@ -621,7 +621,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
         String[] projection = new String[]{DatabaseEntry.COL_LAT, DatabaseEntry.COL_LON};
         String[] selectionArgs = new String[]{track_id};
-        Log.v("in map view", track_id);
+        //Log.v("in map view", track_id);
         String table = DatabaseEntry.TABLE_TRACK_POINTS;
         String sortOrder = DatabaseEntry.COL_ORD;
 

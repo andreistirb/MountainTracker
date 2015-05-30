@@ -36,6 +36,7 @@ public class TrackLoggerActivity extends Activity {
 	private Integer mTrackNo;
 	public boolean detalii_btn; //daca sa apara sau nu butonul detalii
 	private boolean service_started;
+    private boolean is_default_track = false;
 
     //track data
     long time;
@@ -86,6 +87,7 @@ public class TrackLoggerActivity extends Activity {
 		track_name = this.getIntent().getExtras().getString("track_name");
 		if(this.getIntent().hasExtra("track_id")){
 			track_id = this.getIntent().getExtras().getString("track_id");
+            is_default_track = true;
 		}
 		this.setTitle(track_name);
 		if(this.getIntent().hasExtra("detalii")){
@@ -149,6 +151,7 @@ public class TrackLoggerActivity extends Activity {
 					Log.v("in trackloggeractivity", "click");
 				
 					GPSLoggerServiceIntent.putExtra("track_name", track_name);
+                if(is_default_track)
                     GPSLoggerServiceIntent.putExtra("track_id", track_id);
 				
 					service_started = true;
