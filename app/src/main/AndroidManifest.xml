@@ -75,8 +75,9 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.mountain.mytracker.gps.GeofenceTransitionsIntentService"
-            android:exported="false">
+        <service
+            android:name="com.mountain.mytracker.gps.GeofenceTransitionsIntentService"
+            android:exported="true">
         </service>
 
         <provider
@@ -90,10 +91,6 @@
             android:value="@integer/google_play_services_version" >
         </meta-data>
 
-        <service
-            android:name="com.mountain.mytracker.gps.GeofenceTransitionsIntentService"
-            android:exported="false" >
-        </service>
     </application>
 
 </manifest>

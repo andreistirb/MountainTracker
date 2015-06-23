@@ -50,7 +50,7 @@ public class MyTrackDetailsTrackFragment extends Fragment {
 
         if (getArguments() != null) {
 
-            db = new DatabaseHelper(getActivity());
+            db = new DatabaseHelper(getActivity().getApplicationContext());
 
             String table = DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS;
 

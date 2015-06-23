@@ -56,20 +56,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
         int geofenceTransition = mGeofencingEvent.getGeofenceTransition();
         switch(geofenceTransition) {
-            case Geofence.GEOFENCE_TRANSITION_ENTER : {
-                List<Geofence> triggeringGeofences = mGeofencingEvent.getTriggeringGeofences();
-                enterCounter += triggeringGeofences.size();
-                String geofenceTransitionDetails = getGeofenceTransitionDetails(this,
-                        geofenceTransition, triggeringGeofences);
-                //sendNotification(geofenceTransitionDetails);
-                Log.i(TAG,geofenceTransitionDetails);
-                Log.i(TAG,enterCounter + " zone in care ai intrat");
-                currentArea.addAll(triggeringGeofences);
-                break;
-            }
             case Geofence.GEOFENCE_TRANSITION_EXIT : {
                 List<Geofence> triggeringGeofences = mGeofencingEvent.getTriggeringGeofences();
-                exitCounter += triggeringGeofences.size();
+                exitCounter = triggeringGeofences.size();
                 String geofenceTransitionDetails = getGeofenceTransitionDetails(this,
                         geofenceTransition, triggeringGeofences);
                 currentArea.removeAll(triggeringGeofences);
@@ -78,6 +67,17 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 }
                 Log.i(TAG,geofenceTransitionDetails);
                 Log.i(TAG,exitCounter + " zone din care ai iesit");
+                break;
+            }
+            case Geofence.GEOFENCE_TRANSITION_ENTER : {
+                List<Geofence> triggeringGeofences = mGeofencingEvent.getTriggeringGeofences();
+                enterCounter = triggeringGeofences.size();
+                String geofenceTransitionDetails = getGeofenceTransitionDetails(this,
+                        geofenceTransition, triggeringGeofences);
+                //sendNotification(geofenceTransitionDetails);
+                Log.i(TAG,geofenceTransitionDetails);
+                Log.i(TAG,enterCounter + " zone in care ai intrat");
+                currentArea.addAll(triggeringGeofences);
                 break;
             }
             case Geofence.GEOFENCE_TRANSITION_DWELL : {
@@ -123,8 +123,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
     private String getTransitionString(int transitionType){
         switch (transitionType){
             case Geofence.GEOFENCE_TRANSITION_ENTER : return "You just entered the area";
-            case Geofence.GEOFENCE_TRANSITION_EXIT : return "You just exited the area";
-            case Geofence.GEOFENCE_TRANSITION_DWELL : return "You are lingering in the area";
+            case Geofence.GEOFENCE_TRANSITION_EXIT : return "Ai iesit de pe traseu";
+            case Geofence.GEOFENCE_TRANSITION_DWELL : return "";// "You are lingering in the area";
             default : return  "Unknown move. Are you an alien?";
         }
     }

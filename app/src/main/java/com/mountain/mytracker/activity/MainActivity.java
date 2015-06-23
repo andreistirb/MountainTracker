@@ -11,13 +11,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends Activity {
-	
 
-	Button mountain_list;
-	Button about_btn, my_tracks;
+	Button about_btn, my_tracks, mountain_list;
 
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
-
 
     @Override
 	public void onCreate(Bundle savedInstanceState){

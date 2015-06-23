@@ -5,7 +5,6 @@
     android:background= "@drawable/background"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
-    <!--"#2c5da9" -> culoare background-->
 
     <LinearLayout
         android:id="@+id/linearLayout1"

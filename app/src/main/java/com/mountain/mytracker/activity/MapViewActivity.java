@@ -152,6 +152,7 @@ public class MapViewActivity extends Activity {
         harta.setBuiltInZoomControls(true);
         harta.setTileSource(TileSourceFactory.CYCLEMAP);
         harta.setMultiTouchControls(true);
+        hartaController.setZoom(14);
     }
 
     private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){

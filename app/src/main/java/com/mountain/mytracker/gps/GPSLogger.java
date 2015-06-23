@@ -53,9 +53,20 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class GPSLogger extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
+
+    private class ParseAsync extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params){
+
+            setUpDatabaseTrackPoints();
+            return null;
+        }
+    }
 
 
     private class Geofencing extends AsyncTask<ParseGeoPoint, Void, String> {
@@ -74,19 +85,25 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
             query.setLimit(99);
             //try {
             //trackPointsList =
-            query.findInBackground(new FindCallback<ParseObject>() {
-                                       @Override
-                                       public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-                                          // Log.i("asyncTask", "retrieved some Parse points");
-                                           for (ParseObject o : parseObjects) {
-                                               ParseGeoPoint pct = (ParseGeoPoint) o.get("coordinates");
-                                               addGeofence(new GeoPoint(pct.getLatitude(), pct.getLongitude()));
-                                           }
-                                           addGeofences();
-                                       }
-                                   }
-
-            );
+//            query.findInBackground(new FindCallback<ParseObject>() {
+//                                       @Override
+//                                       public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+//                                          // Log.i("asyncTask", "retrieved some Parse points");
+//
+//                                       }
+//                                   }
+//
+//            );
+            try {
+                trackPointsList = query.find();
+                for (ParseObject o : trackPointsList) {
+                    ParseGeoPoint pct = (ParseGeoPoint) o.get("coordinates");
+                    addGeofence(new GeoPoint(pct.getLatitude(), pct.getLongitude()));
+                }
+                addGeofences();
+            } catch (com.parse.ParseException e) {
+                e.printStackTrace();
+            }
             //}
             /*catch (com.parse.ParseException e){
                 e.printStackTrace();
@@ -214,7 +231,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         track_name = intent.getExtras().getString("track_name");
         if (intent.hasExtra("track_id")) {
             track_id = intent.getExtras().getString("track_id");
-            setUpDatabaseTrackPoints();
+            new ParseAsync().execute();
             shouldGeofence = true;
         }
         Log.v("in gpslogger", "am primit numele");
@@ -559,14 +576,14 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT);
         builder.addGeofences(mGeofenceList);
         return builder.build();
     }
 
     private void addGeofences() {
         if (!mGoogleApiClient.isConnected()) {
-            Toast.makeText(this, "GoogleApiClient not connected", Toast.LENGTH_LONG).show();
+           // Toast.makeText(this, "GoogleApiClient not connected", Toast.LENGTH_LONG).show();
             return;
         }
         try {
@@ -575,7 +592,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
                     getGeofencingRequest(),
                     getGeofencePendingIntent()
             ).setResultCallback(this);
-            Toast.makeText(this, "GoogleApiClient is connected", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "GoogleApiClient is connected", Toast.LENGTH_LONG).show();
         } catch (SecurityException securityException) {
             securityException.printStackTrace();
         }
@@ -606,11 +623,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         Geofence mGeofence = new Geofence.Builder()
                 .setRequestId(String.valueOf(point.getLatitude()))//String.valueOf(mGeofenceList.size()))//point.getLatitude() + point.getLongitude()))
-                .setCircularRegion(point.getLatitude(), point.getLongitude(), 100) //50 meters
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT | Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL)
-                .setLoiteringDelay(5000)
-                .setExpirationDuration(1000 * 60 * 60 * 12)
-                .build();
+                        .setCircularRegion(point.getLatitude(), point.getLongitude(), 50) //50 meters
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .build();
 
         if (!mGeofenceList.contains(mGeofence))
             mGeofenceList.add(mGeofence);
