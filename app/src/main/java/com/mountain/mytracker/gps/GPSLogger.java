@@ -6,141 +6,40 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.wifi.WifiConfiguration;
-import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
+
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
-import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.MountainTrackerContentProvider;
 import com.mountain.mytracker.db.NewDatabaseHelper;
-import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.osmdroid.util.GeoPoint;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
-public class GPSLogger extends Service implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
-
-    private class ParseAsync extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params){
-
-            setUpDatabaseTrackPoints();
-            return null;
-        }
-    }
-
-
-    private class Geofencing extends AsyncTask<ParseGeoPoint, Void, String> {
-
-        private int MAX_GEOFENCE_POINTS = 99;
-
-        @Override
-        protected String doInBackground(ParseGeoPoint... params) {
-
-            List<ParseObject> trackPointsList = new ArrayList<ParseObject>();
-            //mGeofenceList = new ArrayList<Geofence>();
-            //query database for closest 99 points to user's location
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("TrackPoint");
-            query.fromLocalDatastore();
-            query.whereNear("coordinates", params[0]);
-            query.setLimit(99);
-            //try {
-            //trackPointsList =
-//            query.findInBackground(new FindCallback<ParseObject>() {
-//                                       @Override
-//                                       public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
-//                                          // Log.i("asyncTask", "retrieved some Parse points");
-//
-//                                       }
-//                                   }
-//
-//            );
-            try {
-                trackPointsList = query.find();
-                for (ParseObject o : trackPointsList) {
-                    ParseGeoPoint pct = (ParseGeoPoint) o.get("coordinates");
-                    addGeofence(new GeoPoint(pct.getLatitude(), pct.getLongitude()));
-                }
-                addGeofences();
-            } catch (com.parse.ParseException e) {
-                e.printStackTrace();
-            }
-            //}
-            /*catch (com.parse.ParseException e){
-                e.printStackTrace();
-            }*/
-            /*if (c.getCount() <= MAX_GEOFENCE_POINTS){
-                c.moveToFirst();
-                do{
-                    addGeofence(new GeoPoint(c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LAT)),
-                            c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LON))));
-                   // Log.i("cand adauga geofence","am adaugat inca un geofence");
-                }
-                while(c.moveToNext());
-            }*/
-
-            return "Done!";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-           // addGeofences();
-            Log.i("In asyncTask", result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... results) {
-        }
-    }
+public class GPSLogger extends Service implements LocationListener {
 
     //database
     private DatabaseHelper mDatabase;
-
-    //Google Api
-    protected GoogleApiClient mGoogleApiClient;
 
     //Location
     protected Location mLastLocation;
@@ -201,13 +100,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //database
         mDatabase = new DatabaseHelper(this.getBaseContext());
         factoryDB = new NewDatabaseHelper(this.getBaseContext());
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "y74djiFMOlXnb6illRwJx7k30xnPzabHCEkM8lQe", "jLvZaXy1OfmnufzNRBIKBwugBKWY06RUyP7pRIzD");
 
         mGeofenceList = new ArrayList<Geofence>();
 
         //location
-        buildGoogleApiClient();
         distance = 0.0f;
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -225,13 +121,12 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        mGoogleApiClient.connect();
 
         // receive available info
         track_name = intent.getExtras().getString("track_name");
         if (intent.hasExtra("track_id")) {
             track_id = intent.getExtras().getString("track_id");
-            new ParseAsync().execute();
+//            new ParseAsync().execute();
             shouldGeofence = true;
         }
         Log.v("in gpslogger", "am primit numele");
@@ -279,10 +174,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
             stopTracking();
         }
 
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-
         stopNotifyBackgroundService();
     }
 
@@ -292,6 +183,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         mVibrator.vibrate(500);
         NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nmgr.notify(1, getNotification());
+
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         if (!checkEmptyDatabase(mDatabase)) {
             mTrackNo = 1;
@@ -310,75 +203,12 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     }
 
     private void stopTracking() {
-        stopLocationUpdates();
         isTracking = false;
         mVibrator.vibrate(500);
-        if (shouldGeofence) {
-            removeGeofences();
-            try {
-                ParseObject.unpinAll("trackpoints");
-            } catch (com.parse.ParseException parseException) {
-                parseException.printStackTrace();
-            }
-        }
+        mLocationManager.removeUpdates(this);
         this.stopSelf();
     }
 
-    //Google API - Location
-
-    /**
-     * Runs when a GoogleApiClient object successfully connects.
-     */
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        // Provides a simple way of getting a device's location and is well suited for
-        // applications that do not require a fine-grained location and that do not need location
-        // updates. Gets the best and most recent location currently available, which may be null
-        // in rare cases when a location is not available.
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        startLocationUpdates();
-        Log.i("conectat googleapi", "conectat");
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        Log.i(TAG, "Connection failed : ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason. We call connect() to
-        // attempt to re-establish the connection.
-
-        Log.i(TAG, "Connection suspended, trying to reconnect");
-        mGoogleApiClient.connect();
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        createLocationRequest();
-    }
-
-    //Location Request
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(15000);
-        mLocationRequest.setFastestInterval(10000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -406,8 +236,23 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
             mLocationRequest.setFastestInterval(30000);
         }
         if (shouldGeofence) {
-            new Geofencing().execute(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+            //  new Geofencing().execute(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
         }
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
 
     }
 
@@ -574,87 +419,4 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
     }
 
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT);
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private void addGeofences() {
-        if (!mGoogleApiClient.isConnected()) {
-           // Toast.makeText(this, "GoogleApiClient not connected", Toast.LENGTH_LONG).show();
-            return;
-        }
-        try {
-            LocationServices.GeofencingApi.addGeofences(
-                    mGoogleApiClient,
-                    getGeofencingRequest(),
-                    getGeofencePendingIntent()
-            ).setResultCallback(this);
-            //Toast.makeText(this, "GoogleApiClient is connected", Toast.LENGTH_LONG).show();
-        } catch (SecurityException securityException) {
-            securityException.printStackTrace();
-        }
-    }
-
-    private void removeGeofences() {
-        try {
-            LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, getGeofencePendingIntent())
-                    .setResultCallback(this);
-        } catch (SecurityException securityException) {
-            securityException.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onResult(Status status) {
-
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        if (mPendingIntent != null)
-            return mPendingIntent;
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void addGeofence(GeoPoint point) {
-
-        Geofence mGeofence = new Geofence.Builder()
-                .setRequestId(String.valueOf(point.getLatitude()))//String.valueOf(mGeofenceList.size()))//point.getLatitude() + point.getLongitude()))
-                        .setCircularRegion(point.getLatitude(), point.getLongitude(), 50) //50 meters
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                        .build();
-
-        if (!mGeofenceList.contains(mGeofence))
-            mGeofenceList.add(mGeofence);
-    }
-
-    private void setUpDatabaseTrackPoints() {
-
-        String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
-        String[] projection = new String[]{DatabaseEntry.COL_LAT, DatabaseEntry.COL_LON};
-        String[] selectionArgs = new String[]{track_id};
-        //Log.v("in map view", track_id);
-        String table = DatabaseEntry.TABLE_TRACK_POINTS;
-        String sortOrder = DatabaseEntry.COL_ORD;
-
-        Cursor c = factoryDB.myQuery(table, projection, selection, selectionArgs, null,
-                null, sortOrder);
-        c.moveToFirst();
-        do {
-            ParseObject trackPoint = new ParseObject("TrackPoint");
-            ParseGeoPoint coord = new ParseGeoPoint(c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LAT)), c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LON)));
-            trackPoint.put("coordinates", coord);
-            try {
-                trackPoint.pin("trackpoints");
-                Log.i("setUpdatabaseParse", "adaugam puncte");
-            } catch (com.parse.ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        while (c.moveToNext());
-    }
 }
