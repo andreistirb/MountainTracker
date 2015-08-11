@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 public class MainActivity extends Activity {
 
 	Button about_btn, my_tracks, mountain_list;
@@ -22,11 +19,7 @@ public class MainActivity extends Activity {
 		this.setContentView(R.layout.main_layout);
 
         int i;
-        //check if Google Play services are available
-        if ((i = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)) != ConnectionResult.SUCCESS){
-            GooglePlayServicesUtil.getErrorDialog(i, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
-        }
-		
+
 		mountain_list = (Button) this.findViewById(R.id.main_mountain_btn);		
 		mountain_list.setOnClickListener(new View.OnClickListener() {
 			

@@ -20,15 +20,11 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 
-
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationRequest;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
-import com.parse.Parse;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -45,7 +41,6 @@ public class GPSLogger extends Service implements LocationListener {
     protected Location mLastLocation;
     protected Location mOldLocation;
     protected Location mCurrentLocation;
-    protected LocationRequest mLocationRequest;
     protected LocationManager mLocationManager;
 
     private float distance;
@@ -86,8 +81,6 @@ public class GPSLogger extends Service implements LocationListener {
     double max_alt, min_alt;
 
     //implementing GeoFence
-    ArrayList<Geofence> mGeofenceList;
-    PendingIntent mPendingIntent;
     boolean shouldGeofence = false;
 
 
@@ -100,8 +93,6 @@ public class GPSLogger extends Service implements LocationListener {
         //database
         mDatabase = new DatabaseHelper(this.getBaseContext());
         factoryDB = new NewDatabaseHelper(this.getBaseContext());
-
-        mGeofenceList = new ArrayList<Geofence>();
 
         //location
         distance = 0.0f;
@@ -213,30 +204,29 @@ public class GPSLogger extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
-        mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        computeTime(location);
-        computeSpeed(location);
-        computeDistance(location);
-        computeAlt(location);
-        insertLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), mCurrentLocation.getAltitude());
-        buildNotification();
-        sendBroadcast(notification);
-        Log.v("in sender", "trimit date");
-        Log.v("in sender", String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)));
-        batteryLevel = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        if (batteryLevel >= 40) {
-            mLocationRequest.setInterval(15000);
-            mLocationRequest.setFastestInterval(10000);
-        } else if (batteryLevel > 20 && batteryLevel < 40) {
-            mLocationRequest.setInterval(30000);
-            mLocationRequest.setFastestInterval(15000);
-        } else if (batteryLevel <= 20) {
-            mLocationRequest.setInterval(60000);
-            mLocationRequest.setFastestInterval(30000);
-        }
-        if (shouldGeofence) {
-            //  new Geofencing().execute(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+        if((location != null) && (location.getAccuracy() < 20)) {
+            mCurrentLocation = location;
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            computeTime(location);
+            computeSpeed(location);
+            computeDistance(location);
+            computeAlt(location);
+            insertLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), mCurrentLocation.getAltitude());
+            buildNotification();
+            sendBroadcast(notification);
+            Log.v("in sender", "trimit date");
+            Log.v("in sender", String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)));
+            batteryLevel = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            if (batteryLevel >= 40) {
+
+            } else if (batteryLevel > 20 && batteryLevel < 40) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 100, this);
+            } else if (batteryLevel <= 20) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 8000, 500, this);
+            }
+            if (shouldGeofence) {
+                //  new Geofencing().execute(new ParseGeoPoint(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+            }
         }
 
     }
