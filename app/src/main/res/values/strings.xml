@@ -61,4 +61,10 @@
 
     <string name="sample_text">Sample text</string>
 
+    <!--> Menu strings </-->
+    <string name="mapview_menu_cache">Map Cache</string>
+    <string name="mapview_menu_download_view_area">Download map</string>
+    <string name="mapview_menu_delete_view_area">Delete map</string>
+    <string name="mapview_menu_tile">Map Tiles</string>
+
 </resources>
