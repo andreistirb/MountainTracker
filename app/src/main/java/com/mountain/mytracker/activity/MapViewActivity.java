@@ -1,19 +1,5 @@
 package com.mountain.mytracker.activity;
 
-import java.util.ArrayList;
-
-import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.overlays.Polyline;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MyLocationOverlay;
-import org.osmdroid.views.overlay.PathOverlay;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,13 +10,25 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 import com.mountain.mytracker.gps.GPSLogger;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.cachemanager.CacheManager;
+import org.osmdroid.bonuspack.overlays.Polyline;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MyLocationOverlay;
+
+import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
@@ -145,6 +143,49 @@ public class MapViewActivity extends Activity {
 	public void onDestroy() {
 		unregisterReceiver(receiver);
 		super.onDestroy();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.mapview_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()){
+			case R.id.mapview_menu_download_view_area : {
+				CacheManager cacheManager = new CacheManager(harta);
+				int zoomMin = harta.getZoomLevel();
+				int zoomMax = harta.getZoomLevel()+4;
+				cacheManager.downloadAreaAsync(this, harta.getBoundingBox(), zoomMin, zoomMax);
+				break;
+			}
+			case R.id.mapview_menu_delete_view_area : {
+				CacheManager cacheManager = new CacheManager(harta);
+				int zoomMin = harta.getZoomLevel();
+				int zoomMax = harta.getZoomLevel()+7;
+				cacheManager.cleanAreaAsync(this, harta.getBoundingBox(), zoomMin, zoomMax);
+				break;
+			}
+			case R.id.mapview_menu_tile_mapnik : {
+				harta.setTileSource(TileSourceFactory.MAPNIK);
+				item.setChecked(true);
+				break;
+			}
+			case R.id.mapview_menu_tile_cyclemap : {
+				harta.setTileSource(TileSourceFactory.CYCLEMAP);
+				item.setChecked(true);
+				break;
+			}
+			case R.id.mapview_menu_tile_mapquest_osm : {
+				harta.setTileSource(TileSourceFactory.MAPQUESTOSM);
+				item.setChecked(true);
+				break;
+			}
+		}
+		return true;
 	}
 
     private void setMap(){
