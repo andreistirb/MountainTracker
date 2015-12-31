@@ -18,7 +18,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_duration_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Durata:" />
+                android:text="@string/my_track_details_duration" />
 
             <TextView
                 android:id="@+id/mytrackdetails_duration"
@@ -34,7 +34,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_distance_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Distanta parcursa(km):" />
+                android:text="@string/my_track_details_distance" />
 
             <TextView
                 android:id="@+id/mytrackdetails_distance"
@@ -50,7 +50,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_avg_speed_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Viteza medie(km/h):" />
+                android:text="@string/my_track_details_avg_speed" />
 
             <TextView
                 android:id="@+id/mytrackdetails_avg_speed"
@@ -66,7 +66,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_max_speed_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Viteza maxima(km/h):" />
+                android:text="@string/my_track_details_max_speed" />
 
             <TextView
                 android:id="@+id/mytrackdetails_max_speed"
@@ -82,7 +82,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_min_alt_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Altitudine minima(m):" />
+                android:text="@string/my_track_details_min_altitude" />
 
             <TextView
                 android:id="@+id/mytrackdetails_min_alt"
@@ -98,7 +98,7 @@
             <TextView
                 android:id="@+id/mytrackdetails_max_alt_text"
                 style="@style/mytrackdetails_detail"
-                android:text="Altitudine maxima(m):" />
+                android:text="@string/my_track_details_max_altitude" />
 
             <TextView
                 android:id="@+id/mytrackdetails_max_alt"
@@ -114,7 +114,7 @@
             <Button
                 android:id="@+id/mytrackdetails_export"
                 style="@style/text_buton"
-                android:text="Exporta ca GPX"
+                android:text="@string/my_track_details_export_button"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 

@@ -15,7 +15,7 @@
             android:id="@+id/mountain_track_list_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Marcaj"
+            android:contentDescription="@string/mountain_track_list_marker"
             android:src="@drawable/banda_rosie"
             android:layout_centerVertical="false"
             android:layout_alignParentRight="true"
@@ -33,21 +33,21 @@
             android:id="@+id/mountain_track_list_diff_label"
             style="@style/track_list_item_detail"
             android:layout_below="@+id/mountain_track_list_text"
-            android:text="Dificultate:"></TextView>
+            android:text="@string/mountain_track_list_difficulty"/>
 
         <TextView
             android:id="@+id/mountain_track_list_diff"
             android:layout_below="@+id/mountain_track_list_text"
             android:layout_toRightOf="@+id/mountain_track_list_diff_label"
+            android:layout_toEndOf="@+id/mountain_track_list_diff_label"
             android:text="@string/sample_text"
-            style="@style/track_list_item_detail">
-        </TextView>
+            style="@style/track_list_item_detail"/>
 
         <TextView
             android:id="@+id/mountain_track_list_length_label"
             android:layout_below="@+id/mountain_track_list_diff_label"
             android:layout_marginBottom="10dp"
-            android:text="Durata:"
+            android:text="@string/mountain_track_list_duration"
             style="@style/track_list_item_detail"/>
 
         <TextView
@@ -55,6 +55,7 @@
             style="@style/track_list_item_detail"
             android:layout_below="@+id/mountain_track_list_diff"
             android:layout_toRightOf="@+id/mountain_track_list_length_label"
+            android:layout_toEndOf="@+id/mountain_track_list_diff_label"
             android:text="@string/sample_text"
             android:layout_marginBottom="10dp"/>
     </RelativeLayout>
@@ -65,6 +66,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:baselineAligned="false">
+
 
         <RelativeLayout
             android:layout_width="fill_parent"

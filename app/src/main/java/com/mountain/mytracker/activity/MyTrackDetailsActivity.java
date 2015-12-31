@@ -120,11 +120,11 @@ public class MyTrackDetailsActivity extends FragmentActivity implements ActionBa
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Detalii traseu ";
+                    return getString(R.string.my_track_details_page1);
                 case 1:
-                    return "Harta";
+                    return getString(R.string.my_track_details_page2);
                 default:
-                    return "Unknown page";
+                    return getString(R.string.my_track_details_unknown_page);
             }
         }
 

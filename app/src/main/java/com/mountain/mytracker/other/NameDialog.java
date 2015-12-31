@@ -39,13 +39,13 @@ public class NameDialog extends DialogFragment{
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		
-		builder.setTitle("Traseu nou");
+		builder.setTitle(getString(R.string.new_track_dialog));
 		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View mView = inflater.inflate(R.layout.dialog_new_track, null);
 		builder.setView(mView);
 		mEditText = (EditText) mView.findViewById(R.id.dialog_new_track);
-		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(getString(R.string.new_track_dialog_ok), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -54,7 +54,7 @@ public class NameDialog extends DialogFragment{
 				mListener.onDialogPositiveClick(mEditText.getText().toString());
 			}
 		});
-		builder.setNegativeButton("Inapoi", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getString(R.string.new_track_dialog_cancel), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

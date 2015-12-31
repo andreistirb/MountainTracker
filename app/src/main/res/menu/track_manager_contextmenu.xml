@@ -4,7 +4,7 @@
     <item
         android:id="@+id/contextmenu_delete_track"
         android:showAsAction="never"
-        android:title="@string/contextmenu_delete_track">
+        android:title="@string/tracker_manager_contextmenu_delete_track">
     </item>
 
 </menu>
