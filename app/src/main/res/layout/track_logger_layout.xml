@@ -27,7 +27,8 @@
                 android:src="@drawable/start_icon"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/line_content_description"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,7 +55,8 @@
                 android:src="@drawable/stop_icon"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/line_content_description"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -83,13 +85,14 @@
             android:layout_height="3dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/linie"
-            android:contentDescription="linie" />
+            android:contentDescription="@string/line_content_description" />
 
         <RelativeLayout
             android:id="@+id/track_logger_alt_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/track_logger_lon_layout"
+            android:layout_toEndOf="@+id/track_logger_lon_layout"
             android:orientation="horizontal">
 
             <TextView
@@ -127,6 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/track_logger_lat_layout"
+            android:layout_toEndOf="@+id/track_logger_lat_layout"
             android:orientation="horizontal">
 
             <TextView
@@ -155,7 +159,7 @@
             android:layout_height="3dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/linie"
-            android:contentDescription="linie" />
+            android:contentDescription="@string/line_content_description" />
 
         <RelativeLayout
             android:id="@+id/track_logger_speed_layout"
@@ -180,12 +184,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@+id/track_logger_speed_layout"
+            android:layout_toEndOf="@+id/track_logger_speed_layout"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_distance_label"
                 style="@style/track_logger_layout_label"
-                android:text="Distanta (km)" />
+                android:text="@string/track_logger_distance" />
 
             <TextView
                 android:id="@+id/track_logger_distance"
@@ -199,12 +204,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_toLeftOf="@+id/track_logger_speed_layout"
+            android:layout_toStartOf="@+id/track_logger_speed_layout"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/track_logger_duration_label"
                 style="@style/track_logger_layout_label"
-                android:text="Timp" />
+                android:text="@string/track_logger_time" />
 
             <TextView
                 android:id="@+id/track_logger_duration"
@@ -232,7 +238,8 @@
             android:src="@drawable/map_icon"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/line_content_description"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -259,7 +266,8 @@
             android:src="@drawable/details_icon"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/line_content_description"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -287,7 +295,8 @@
             android:src="@drawable/trekking_icon"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/line_content_description"/>
 
         <TextView
             android:layout_width="wrap_content"

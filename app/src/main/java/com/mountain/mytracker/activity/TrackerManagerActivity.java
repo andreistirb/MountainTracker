@@ -47,7 +47,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.tracker_manager);
-		this.setTitle("Traseele mele");
+		this.setTitle(getString(R.string.activity_tracker_manager));
 
 		db = new DatabaseHelper(this);
 

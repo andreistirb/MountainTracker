@@ -1,67 +1,90 @@
 <resources>
 
     <string name="app_name">Mountain Tracker</string>
-    <string name="activity_tracker_manager">My Tracks</string>
-    <string name="activity_mountain_list">Grupe de munti</string>
-    <string name="activity_mountain_tracks_list">Trasee</string>
-    
-    <string name="menu_newtrack">New Track</string>
-    <string name="menu_refresh">Refresh</string>
-    <string name="menu_delete_all">Delete all</string>
-    
-    <string name="contextmenu_delete_track">Delete track</string>
-    
-    <string name="mountain_track_list_contextmenu_show">Arata pe harta</string>
-    <string name="mountain_track_list_contextmenu_details">Detalii</string>
-    <string name="mountain_track_list_contextmenu_try">Incearca traseu</string>
-    
-    <string name="main_welcome">Mountain Tracker</string>
-    <string name="main_about_btn">Despre noi</string>
-    <string name="main_mountain">Munti</string>
-    <string name="main_tracks_btn">Traseele mele</string>
+    <string name="app_website">https://github.com/andreistirb/MountainTracker/wiki</string>
+
+    <!-->Main Activity<-->
+    <string name="main_about_btn">About</string>
+    <string name="main_mountain">Mountains</string>
+    <string name="main_tracks_btn">My Tracks</string>
     <string name="main_logo_description">Logo</string>
-    
-    <string name="mountain_list_retezat">Retezat</string>
-    <string name="mountain_list_bucegi">Bucegi</string>
-    
-    <string name="track_details_title">Titlu:</string>
-    <string name="track_details_duration">Durata traseului:</string>
-    <string name="track_details_difficulty">Dificultate:</string>
-    <string name="track_details_mark">Marcaj:</string>
-    <string name="track_details_description">Descriere:</string>
-    <string name="track_details_availability">Accesibil:</string>
-    <string name="track_details_min_alt">Altitudine minima:</string>
-    <string name="track_details_max_alt">Altitudine maxima:</string>
-    
-    <string name="mountain_track_list_menu_sort">Sorteaza</string>
-    <string name="mountain_track_list_menu_sort_name">Nume</string>
-    <string name="mountain_track_list_menu_sort_diff">Dificultate</string>
-    <string name="mountain_track_list_menu_sort_dur">Durata</string>
-    
-    <string name="track_logger_start">Incepe traseul</string>
-    <string name="track_logger_map">Harta</string>
-    <string name="track_logger_stop">Termina traseul</string>
+
+    <!-->MountainListActivity<-->
+    <string name="activity_mountain_list">Mountains</string>
+
+    <!-->MountainTrackListActivity<-->
+    <string name="activity_mountain_tracks_list">Tracks</string>
+    <string name="mountain_track_list_marker">Mark</string>
+    <string name="mountain_track_list_difficulty">Difficulty:</string>
+    <string name="mountain_track_list_duration">Duration:</string>
+
+    <string name="mountain_track_list_menu_sort">Sort</string>
+    <string name="mountain_track_list_menu_sort_name">Name</string>
+    <string name="mountain_track_list_menu_sort_diff">Difficulty</string>
+    <string name="mountain_track_list_menu_sort_dur">Duration</string>
+
+    <string name="mountain_track_list_contextmenu_show">Show on map</string>
+    <string name="mountain_track_list_contextmenu_details">Details</string>
+    <string name="mountain_track_list_contextmenu_try">Start track</string>
+
+    <!-->MyTrackDetailsActivity<-->
+    <string name="my_track_details_duration">Duration:</string>
+    <string name="my_track_details_distance">Distance:</string>
+    <string name="my_track_details_avg_speed">Average speed:</string>
+    <string name="my_track_details_max_speed">Max speed:</string>
+    <string name="my_track_details_min_altitude">Min altitude:</string>
+    <string name="my_track_details_max_altitude">Max altitude:</string>
+    <string name="my_track_details_export_button">Export as GPX</string>
+    <string name="my_track_details_page1">Track details</string>
+    <string name="my_track_details_page2">Map</string>
+    <string name="my_track_details_unknown_page">Unknown page</string>
+
+    <!-->TrackDetailsActivity<-->
+    <string name="track_details_title">Title:</string>
+    <string name="track_details_duration">Duration:</string>
+    <string name="track_details_difficulty">Difficulty:</string>
+    <string name="track_details_mark">Mark:</string>
+    <string name="track_details_description">Description:</string>
+    <string name="track_details_availability">Accessibilily:</string>
+    <string name="track_details_min_alt">Min altitude:</string>
+    <string name="track_details_max_alt">Max altitude:</string>
+
+    <!-->TrackerManagerActivity<-->
+    <string name="activity_tracker_manager">My Tracks</string>
+    <string name="tracker_manager_contextmenu_delete_track">Delete track</string>
+    <string name="tracker_manager_menu_newtrack">New Track</string>
+    <string name="tracker_manager_menu_delete_all">Delete all</string>
+
+    <!-->TrackLoggerActivity<-->
+    <string name="track_logger_start">Start</string>
+    <string name="track_logger_map">Map</string>
+    <string name="track_logger_stop">Finish</string>
     <string name="track_logger_gps_disabled">GPS disabled</string>
-    <string name="track_logger_gps_disabled_hint">GPS-ul nu este pornit. Doriti sa-l porniti?</string>
-    <string name="track_logger_alt">Altitudine</string>
-    <string name="track_logger_lat">Latitudine</string>
-    <string name="track_logger_lon">Longitudine</string>
-    <string name="track_logger_speed">Viteza(km/h)</string>
-    <string name="track_logger_details">Detalii</string>
-    <string name="track_logger_trekking">Traseele mele</string>
-    
+    <string name="track_logger_gps_disabled_hint">Location is not activated. In order to proceed you need to activate location</string>
+    <string name="track_logger_alt">Altitude</string>
+    <string name="track_logger_lat">Latitude</string>
+    <string name="track_logger_lon">Longitude</string>
+    <string name="track_logger_speed">Speed(km/h)</string>
+    <string name="track_logger_distance">Distance(km)</string>
+    <string name="track_logger_time">Time</string>
+    <string name="track_logger_details">Details</string>
+    <string name="track_logger_trekking">My Tracks</string>
 
-	<string name="notification_ticker_text">Esti pe traseu</string>
-	<string name="notification_title">Esti pe traseu</string>
-	<string name="notification_text">Apasa pentru a intra in aplicatie</string>
+    <!-->GPSLogger<-->
+	<string name="notification_ticker_text">Track is recording</string>
+	<string name="notification_title">Recording track</string>
+	<string name="notification_text">Click here to enter the application</string>
 
-    <string name="new_track_dialog">Traseu nou</string>
+    <!-->Name Dialog<-->
+    <string name="new_track_dialog">New track</string>
+    <string name="new_track_dialog_ok">Ok</string>
+    <string name="new_track_dialog_cancel">Cancel</string>
 
-    <string name="line_content_description">Linie</string>
-
+    <!-->Auxiliary<-->
+    <string name="line_content_description">Line</string>
     <string name="sample_text">Sample text</string>
 
-    <!--> Menu strings </-->
+    <!--> Map Menu </-->
     <string name="mapview_menu_cache">Map Cache</string>
     <string name="mapview_menu_download_view_area">Download map</string>
     <string name="mapview_menu_delete_view_area">Delete map</string>
