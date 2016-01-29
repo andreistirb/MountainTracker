@@ -78,9 +78,9 @@ public class MapViewActivity extends Activity {
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 		}
 
-        mTrack = new ArrayList<GeoPoint>();
+        mTrack = new ArrayList<>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
-		hartaController = (MapController) harta.getController();
+		hartaController = harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
 		
 		/* ca sa aducem punctele traseului din baza de date */
@@ -207,7 +207,7 @@ public class MapViewActivity extends Activity {
 
 	// gets track points from database and builds an ArrayList of GeoPoints
 	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
+		ArrayList<GeoPoint> traseu = new ArrayList<>();
 		c.moveToFirst();
 		do {
 			double latitude = c.getDouble(c

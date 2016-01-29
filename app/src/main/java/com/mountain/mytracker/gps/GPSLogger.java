@@ -67,7 +67,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         @Override
         protected String doInBackground(ParseGeoPoint... params) {
 
-            List<ParseObject> trackPointsList = new ArrayList<ParseObject>();
+            List<ParseObject> trackPointsList = new ArrayList<>();
             //mGeofenceList = new ArrayList<Geofence>();
             //query database for closest 99 points to user's location
             ParseQuery<ParseObject> query = ParseQuery.getQuery("TrackPoint");
@@ -195,7 +195,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "y74djiFMOlXnb6illRwJx7k30xnPzabHCEkM8lQe", "jLvZaXy1OfmnufzNRBIKBwugBKWY06RUyP7pRIzD");
 
-        mGeofenceList = new ArrayList<Geofence>();
+        mGeofenceList = new ArrayList<>();
 
         //location
         buildGoogleApiClient();

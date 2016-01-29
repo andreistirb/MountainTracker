@@ -51,7 +51,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.mytrackdetails_map_fragment, container, false);
         harta = (MapView) rootView.findViewById(R.id.mytrackdetails_mapview);
-        hartaController = (MapController) harta.getController();
+        hartaController = harta.getController();
         setMap();
 
         String selection = DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ";
@@ -90,7 +90,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
     // gets track points from database and builds an ArrayList of GeoPoints
     private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-        ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
+        ArrayList<GeoPoint> traseu = new ArrayList<>();
         c.moveToFirst();
         do {
             double latitude = c.getDouble(c

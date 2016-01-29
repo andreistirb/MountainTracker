@@ -29,7 +29,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     static int exitCounter = 0;
     static int dwellCounter = 0;
 
-    static Set<Geofence> currentArea = new HashSet<Geofence>();
+    static Set<Geofence> currentArea = new HashSet<>();
 
     protected static final String TAG = "geofence-transitions";
 
