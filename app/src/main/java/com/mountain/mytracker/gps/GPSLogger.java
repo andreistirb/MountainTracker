@@ -500,10 +500,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
                 startTrackLogger, PendingIntent.FLAG_UPDATE_CURRENT);
         n.flags = Notification.FLAG_FOREGROUND_SERVICE
                 | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-        n.setLatestEventInfo(getApplicationContext(),
+        /*n.setLatestEventInfo(getApplicationContext(),
                 getResources().getString(R.string.notification_title),
                 getResources().getString(R.string.notification_text),
-                contentIntent);
+                contentIntent);*/
         return n;
     }
 
