@@ -23,8 +23,7 @@ public class TrackListAdapter extends CursorAdapter {
 	
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup vg){
-		View view = LayoutInflater.from(vg.getContext()).inflate(R.layout.tracker_manager_item, vg, false);
-		return view;
+		return LayoutInflater.from(vg.getContext()).inflate(R.layout.tracker_manager_item, vg, false);
 	}
 	
 	@Override

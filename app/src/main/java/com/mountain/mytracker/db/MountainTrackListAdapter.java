@@ -2,7 +2,6 @@ package com.mountain.mytracker.db;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mountain.mytracker.activity.MainActivity;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
@@ -22,8 +20,7 @@ public class MountainTrackListAdapter extends CursorAdapter {
 	
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup vg){
-		View view = LayoutInflater.from(vg.getContext()).inflate(R.layout.mountain_track_list_item, vg, false);
-		return view;
+		return LayoutInflater.from(vg.getContext()).inflate(R.layout.mountain_track_list_item, vg, false);
 	}
 	
 	@Override

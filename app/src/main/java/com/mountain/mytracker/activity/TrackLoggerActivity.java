@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -212,7 +211,7 @@ public class TrackLoggerActivity extends Activity {
 	}
 
 	public void checkGPS() {
-		lm = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+		lm = (LocationManager) this.getSystemService(TrackLoggerActivity.LOCATION_SERVICE);
 
 		if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// GPS isn't enabled. Offer user to go enable it

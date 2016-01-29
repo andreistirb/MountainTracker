@@ -1,13 +1,10 @@
 package com.mountain.mytracker.db;
 
-import java.io.IOException;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.util.Log;
@@ -129,7 +126,7 @@ public class MountainTrackerContentProvider extends ContentProvider {
 		}
 		case 3: {
 			table = DatabaseEntry.TABLE_MOUNTAIN_TRACK;
-			if (uri == this.MAP_VIEW_TRACK) {
+			if (uri == MountainTrackerContentProvider.MAP_VIEW_TRACK) {
 				groupBy = null;
 			} else
 				groupBy = DatabaseEntry.COL_TRACK_NAME;

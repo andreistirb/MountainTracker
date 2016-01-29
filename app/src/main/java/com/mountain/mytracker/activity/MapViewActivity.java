@@ -32,11 +32,9 @@ import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
-    private String numeTraseu;
 	private String traseu_id;
 	private MapView harta;
 	private IMapController hartaController;
-	private ArrayList<GeoPoint> track;
 	private ArrayList<GeoPoint> mTrack;
 	private MyLocationOverlay mLocationOverlay;
 	private NewDatabaseHelper db;
@@ -63,6 +61,8 @@ public class MapViewActivity extends Activity {
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
+		String numeTraseu;
+
 		super.onCreate(savedInstanceState);
         has_track = false;
 
@@ -95,6 +95,7 @@ public class MapViewActivity extends Activity {
 
 	@Override
 	public void onResume() {
+		ArrayList<GeoPoint> track;
 
         if(has_track){
 

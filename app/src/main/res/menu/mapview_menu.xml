@@ -23,13 +23,13 @@
             <group android:checkableBehavior="single" >
                 <item
                     android:id="@+id/mapview_menu_tile_mapnik"
-                    android:title="OSM Standard"/>
+                    android:title="@string/OSM_Standard"/>
                 <item
                     android:id="@+id/mapview_menu_tile_mapquest_osm"
-                    android:title="OSM by MapQuest"/>
+                    android:title="@string/OSM_by_MapQuest"/>
                 <item
                     android:id="@+id/mapview_menu_tile_cyclemap"
-                    android:title="Open Cycle Map"
+                    android:title="@string/Open_Cycle_Map"
                     android:checked="true"/>
             </group>
         </menu>

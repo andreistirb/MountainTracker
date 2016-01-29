@@ -16,7 +16,7 @@ import com.mountain.mytracker.activity.R;
 public class NameDialog extends DialogFragment{
 	
 	public interface NoticeDialogListener {
-		public void onDialogPositiveClick(String titlu);
+		void onDialogPositiveClick(String titlu);
 	}
 	
 	NoticeDialogListener mListener;

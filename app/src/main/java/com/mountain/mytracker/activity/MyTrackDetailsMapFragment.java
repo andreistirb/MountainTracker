@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.NewDatabaseHelper;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.Polyline;

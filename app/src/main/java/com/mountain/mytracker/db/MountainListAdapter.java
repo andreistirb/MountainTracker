@@ -19,8 +19,7 @@ public class MountainListAdapter extends CursorAdapter {
 	
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup vg){
-		View view = LayoutInflater.from(vg.getContext()).inflate(R.layout.mountain_list_item, vg, false);
-		return view;
+		return LayoutInflater.from(vg.getContext()).inflate(R.layout.mountain_list_item, vg, false);
 	}
 	
 	@Override

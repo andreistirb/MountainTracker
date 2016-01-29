@@ -2,10 +2,8 @@ package com.mountain.mytracker.activity;
 
 import android.app.DialogFragment;
 import android.app.ListActivity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;

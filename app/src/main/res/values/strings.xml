@@ -77,12 +77,17 @@
 
     <!-->Name Dialog<-->
     <string name="new_track_dialog">New track</string>
-    <string name="new_track_dialog_ok">Ok</string>
+    <string name="new_track_dialog_ok">OK</string>
     <string name="new_track_dialog_cancel">Cancel</string>
 
     <!-->Auxiliary<-->
     <string name="line_content_description">Line</string>
     <string name="sample_text">Sample text</string>
+    <string name="id">id</string>
+
+    <!--> Track List Item <!-->
+    <string name="tracklist_item_name">Track Name</string>
+    <string name="tracklist_item_details">Track Details</string>
 
     <!--> Map Menu </-->
     <string name="mapview_menu_cache">Map Cache</string>
@@ -90,4 +95,8 @@
     <string name="mapview_menu_delete_view_area">Delete map</string>
     <string name="mapview_menu_tile">Map Tiles</string>
 
+    <!--> OSM titles <!-->
+    <string name="OSM_Standard">OSM Standard</string>
+    <string name="OSM_by_MapQuest">OSM by MapQuest</string>
+    <string name="Open_Cycle_Map">Open Cycle Map</string>
 </resources>
