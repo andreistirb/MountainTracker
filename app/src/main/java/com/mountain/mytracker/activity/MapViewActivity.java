@@ -24,7 +24,6 @@ import org.osmdroid.bonuspack.cachemanager.CacheManager;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 
@@ -78,7 +77,7 @@ public class MapViewActivity extends Activity {
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 		}
 
-        mTrack = new ArrayList<>();
+        mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
@@ -207,7 +206,7 @@ public class MapViewActivity extends Activity {
 
 	// gets track points from database and builds an ArrayList of GeoPoints
 	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-		ArrayList<GeoPoint> traseu = new ArrayList<>();
+		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
 		c.moveToFirst();
 		do {
 			double latitude = c.getDouble(c

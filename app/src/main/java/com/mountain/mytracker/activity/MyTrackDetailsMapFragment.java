@@ -19,7 +19,6 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
     // gets track points from database and builds an ArrayList of GeoPoints
     private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-        ArrayList<GeoPoint> traseu = new ArrayList<>();
+        ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
         c.moveToFirst();
         do {
             double latitude = c.getDouble(c
