@@ -28,8 +28,6 @@ public class MyTrackDetailsMapFragment extends Fragment {
     private Integer mTrackNo;
     private DatabaseHelper db;
     private MapView harta;
-    private IMapController hartaController;
-    private ArrayList<GeoPoint> track;
 
     public MyTrackDetailsMapFragment() {
         // Required empty public constructor
@@ -47,6 +45,9 @@ public class MyTrackDetailsMapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        IMapController hartaController;
+        ArrayList<GeoPoint> track;
 
         View rootView = inflater.inflate(R.layout.mytrackdetails_map_fragment, container, false);
         harta = (MapView) rootView.findViewById(R.id.mytrackdetails_mapview);

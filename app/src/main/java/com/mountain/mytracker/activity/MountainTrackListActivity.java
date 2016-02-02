@@ -18,10 +18,7 @@ import com.mountain.mytracker.db.MountainTrackListAdapter;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
 public class MountainTrackListActivity extends ListActivity {
-	
 
-	private String munte;
-	private String munte_id;
 	private String selection;
 	private String table;
 	private String sortOrder;
@@ -32,6 +29,9 @@ public class MountainTrackListActivity extends ListActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
+
+		String munte, munte_id;;
+
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.mountain_track_list_layout);
 		
