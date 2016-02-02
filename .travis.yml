@@ -30,6 +30,4 @@ before_script:
 
 script: 
   - gradle -version
-  - ./gradlew -version
-  - ./gradlew clean connectedCheck
-  - ./gradlew build connectedCheck
+  - gradle build connectedCheck
