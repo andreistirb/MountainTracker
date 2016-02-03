@@ -65,7 +65,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
                 null, sortOrder);
         if(c.getCount() > 0) {
             track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), track, Color.BLUE, 3.0f));
+            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), track));
             hartaController.setZoom(14);
             hartaController.setCenter(track.get(0));
         }
@@ -80,11 +80,11 @@ public class MyTrackDetailsMapFragment extends Fragment {
         harta.setMultiTouchControls(true);
     }
 
-    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints){
         Polyline track = new Polyline(context);
         track.setPoints(trackPoints);
-        track.setColor(color);
-        track.setWidth(width);
+        track.setColor(Color.BLUE);
+        track.setWidth(3.0f);
         return track;
     }
 

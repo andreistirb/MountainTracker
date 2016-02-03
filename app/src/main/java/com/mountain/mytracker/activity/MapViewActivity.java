@@ -31,6 +31,8 @@ import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
+	private static final float polylineWidth = 3.0f;
+
 	private String traseu_id;
 	private MapView harta;
 	private IMapController hartaController;
@@ -53,7 +55,7 @@ public class MapViewActivity extends Activity {
 					bundle.getDouble("longitude"));
 			mTrack.add(curent);
 
-            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED,3.0f));
+            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED));
 			hartaController.setCenter(curent);
 			mLocationOverlay.enableMyLocation();
 		}
@@ -108,7 +110,7 @@ public class MapViewActivity extends Activity {
             Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
                     null, sortOrder);
             track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE,3.0f));
+            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE));
             hartaController.setZoom(14);
             hartaController.setCenter(track.get(0));
         }
@@ -196,11 +198,11 @@ public class MapViewActivity extends Activity {
         hartaController.setZoom(14);
     }
 
-    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color){
         Polyline track = new Polyline(context);
         track.setPoints(trackPoints);
         track.setColor(color);
-        track.setWidth(width);
+        track.setWidth(polylineWidth);
         return track;
     }
 

@@ -1,9 +1,7 @@
 package com.mountain.mytracker.other;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import android.database.Cursor;
@@ -21,10 +19,8 @@ public class GPXExport {
 	
 	public boolean isExternalStorageWritable() {
 	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state)) {
-	        return true;
-	    }
-	    return false;
+
+		return (Environment.MEDIA_MOUNTED.equals(state));
 	}
 	
 	public File getFileDir(String mDirName) {
@@ -75,11 +71,9 @@ public class GPXExport {
 	        pw.flush();
 	        pw.close();
 	        f.close();
-	    } catch (FileNotFoundException e) {
+	    } catch (Exception e) {
 	        e.printStackTrace();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }   
+	    }
 	}
 
 }

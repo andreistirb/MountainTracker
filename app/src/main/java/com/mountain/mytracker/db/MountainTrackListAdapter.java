@@ -14,8 +14,8 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
 public class MountainTrackListAdapter extends CursorAdapter {
 	
-	public MountainTrackListAdapter(Context context, Cursor cursor, int flags){
-		super(context, cursor, flags);
+	public MountainTrackListAdapter(Context context, Cursor cursor){
+		super(context, cursor, 1);
 	}
 	
 	@Override
