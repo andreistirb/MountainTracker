@@ -2,11 +2,15 @@ package com.mountain.mytracker.Track;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ public class Track implements Serializable {
     private Integer trackId, mountainId;
     private String trackName, trackDifficulty, trackMark, trackLength, trackDescription, trackAvailability;
     private ArrayList<TrackPoint> trackPoints;
+    private ArrayList<GeoPoint> trackGeoPoints;
 
     //Database
     private DatabaseHelper mDatabase;
@@ -27,6 +32,8 @@ public class Track implements Serializable {
 
     public Track(Integer trackId){
         this.trackId = trackId;
+        trackPoints = new ArrayList<TrackPoint>();
+        trackGeoPoints = new ArrayList<GeoPoint>();
     }
 
     public Integer getTrackId() {
@@ -105,8 +112,19 @@ public class Track implements Serializable {
         this.trackPoints.add(trackPoint);
     }
 
-    public Track fromFactoryDatabase(Integer trackId, Context context){
-        Track newTrack = new Track(trackId);
+    public void addTrackGeoPoint(GeoPoint trackGeoPoint){
+        this.trackGeoPoints.add(trackGeoPoint);
+    }
+
+    public ArrayList<GeoPoint> getTrackGeoPoints() {
+        return trackGeoPoints;
+    }
+
+    public void setTrackGeoPoints(ArrayList<GeoPoint> trackGeoPoints) {
+        this.trackGeoPoints = trackGeoPoints;
+    }
+
+    public void fromFactoryDatabase(Integer trackId, Context context){
         TrackPoint newTrackPoint;
         String selection, table, sortOrder;
         String[] selectionArgs;
@@ -117,15 +135,17 @@ public class Track implements Serializable {
         selectionArgs = new String[] { trackId.toString() };
         table = DatabaseEntry.TABLE_MOUNTAIN_TRACK;
 
+        factoryDatabase = new NewDatabaseHelper(context);
+
         c = factoryDatabase.myQuery(table, null, selection, selectionArgs, null, null, null);
         c.moveToFirst();
-        newTrack.setMountainId(c.getInt(c.getColumnIndex(DatabaseEntry.COL_MOUNTAIN_ID)));
-        newTrack.setTrackAvailability(c.getString(c.getColumnIndex(DatabaseEntry.COL_AVLB)));
-        newTrack.setTrackDifficulty(c.getString(c.getColumnIndex(DatabaseEntry.COL_DIFF)));
-        newTrack.setTrackDescription(c.getString(c.getColumnIndex(DatabaseEntry.COL_DESCRIPTION)));
-        newTrack.setTrackLength(c.getString(c.getColumnIndex(DatabaseEntry.COL_LENGTH)));
-        newTrack.setTrackMark(c.getString(c.getColumnIndex(DatabaseEntry.COL_MRK)));
-        newTrack.setTrackName(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
+        this.setMountainId(c.getInt(c.getColumnIndex(DatabaseEntry.COL_MOUNTAIN_ID)));
+        this.setTrackAvailability(c.getString(c.getColumnIndex(DatabaseEntry.COL_AVLB)));
+        this.setTrackDifficulty(c.getString(c.getColumnIndex(DatabaseEntry.COL_DIFF)));
+        this.setTrackDescription(c.getString(c.getColumnIndex(DatabaseEntry.COL_DESCRIPTION)));
+        this.setTrackLength(c.getString(c.getColumnIndex(DatabaseEntry.COL_LENGTH)));
+        this.setTrackMark(c.getString(c.getColumnIndex(DatabaseEntry.COL_MRK)));
+        this.setTrackName(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
 
         //fetch data about trackpoints
         table = DatabaseEntry.TABLE_TRACK_POINTS;
@@ -143,25 +163,50 @@ public class Track implements Serializable {
 
 
             newTrackPoint = new TrackPoint(trackId, latitude, longitude, altitude, null, null, null, context);
-            newTrack.addTrackPoint(newTrackPoint);
+            this.addTrackPoint(newTrackPoint);
+            this.addTrackGeoPoint(new GeoPoint(latitude,longitude));
 
         } while (c.moveToNext());
 
-        return newTrack;
     }
 
-    public Track fromDatabase(Integer trackId, Context context){
+    public Track fromDatabase(Integer trackId, Context context) {
         Track newTrack = new Track(trackId);
+        TrackPoint newTrackPoint;
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        Cursor c;
 
+        mDatabase = new DatabaseHelper(context);
 
+        // TO-DO
+        // Must get details about Track, like title, description, etc
 
-        //Must modify database to contain this columns!!!
-        //Float speed = c.getFloat(c.getColumnIndex(DatabaseEntry.COL_SPD));
-        //Float accuracy = c.getFloat(c.getColumnIndex(DatabaseEntry.COL_ACC));
-        //Long time = c.getLong(c.getColumnIndex(DatabaseEntry.COL_TMP));
+        qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
+        c = qb.query(mDatabase.getReadableDatabase(), null, DatabaseEntry.COL_TRACK_NO + " = ? ",
+                new String[]{trackId.toString()}, null, null, DatabaseEntry._ID);
+        c.moveToFirst();
+        if (c.getCount() > 0) {
 
+            do {
+                Double latitude = c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LAT));
+                Double longitude = c.getDouble(c.getColumnIndex(DatabaseEntry.COL_LON));
+                Double altitude = c.getDouble(c.getColumnIndex(DatabaseEntry.COL_ALT));
 
-        return newTrack;
+                // TO-DO
+                // Must modify database to contain this columns!!!
+                //Float speed = c.getFloat(c.getColumnIndex(DatabaseEntry.COL_SPD));
+                //Float accuracy = c.getFloat(c.getColumnIndex(DatabaseEntry.COL_ACC));
+                //Long time = c.getLong(c.getColumnIndex(DatabaseEntry.COL_TMP));
+
+                newTrackPoint = new TrackPoint(trackId, latitude, longitude, altitude, null, null, null, context);
+                newTrack.addTrackPoint(newTrackPoint);
+            } while (c.moveToNext());
+
+            return newTrack;
+
+        } else {
+            return null;
+        }
     }
 
     public void toDatabase(){

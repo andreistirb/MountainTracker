@@ -98,7 +98,7 @@ public class MountainTrackListActivity extends ListActivity {
 		case R.id.mountain_track_list_contextmenu_show: {
 			Intent i = new Intent(this, MapViewActivity.class);
 			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			i.putExtra("track_id", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 			break;
 		}

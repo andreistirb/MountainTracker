@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 public class MapViewActivity extends Activity {
 
     private String numeTraseu;
-	private String traseu_id;
+	private Integer trackId;
 	private MapView harta;
 	private IMapController hartaController;
 	private ArrayList<GeoPoint> track;
@@ -43,6 +44,7 @@ public class MapViewActivity extends Activity {
 	private DatabaseHelper mDatabase;
 	private Integer mTrackNo;
 	private boolean has_track;
+	private Track traseu;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -71,7 +73,8 @@ public class MapViewActivity extends Activity {
 
 		numeTraseu = this.getIntent().getExtras().getString("track_name");
 		if(this.getIntent().hasExtra("track_id")){
-			traseu_id = this.getIntent().getExtras().getString("track_id");
+			trackId = this.getIntent().getExtras().getInt("track_id");
+			traseu = new Track(trackId);
 			has_track = true;
 		}
 		if(this.getIntent().hasExtra("mTrackNo")){
@@ -99,18 +102,19 @@ public class MapViewActivity extends Activity {
         if(has_track){
 
             // cautam punctele traseului
-            String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
-            String[] selectionArgs = new String[] { traseu_id };
-            Log.v("in map view", traseu_id);
-            String table = DatabaseEntry.TABLE_TRACK_POINTS;
-            String sortOrder = DatabaseEntry.COL_ORD;
+            //String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
+            //String[] selectionArgs = new String[] { traseu_id };
+            //Log.v("in map view", traseu_id);
+            //String table = DatabaseEntry.TABLE_TRACK_POINTS;
+            //String sortOrder = DatabaseEntry.COL_ORD;
 
-            Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
-                    null, sortOrder);
-            track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE,3.0f));
+            //Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
+            //        null, sortOrder);
+            //track = buildGeoPoint(c);
+			traseu.fromFactoryDatabase(trackId, this);
+            harta.getOverlays().add(buildPolyline(this,traseu.getTrackGeoPoints(),Color.BLUE,3.0f));
             hartaController.setZoom(14);
-            hartaController.setCenter(track.get(0));
+            hartaController.setCenter(traseu.getTrackGeoPoints().get(0));
         }
 
         if (GPSLogger.isTracking()) {
@@ -205,7 +209,7 @@ public class MapViewActivity extends Activity {
     }
 
 	// gets track points from database and builds an ArrayList of GeoPoints
-	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
+	/*private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
 		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
 		c.moveToFirst();
 		do {
@@ -217,6 +221,6 @@ public class MapViewActivity extends Activity {
 		} while (c.moveToNext());
 
 		return traseu;
-	}
+	}*/
 
 }
