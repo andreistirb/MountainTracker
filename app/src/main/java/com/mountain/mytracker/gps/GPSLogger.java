@@ -33,6 +33,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
 import com.mountain.mytracker.db.DatabaseContract;
@@ -192,6 +193,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     boolean shouldGeofence = false;
 
 
+    Track mTrack, factoryTrack;
+
     // the service is being created
     @Override
     public void onCreate() {
@@ -205,6 +208,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         Parse.initialize(this, "y74djiFMOlXnb6illRwJx7k30xnPzabHCEkM8lQe", "jLvZaXy1OfmnufzNRBIKBwugBKWY06RUyP7pRIzD");
 
         mGeofenceList = new ArrayList<Geofence>();
+        mTrack = new Track();
 
         //location
         buildGoogleApiClient();
@@ -439,6 +443,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         notification.putExtra("avg_speed", avg_speed);
         notification.putExtra("max_alt", max_alt);
         notification.putExtra("min_alt", min_alt);
+        notification.putExtra("trackObject", new Track(14));
     }
 
     private void computeDistance(Location location) {

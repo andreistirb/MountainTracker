@@ -115,6 +115,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
             case R.id.contextmenu_delete_track : {
                 deleteTrack(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
                 Log.i("delete row","deleting row");
+                //TO-DO update the list from database
                 break;
             }
         }

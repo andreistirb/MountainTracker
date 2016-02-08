@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_TABLE_TRACK = "CREATE TABLE "
 			+ DatabaseEntry.TABLE_MY_TRACKS + " ( "
 			+ DatabaseEntry._ID + " integer primary key autoincrement, "
-			+ DatabaseEntry.COL_TRACK_NO + " , "
+			+ DatabaseEntry.COL_TRACK_NO + " , " //should be integer autoincrement!!!
 			+ DatabaseEntry.COL_TRACK_NAME + " , "
 			+ DatabaseEntry.COL_TRACK_ID + " , "
 			+ DatabaseEntry.COL_DISTANCE + " , "

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.gps.GPSLogger;
@@ -28,7 +29,7 @@ public class TrackLoggerActivity extends Activity {
 	private GPSLogger gpsLogger;
 	boolean GPSflag = false;
 	private String track_name;
-	private String track_id;
+	private Integer track_id;
     private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private Context context;
@@ -37,6 +38,8 @@ public class TrackLoggerActivity extends Activity {
 	public boolean detalii_btn; //daca sa apara sau nu butonul detalii
 	private boolean service_started;
     private boolean is_default_track = false;
+
+    private Track mTrack, factoryTrack;
 
     //track data
     long time;
@@ -82,20 +85,28 @@ public class TrackLoggerActivity extends Activity {
 		context = this;
 		checkGPS();
 
+        mTrack = new Track();
+
 		this.setContentView(R.layout.track_logger_layout);
 
-		track_name = this.getIntent().getExtras().getString("track_name");
+        if(this.getIntent().hasExtra("track_name")){
+            track_name = this.getIntent().getExtras().getString("track_name");
+            this.setTitle(track_name);
+        }
+
 		if(this.getIntent().hasExtra("track_id")){
-			track_id = this.getIntent().getExtras().getString("track_id");
+			track_id = this.getIntent().getExtras().getInt("track_id");
             is_default_track = true;
+            factoryTrack = new Track(track_id, this.getBaseContext());
 		}
-		this.setTitle(track_name);
+
 		if(this.getIntent().hasExtra("detalii")){
 			detalii_btn = this.getIntent().getExtras().getBoolean("detalii");
 		}
 		else {
 			detalii_btn = false;
 		}
+
 		if(this.getIntent().hasExtra("mTrackNo")){
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 			service_started = true;
@@ -134,28 +145,30 @@ public class TrackLoggerActivity extends Activity {
 		}
 		else {
 			detalii.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					TrackDetailsActivityIntent.putExtra("track_name", track_name);
-					TrackDetailsActivityIntent.putExtra("track_id", track_id);
-					context.startActivity(TrackDetailsActivityIntent);
-				}
-			});
+
+                @Override
+                public void onClick(View arg0) {
+                    if (factoryTrack != null) {
+                        TrackDetailsActivityIntent.putExtra("factoryTrackObj", factoryTrack);
+                        //TrackDetailsActivityIntent.putExtra("track_name", track_name);
+                        //TrackDetailsActivityIntent.putExtra("track_id", track_id);
+                        context.startActivity(TrackDetailsActivityIntent);
+                    }
+                }
+            });
 		}
 		start.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-					Log.v("in trackloggeractivity", "click");
+                Log.v("in trackloggeractivity", "click");
 				
-					GPSLoggerServiceIntent.putExtra("track_name", track_name);
-                if(is_default_track)
-                    GPSLoggerServiceIntent.putExtra("track_id", track_id);
-				
-					service_started = true;
-					startService(GPSLoggerServiceIntent);
+				GPSLoggerServiceIntent.putExtra("track_name", track_name);
+				GPSLoggerServiceIntent.putExtra("factoryTrackObj", factoryTrack);
+
+				service_started = true;
+				startService(GPSLoggerServiceIntent);
 			}
 		});
 

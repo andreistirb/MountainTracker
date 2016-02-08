@@ -1,7 +1,9 @@
 package com.mountain.mytracker.Track;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -30,10 +32,22 @@ public class Track implements Serializable {
     private DatabaseHelper mDatabase;
     private NewDatabaseHelper factoryDatabase;
 
+    public Track(){
+        trackPoints = new ArrayList<TrackPoint>();
+        trackGeoPoints = new ArrayList<GeoPoint>();
+    }
+
     public Track(Integer trackId){
         this.trackId = trackId;
         trackPoints = new ArrayList<TrackPoint>();
         trackGeoPoints = new ArrayList<GeoPoint>();
+    }
+
+    public Track(Integer trackId, Context context){
+        this.trackId = trackId;
+        trackPoints = new ArrayList<TrackPoint>();
+        trackGeoPoints = new ArrayList<GeoPoint>();
+        this.fromFactoryDatabase(trackId, context);
     }
 
     public Integer getTrackId() {
@@ -124,6 +138,10 @@ public class Track implements Serializable {
         this.trackGeoPoints = trackGeoPoints;
     }
 
+    public Integer getTrackPointsCount(){
+        return this.getTrackPoints().size();
+    }
+
     public void fromFactoryDatabase(Integer trackId, Context context){
         TrackPoint newTrackPoint;
         String selection, table, sortOrder;
@@ -170,8 +188,7 @@ public class Track implements Serializable {
 
     }
 
-    public Track fromDatabase(Integer trackId, Context context) {
-        Track newTrack = new Track(trackId);
+    public void fromDatabase(Integer trackId, Context context) {
         TrackPoint newTrackPoint;
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         Cursor c;
@@ -199,17 +216,42 @@ public class Track implements Serializable {
                 //Long time = c.getLong(c.getColumnIndex(DatabaseEntry.COL_TMP));
 
                 newTrackPoint = new TrackPoint(trackId, latitude, longitude, altitude, null, null, null, context);
-                newTrack.addTrackPoint(newTrackPoint);
+                this.addTrackPoint(newTrackPoint);
+                this.addTrackGeoPoint(new GeoPoint(latitude, longitude));
+
             } while (c.moveToNext());
 
-            return newTrack;
-
-        } else {
-            return null;
         }
     }
 
-    public void toDatabase(){
+    public void createDatabaseEntry(Integer trackId, Context context){
+        ContentValues row = new ContentValues();
+        Integer mTrackNo = getTrackNo(context);
 
+        row.put(DatabaseEntry.COL_TRACK_NO, mTrackNo);
+        if(trackId != null)
+            row.put(DatabaseEntry.COL_TRACK_ID, trackId);
+        mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS, null, row);
+        mDatabase.close();
+    }
+
+    private int getTrackNo(Context context) {
+        Integer mTrackNo;
+        SQLiteDatabase db;
+
+        mDatabase = new DatabaseHelper(context);
+        db = mDatabase.getReadableDatabase();
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+
+        qb.setTables(DatabaseEntry.TABLE_MY_TRACKS);
+        Cursor c = qb.query(db, new String[]{"max(" + DatabaseEntry.COL_TRACK_NO + ")"},
+                null, null, null, null, null);
+
+        c.moveToFirst();
+        mTrackNo = c.getInt(c.getColumnIndex("max(" + DatabaseEntry.COL_TRACK_NO + ")") + 1);
+
+        db.close();
+        return mTrackNo;
     }
 }

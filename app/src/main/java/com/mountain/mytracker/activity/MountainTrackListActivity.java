@@ -106,14 +106,14 @@ public class MountainTrackListActivity extends ListActivity {
 			traseu = (TextView) findViewById(R.id.mountain_track_list_text);
 			Intent i = new Intent(this, TrackDetailsActivity.class);
 			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			i.putExtra("track_id", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_try:{
 			Intent i = new Intent(this, TrackLoggerActivity.class);
 			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			i.putExtra("track_id", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 		}
 		}
