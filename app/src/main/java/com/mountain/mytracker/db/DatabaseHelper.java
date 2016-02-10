@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 import android.content.Context;
 import android.database.SQLException;
@@ -17,7 +18,7 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
  * Helper pentru baza de date a traseelor
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 
 	public static final String DB_NAME = "MyTracks.db";
 	public static final int DB_VERSION = 1;

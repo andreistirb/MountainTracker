@@ -9,11 +9,13 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
+import java.io.Serializable;
+
 /**
  * Created by astirb on 26.01.2016.
  */
 
-public class TrackPoint {
+public class TrackPoint implements Serializable {
 
     //Attributes
     private Integer trackId;

@@ -5,18 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.mountain.mytracker.Track.Track;
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
-import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.gps.GPSLogger;
 
 import org.osmdroid.api.IMapController;
@@ -32,14 +27,13 @@ import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
-    private String numeTraseu;
-	private Integer trackId;
+    //private String numeTraseu;
 	private MapView harta;
 	private IMapController hartaController;
-	private ArrayList<GeoPoint> track;
-	private ArrayList<GeoPoint> mTrack;
+	///private ArrayList<GeoPoint> track;
+	//private ArrayList<GeoPoint> mTrack;
 	private MyLocationOverlay mLocationOverlay;
-	private DatabaseHelper mDatabase;
+	//private DatabaseHelper mDatabase;
 	private Integer mTrackNo;
 	private boolean has_track;
 	private Track factoryTrack, userTrack;
@@ -72,28 +66,35 @@ public class MapViewActivity extends Activity {
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
+        Integer factoryTrackId;
+
 		super.onCreate(savedInstanceState);
         has_track = false;
 
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
-        if(this.getIntent().hasExtra("track_name")){
+        /*if(this.getIntent().hasExtra("track_name")){
             numeTraseu = this.getIntent().getExtras().getString("track_name");
             setTitle(numeTraseu);
-        }
+        }*/
 
-		if(this.getIntent().hasExtra("track_id")){
-			trackId = this.getIntent().getExtras().getInt("track_id");
-			factoryTrack = new Track(trackId);
+		if(this.getIntent().hasExtra("factoryTrackId")){
+			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
+			factoryTrack = new Track(factoryTrackId, this.getApplicationContext());
 			has_track = true;
+            setTitle(factoryTrack.getTrackName());
 		}
+
 		if(this.getIntent().hasExtra("mTrackNo")){
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
             userTrack = new Track(mTrackNo);
 		}
 
-        mTrack = new ArrayList<GeoPoint>();
+        /*if(this.getIntent().hasExtra("factoryTrackObj"))
+            factoryTrack = (Track) this.getIntent().getSerializableExtra("factoryTrackObj");*/
+
+        //mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = (MapController) harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
@@ -111,7 +112,7 @@ public class MapViewActivity extends Activity {
 
         if(has_track){
             // search for track points
-			factoryTrack.fromFactoryDatabase(trackId, this);
+			//factoryTrack.fromFactoryDatabase(factoryTrackId, this);
             harta.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE, 3.0f));
             hartaController.setZoom(14);
             hartaController.setCenter(factoryTrack.getTrackGeoPoints().get(0));

@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
-public class NewDatabaseHelper extends SQLiteAssetHelper {
+import java.io.Serializable;
+
+public class NewDatabaseHelper extends SQLiteAssetHelper implements Serializable {
 
 	private static final String DB_NAME = "MountainTracker.s3db";
 	private static final int DB_VERSION = 1;

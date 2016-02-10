@@ -232,9 +232,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         mGoogleApiClient.connect();
 
         // receive available info
-        track_name = intent.getExtras().getString("track_name");
-        if (intent.hasExtra("track_id")) {
-            track_id = intent.getExtras().getString("track_id");
+        //track_name = intent.getExtras().getString("track_name");
+        if (intent.hasExtra("factoryTrackId")) {
+            //track_id = intent.getExtras().getString("track_id");
+            factoryTrack = new Track(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
             new ParseAsync().execute();
             shouldGeofence = true;
         }

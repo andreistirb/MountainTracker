@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -28,8 +27,8 @@ public class TrackLoggerActivity extends Activity {
 	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
 	private GPSLogger gpsLogger;
 	boolean GPSflag = false;
-	private String track_name;
-	private Integer track_id;
+	//private String track_name;
+	private Integer factoryTrackId;
     private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private Context context;
@@ -37,7 +36,7 @@ public class TrackLoggerActivity extends Activity {
 	private Integer mTrackNo;
 	public boolean detalii_btn; //daca sa apara sau nu butonul detalii
 	private boolean service_started;
-    private boolean is_default_track = false;
+    //private boolean is_default_track = false;
 
     private Track mTrack, factoryTrack;
 
@@ -89,15 +88,16 @@ public class TrackLoggerActivity extends Activity {
 
 		this.setContentView(R.layout.track_logger_layout);
 
-        if(this.getIntent().hasExtra("track_name")){
+        /*if(this.getIntent().hasExtra("track_name")){
             track_name = this.getIntent().getExtras().getString("track_name");
             this.setTitle(track_name);
-        }
+        }*/
 
-		if(this.getIntent().hasExtra("track_id")){
-			track_id = this.getIntent().getExtras().getInt("track_id");
-            is_default_track = true;
-            factoryTrack = new Track(track_id, this.getBaseContext());
+		if(this.getIntent().hasExtra("factoryTrackId")){
+			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
+            //is_default_track = true;
+            factoryTrack = new Track(factoryTrackId, this.getApplicationContext());
+            setTitle(factoryTrack.getTrackName());
 		}
 
 		if(this.getIntent().hasExtra("detalii")){
@@ -135,7 +135,7 @@ public class TrackLoggerActivity extends Activity {
 
 	public void onResume() {
 
-		this.setTitle(track_name);
+		//this.setTitle(track_name);
 
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
@@ -149,9 +149,9 @@ public class TrackLoggerActivity extends Activity {
                 @Override
                 public void onClick(View arg0) {
                     if (factoryTrack != null) {
-                        TrackDetailsActivityIntent.putExtra("factoryTrackObj", factoryTrack);
+                        TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                         //TrackDetailsActivityIntent.putExtra("track_name", track_name);
-                        //TrackDetailsActivityIntent.putExtra("track_id", track_id);
+                        //TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                         context.startActivity(TrackDetailsActivityIntent);
                     }
                 }
@@ -164,8 +164,9 @@ public class TrackLoggerActivity extends Activity {
 
                 Log.v("in trackloggeractivity", "click");
 				
-				GPSLoggerServiceIntent.putExtra("track_name", track_name);
-				GPSLoggerServiceIntent.putExtra("factoryTrackObj", factoryTrack);
+				//GPSLoggerServiceIntent.putExtra("track_name", track_name);
+                if(factoryTrack != null)
+				    GPSLoggerServiceIntent.putExtra("factoryTrackId", factoryTrackId);
 
 				service_started = true;
 				startService(GPSLoggerServiceIntent);
@@ -188,10 +189,12 @@ public class TrackLoggerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				MapViewActivityIntent.putExtra("track_name", track_name);
-				if(!detalii_btn){
-					MapViewActivityIntent.putExtra("track_id", track_id);
-				}
+				//MapViewActivityIntent.putExtra("track_name", track_name);
+				//if(!detalii_btn){
+				//	MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
+				//}
+                if(factoryTrack != null)
+                    MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
 				MapViewActivityIntent.putExtra("mTrackNo", mTrackNo);
 				context.startActivity(MapViewActivityIntent);
 			}
