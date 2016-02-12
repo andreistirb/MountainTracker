@@ -10,8 +10,7 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
 public class TrackDetailsActivity extends Activity {
-<<<<<<< HEAD
-	
+
 	//private NewDatabaseHelper db;
 	//private String traseu;
 	//private String traseu_id;
@@ -21,10 +20,7 @@ public class TrackDetailsActivity extends Activity {
 	private TextView track_details_description;
 	private TextView track_details_availability;
     private Track factoryTrack;
-	
-=======
 
->>>>>>> 158c9cfb465e0d01ce6baa899328b1d28d14824e
 	public void onCreate(Bundle savedInstanceState){
 
 		NewDatabaseHelper db;
