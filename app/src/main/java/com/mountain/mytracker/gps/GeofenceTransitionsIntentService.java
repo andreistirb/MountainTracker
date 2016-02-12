@@ -21,16 +21,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 
 public class GeofenceTransitionsIntentService extends IntentService {
 
-    static int enterCounter = 0;
-    static int exitCounter = 0;
-    static int dwellCounter = 0;
+    private static int exitCounter = 0;
+    private static int dwellCounter = 0;
 
-    static Set<Geofence> currentArea = new HashSet<Geofence>();
+    private static Set<Geofence> currentArea = new HashSet<>();
 
     protected static final String TAG = "geofence-transitions";
 
@@ -71,12 +69,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
             }
             case Geofence.GEOFENCE_TRANSITION_ENTER : {
                 List<Geofence> triggeringGeofences = mGeofencingEvent.getTriggeringGeofences();
-                enterCounter = triggeringGeofences.size();
+                int enterCounter = triggeringGeofences.size();
                 String geofenceTransitionDetails = getGeofenceTransitionDetails(this,
                         geofenceTransition, triggeringGeofences);
                 //sendNotification(geofenceTransitionDetails);
                 Log.i(TAG,geofenceTransitionDetails);
-                Log.i(TAG,enterCounter + " zone in care ai intrat");
+                Log.i(TAG, enterCounter + " zone in care ai intrat");
                 currentArea.addAll(triggeringGeofences);
                 break;
             }
@@ -110,7 +108,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         String geofenceTransitionString = getTransitionString(geoFenceTransition);
 
         // Get the Ids of each geofence that was triggered.
-        ArrayList triggeringGeofencesIdsList = new ArrayList();
+        ArrayList triggeringGeofencesIdsList = new ArrayList<>();
         for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesIdsList.add(geofence.getRequestId());
         }

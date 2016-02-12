@@ -12,27 +12,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.MountainTrackListAdapter;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
 public class MountainTrackListActivity extends ListActivity {
-	
 
-	private String munte;
-	private String munte_id;
 	private String selection;
 	private String table;
 	private String sortOrder;
-	private String[] selectionArgs; 
-	TextView traseu;
-	NewDatabaseHelper db;
+	private String[] selectionArgs;
+    NewDatabaseHelper db;
 	Cursor c;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
+
+		String munte, munte_id;
+
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.mountain_track_list_layout);
 		
@@ -54,7 +52,7 @@ public class MountainTrackListActivity extends ListActivity {
 
 		///////
 		
-		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c,1));
+		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c));
 		this.registerForContextMenu(this.getListView());
 	}
 	
@@ -78,7 +76,7 @@ public class MountainTrackListActivity extends ListActivity {
 		}		
 		}
 		c = db.myQuery(table, null, selection, selectionArgs, null, null, sortOrder);
-		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c,1));
+		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c));
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -104,7 +102,6 @@ public class MountainTrackListActivity extends ListActivity {
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_details: {
-			traseu = (TextView) findViewById(R.id.mountain_track_list_text);
 			Intent i = new Intent(this, TrackDetailsActivity.class);
 			//i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
 			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));

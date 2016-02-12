@@ -23,7 +23,6 @@ import com.mountain.mytracker.gps.GPSLogger;
 
 public class TrackLoggerActivity extends Activity {
 
-	private LocationManager lm;
 	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
 	private GPSLogger gpsLogger;
 	boolean GPSflag = false;
@@ -100,19 +99,14 @@ public class TrackLoggerActivity extends Activity {
             setTitle(factoryTrack.getTrackName());
 		}
 
-		if(this.getIntent().hasExtra("detalii")){
-			detalii_btn = this.getIntent().getExtras().getBoolean("detalii");
-		}
-		else {
-			detalii_btn = false;
-		}
+		detalii_btn = this.getIntent().hasExtra("detalii") && this.getIntent().getExtras().getBoolean("detalii");
 
 		if(this.getIntent().hasExtra("mTrackNo")){
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 			service_started = true;
 		}
 
-		mDatabase = new DatabaseHelper(this);
+		mDatabase = new DatabaseHelper(this.getApplicationContext());
 
 		GPSLoggerServiceIntent = new Intent(this, GPSLogger.class);
 		MapViewActivityIntent = new Intent(this, MapViewActivity.class);
@@ -228,7 +222,8 @@ public class TrackLoggerActivity extends Activity {
 	}
 
 	public void checkGPS() {
-		lm = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+		LocationManager lm;
+		lm = (LocationManager) this.getSystemService(TrackLoggerActivity.LOCATION_SERVICE);
 
 		if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			// GPS isn't enabled. Offer user to go enable it

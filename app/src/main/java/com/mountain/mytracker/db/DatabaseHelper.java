@@ -1,15 +1,8 @@
 package com.mountain.mytracker.db;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
@@ -20,8 +13,8 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 
-	public static final String DB_NAME = "MyTracks.db";
-	public static final int DB_VERSION = 1;
+	private static final String DB_NAME = "MyTracks.db";
+	private static final int DB_VERSION = 1;
 
 	//Table cu traseele create de utilizator
 	private static final String SQL_CREATE_TABLE_TRACK = "CREATE TABLE "

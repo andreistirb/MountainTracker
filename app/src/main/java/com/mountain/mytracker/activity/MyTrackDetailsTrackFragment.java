@@ -19,7 +19,6 @@ public class MyTrackDetailsTrackFragment extends Fragment {
 
     private Integer mTrackNo;
     private DatabaseHelper db;
-    private TextView duration, distance, avg_speed, max_speed, min_alt, max_alt;
     Button export_btn;
     private String track_name;
 
@@ -37,6 +36,8 @@ public class MyTrackDetailsTrackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        TextView duration, distance, avg_speed, max_speed, min_alt, max_alt;
 
         View rootView = inflater.inflate(R.layout.mytrackdetails_track_fragment, container, false);
 

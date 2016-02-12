@@ -19,7 +19,6 @@ import org.osmdroid.bonuspack.cachemanager.CacheManager;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 
@@ -28,10 +27,11 @@ import java.util.ArrayList;
 public class MapViewActivity extends Activity {
 
     //private String numeTraseu;
-	private MapView harta;
 	private IMapController hartaController;
 	///private ArrayList<GeoPoint> track;
 	//private ArrayList<GeoPoint> mTrack;
+	private static final float polylineWidth = 3.0f;
+	private MapView harta;
 	private MyLocationOverlay mLocationOverlay;
 	//private DatabaseHelper mDatabase;
 	private Integer mTrackNo;
@@ -47,13 +47,14 @@ public class MapViewActivity extends Activity {
 
 			mTrackNo = bundle.getInt("mTrackNo");
 
+
             userTrack = (Track) bundle.getSerializable("trackObj");
 
 			//GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
 			//		bundle.getDouble("longitude"));
 			//mTrack.add(curent);
             try {
-                harta.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED, 3.0f));
+                harta.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
                 pointsNo = userTrack.getTrackPointsCount();
                 if(pointsNo > 0)
                     hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo));
@@ -61,12 +62,14 @@ public class MapViewActivity extends Activity {
             catch(Exception e){
                 e.printStackTrace();
             }
+
 			mLocationOverlay.enableMyLocation();
 		}
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
         Integer factoryTrackId;
+
 
 		super.onCreate(savedInstanceState);
         has_track = false;
@@ -96,7 +99,7 @@ public class MapViewActivity extends Activity {
 
         //mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
-		hartaController = (MapController) harta.getController();
+		hartaController = harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
 		
 		/* ca sa aducem punctele traseului din baza de date */
@@ -109,11 +112,13 @@ public class MapViewActivity extends Activity {
 
 	@Override
 	public void onResume() {
+		ArrayList<GeoPoint> track;
 
         if(has_track){
             // search for track points
 			//factoryTrack.fromFactoryDatabase(factoryTrackId, this);
-            harta.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE, 3.0f));
+            harta.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
+
             hartaController.setZoom(14);
             hartaController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
         }
@@ -121,7 +126,7 @@ public class MapViewActivity extends Activity {
         if (GPSLogger.isTracking()) {
             userTrack.fromDatabase(mTrackNo, this);
             if(userTrack.getTrackPointsCount() > 0) {
-                harta.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED, 3.0f));
+                harta.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
             }
 			//SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 			//qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
@@ -205,11 +210,11 @@ public class MapViewActivity extends Activity {
         hartaController.setZoom(14);
     }
 
-    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color){
         Polyline track = new Polyline(context);
         track.setPoints(trackPoints);
         track.setColor(color);
-        track.setWidth(width);
+        track.setWidth(polylineWidth);
         return track;
     }
 
