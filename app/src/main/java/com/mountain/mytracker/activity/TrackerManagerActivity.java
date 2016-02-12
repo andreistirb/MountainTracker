@@ -24,8 +24,6 @@ import com.mountain.mytracker.other.NameDialog;
 
 public class TrackerManagerActivity extends ListActivity implements NameDialog.NoticeDialogListener {
 
-	private int currentTrackId = 0;
-	private String currentTrackName;
 	private static final long TRACK_ID_NO_TRACK = -1;
 	private DatabaseHelper db;
 	private Cursor c;
@@ -34,7 +32,9 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	Intent mTrackLoggerActivity;
 	
 	@Override
-	public void onDialogPositiveClick(String titlu){		
+	public void onDialogPositiveClick(String titlu){
+		String currentTrackName;
+
 		currentTrackName = titlu;
 		mTrackLoggerActivity.putExtra("track_name", titlu);
 		Log.v("dupa dialog", currentTrackName);
@@ -61,7 +61,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		
 		c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
 		c.moveToFirst();
-		this.setListAdapter(new TrackListAdapter(TrackerManagerActivity.this,c,1));
+		this.setListAdapter(new TrackListAdapter(TrackerManagerActivity.this,c));
 		this.registerForContextMenu(this.getListView());
 	}
 	
@@ -85,7 +85,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	
 	@Override
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
-		
+		int currentTrackId = 0;
 		Intent i;
 		String mTrackNo;
 		i = new Intent(this, MyTrackDetailsActivity.class);

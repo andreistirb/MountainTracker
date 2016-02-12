@@ -19,7 +19,6 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
@@ -29,8 +28,6 @@ public class MyTrackDetailsMapFragment extends Fragment {
     private Integer mTrackNo;
     private DatabaseHelper db;
     private MapView harta;
-    private IMapController hartaController;
-    private ArrayList<GeoPoint> track;
 
     public MyTrackDetailsMapFragment() {
         // Required empty public constructor
@@ -49,6 +46,9 @@ public class MyTrackDetailsMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        IMapController hartaController;
+        ArrayList<GeoPoint> track;
+
         View rootView = inflater.inflate(R.layout.mytrackdetails_map_fragment, container, false);
         harta = (MapView) rootView.findViewById(R.id.mytrackdetails_mapview);
         hartaController = harta.getController();
@@ -65,7 +65,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
                 null, sortOrder);
         if(c.getCount() > 0) {
             track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), track, Color.BLUE, 3.0f));
+            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), track));
             hartaController.setZoom(14);
             hartaController.setCenter(track.get(0));
         }
@@ -80,17 +80,17 @@ public class MyTrackDetailsMapFragment extends Fragment {
         harta.setMultiTouchControls(true);
     }
 
-    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints){
         Polyline track = new Polyline(context);
         track.setPoints(trackPoints);
-        track.setColor(color);
-        track.setWidth(width);
+        track.setColor(Color.BLUE);
+        track.setWidth(3.0f);
         return track;
     }
 
     // gets track points from database and builds an ArrayList of GeoPoints
     private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-        ArrayList<GeoPoint> traseu = new ArrayList<>();
+        ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
         c.moveToFirst();
         do {
             double latitude = c.getDouble(c

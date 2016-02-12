@@ -9,17 +9,14 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
 public class TrackDetailsActivity extends Activity {
-	
-	private NewDatabaseHelper db;
-	private String traseu;
-	private String traseu_id;
-	private TextView track_details_duration;
-	private TextView track_details_difficulty;
-	private TextView track_details_mark;
-	private TextView track_details_description;
-	private TextView track_details_availability;
-	
+
 	public void onCreate(Bundle savedInstanceState){
+
+		NewDatabaseHelper db;
+		String traseu, traseu_id;
+		TextView track_details_duration, track_details_difficulty, track_details_mark,
+				track_details_description, track_details_availability;
+
 		super.onCreate(savedInstanceState);
 		
 		this.setContentView(R.layout.track_details_layout);

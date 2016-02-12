@@ -11,8 +11,8 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	public static final String DB_NAME = "MyTracks.db";
-	public static final int DB_VERSION = 1;
+	private static final String DB_NAME = "MyTracks.db";
+	private static final int DB_VERSION = 1;
 
 	//Table cu traseele create de utilizator
 	private static final String SQL_CREATE_TABLE_TRACK = "CREATE TABLE "

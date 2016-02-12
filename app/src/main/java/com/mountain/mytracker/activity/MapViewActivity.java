@@ -24,13 +24,14 @@ import org.osmdroid.bonuspack.cachemanager.CacheManager;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 
 import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
+
+	private static final float polylineWidth = 3.0f;
 
 	private String traseu_id;
 	private MapView harta;
@@ -54,7 +55,7 @@ public class MapViewActivity extends Activity {
 					bundle.getDouble("longitude"));
 			mTrack.add(curent);
 
-            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED,3.0f));
+            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED));
 			hartaController.setCenter(curent);
 			mLocationOverlay.enableMyLocation();
 		}
@@ -78,7 +79,7 @@ public class MapViewActivity extends Activity {
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
 		}
 
-        mTrack = new ArrayList<>();
+        mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
@@ -109,7 +110,7 @@ public class MapViewActivity extends Activity {
             Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
                     null, sortOrder);
             track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE,3.0f));
+            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE));
             hartaController.setZoom(14);
             hartaController.setCenter(track.get(0));
         }
@@ -197,17 +198,17 @@ public class MapViewActivity extends Activity {
         hartaController.setZoom(14);
     }
 
-    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color, float width){
+    private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color){
         Polyline track = new Polyline(context);
         track.setPoints(trackPoints);
         track.setColor(color);
-        track.setWidth(width);
+        track.setWidth(polylineWidth);
         return track;
     }
 
 	// gets track points from database and builds an ArrayList of GeoPoints
 	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-		ArrayList<GeoPoint> traseu = new ArrayList<>();
+		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
 		c.moveToFirst();
 		do {
 			double latitude = c.getDouble(c

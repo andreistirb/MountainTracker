@@ -24,7 +24,7 @@ public class MountainListActivity extends ListActivity {
 		Cursor c = db.getMountainsList();
 
 		this.setListAdapter(new MountainListAdapter(MountainListActivity.this,
-				c, 1));
+				c));
 	}
 
 	@Override

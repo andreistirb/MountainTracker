@@ -13,8 +13,8 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
 public class MountainListAdapter extends CursorAdapter {
 	
-	public MountainListAdapter(Context context, Cursor cursor, int flags){
-		super(context, cursor, flags);
+	public MountainListAdapter(Context context, Cursor cursor){
+		super(context, cursor, 1);
 	}
 	
 	@Override
