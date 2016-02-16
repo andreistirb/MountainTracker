@@ -91,7 +91,7 @@ public class MapViewActivity extends Activity {
 
 		if(this.getIntent().hasExtra("mTrackNo")){
 			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
-            userTrack = new Track(mTrackNo);
+            userTrack = new Track(mTrackNo, this.getApplicationContext());
 		}
 
         /*if(this.getIntent().hasExtra("factoryTrackObj"))
@@ -112,7 +112,7 @@ public class MapViewActivity extends Activity {
 
 	@Override
 	public void onResume() {
-		ArrayList<GeoPoint> track;
+		//ArrayList<GeoPoint> track;
 
         if(has_track){
             // search for track points

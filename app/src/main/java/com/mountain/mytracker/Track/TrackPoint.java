@@ -42,6 +42,62 @@ public class TrackPoint implements Serializable {
         this.factoryDatabase = new NewDatabaseHelper(context);
     }
 
+    public Integer getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Integer trackId) {
+        this.trackId = trackId;
+    }
+
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(Double altitude) {
+        this.altitude = altitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(Float speed) {
+        this.speed = speed;
+    }
+
+    public Float getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(Float accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
     public void toDatabase(){
         ContentValues row = new ContentValues();
 

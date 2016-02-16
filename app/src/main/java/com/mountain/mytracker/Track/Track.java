@@ -23,8 +23,13 @@ import java.util.ArrayList;
 
 public class Track implements Serializable {
 
-    private Integer trackId, mountainId;
-    private String trackName, trackDifficulty, trackMark, trackLength, trackDescription, trackAvailability;
+    private Integer trackId, mountainId, factoryTrackId;
+    private String trackName;
+    //factory database
+    private String trackDifficulty, trackMark, trackLength, trackDescription, trackAvailability;
+
+    //user database
+
     private ArrayList<TrackPoint> trackPoints;
     private ArrayList<GeoPoint> trackGeoPoints;
 
@@ -32,21 +37,22 @@ public class Track implements Serializable {
     private DatabaseHelper mDatabase;
     private NewDatabaseHelper factoryDatabase;
 
-    public Track(){
+    public Track(Context context){
         trackPoints = new ArrayList<TrackPoint>();
         trackGeoPoints = new ArrayList<GeoPoint>();
-    }
 
-    public Track(Integer trackId){
-        this.trackId = trackId;
-        trackPoints = new ArrayList<TrackPoint>();
-        trackGeoPoints = new ArrayList<GeoPoint>();
+        mDatabase = new DatabaseHelper(context);
+        factoryDatabase = new NewDatabaseHelper(context);
     }
 
     public Track(Integer trackId, Context context){
         this.trackId = trackId;
         trackPoints = new ArrayList<TrackPoint>();
         trackGeoPoints = new ArrayList<GeoPoint>();
+
+        mDatabase = new DatabaseHelper(context);
+        factoryDatabase = new NewDatabaseHelper(context);
+
         this.fromFactoryDatabase(trackId, context);
     }
 
@@ -153,8 +159,6 @@ public class Track implements Serializable {
         selectionArgs = new String[] { trackId.toString() };
         table = DatabaseEntry.TABLE_MOUNTAIN_TRACK;
 
-        factoryDatabase = new NewDatabaseHelper(context);
-
         c = factoryDatabase.myQuery(table, null, selection, selectionArgs, null, null, null);
         c.moveToFirst();
         this.setMountainId(c.getInt(c.getColumnIndex(DatabaseEntry.COL_MOUNTAIN_ID)));
@@ -193,8 +197,6 @@ public class Track implements Serializable {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         Cursor c;
 
-        mDatabase = new DatabaseHelper(context);
-
         // TO-DO
         // Must get details about Track, like title, description, etc
 
@@ -223,23 +225,35 @@ public class Track implements Serializable {
 
         }
     }
-
-    public void createDatabaseEntry(Integer trackId, Context context){
+    
+    public void createDatabaseEntry(Integer trackId){
         ContentValues row = new ContentValues();
-        Integer mTrackNo = getTrackNo(context);
+        Integer mTrackId;
+        String mTrackName;
 
-        row.put(DatabaseEntry.COL_TRACK_NO, mTrackNo);
-        if(trackId != null)
+        if (!checkEmptyDatabase()) {
+            mTrackId = 1;
+        } else {
+            mTrackId = getTrackNo() + 1;
+        }
+        mTrackName = "Track#" + mTrackId.toString();
+
+        this.trackId = mTrackId;
+
+        row.put(DatabaseEntry.COL_TRACK_NO, mTrackId);
+        row.put(DatabaseEntry.COL_TRACK_NAME, mTrackName);
+        if(trackId != null) {
             row.put(DatabaseEntry.COL_TRACK_ID, trackId);
+            this.factoryTrackId = trackId;
+        }
         mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS, null, row);
         mDatabase.close();
     }
 
-    private int getTrackNo(Context context) {
+    private int getTrackNo() {
         Integer mTrackNo;
         SQLiteDatabase db;
 
-        mDatabase = new DatabaseHelper(context);
         db = mDatabase.getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
@@ -253,5 +267,20 @@ public class Track implements Serializable {
 
         db.close();
         return mTrackNo;
+    }
+
+    private boolean checkEmptyDatabase() {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(DatabaseEntry.TABLE_MY_TRACKS);
+        Cursor c = qb.query(mDatabase.getReadableDatabase(), null, null, null,
+                null, null, null);
+        if (c.getCount() == 0) {
+            Log.v("verifica BD null", "are 0 intrari");
+            c.close();
+            return false;
+        } else {
+            c.close();
+            return true;
+        }
     }
 }
