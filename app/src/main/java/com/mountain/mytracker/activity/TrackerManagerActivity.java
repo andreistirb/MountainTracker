@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.TrackListAdapter;
@@ -34,9 +35,15 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	@Override
 	public void onDialogPositiveClick(String titlu){
 		String currentTrackName;
+        UserTrack mUserTrack;
 
 		currentTrackName = titlu;
-		mTrackLoggerActivity.putExtra("track_name", titlu);
+        mUserTrack = new UserTrack(this.getApplicationContext());
+        mUserTrack.createDatabaseEntry(null);
+        mUserTrack.setName(currentTrackName);
+        mUserTrack.updateDatabase();
+
+		mTrackLoggerActivity.putExtra("mTrackId", mUserTrack.getTrackId());
 		Log.v("dupa dialog", currentTrackName);
 		this.startActivity(mTrackLoggerActivity);
 		
@@ -93,7 +100,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		currentTrackId = traseu.getInt(traseu.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
 		mTrackNo = traseu.getString(traseu.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
 		i.putExtra(DatabaseEntry.COL_TRACK_NO, mTrackNo);
-		i.putExtra("track_id",currentTrackId);
+		i.putExtra("userTrackId",currentTrackId);
 		this.startActivity(i);
 	}
 
@@ -122,6 +129,10 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
     private void deleteTrack(String track_id){
         db.getWritableDatabase().delete(DatabaseEntry.TABLE_MY_TRACKS,DatabaseEntry.COL_TRACK_NO + " = " + track_id, null);
+        c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
+        c.moveToFirst();
+        this.setListAdapter(new TrackListAdapter(TrackerManagerActivity.this,c));
+        this.registerForContextMenu(this.getListView());
     }
 
 }

@@ -3,11 +3,14 @@ package com.mountain.mytracker.Track;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
 import android.util.Log;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
 
@@ -111,5 +114,17 @@ public class TrackPoint implements Serializable {
         row.put(DatabaseEntry.COL_TRACK_NO, trackId.toString());
         mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS_POINTS, null, row);
         mDatabase.close();
+    }
+
+    public Float distanceBetween(TrackPoint secondTrackPoint){
+        Location firstLocation = new Location("firstLocation");
+        firstLocation.setLatitude(this.getLatitude());
+        firstLocation.setLongitude(this.getLongitude());
+
+        Location secondLocation = new Location("secondLocation");
+        secondLocation.setLatitude(secondTrackPoint.getLatitude());
+        secondLocation.setLongitude(secondTrackPoint.getLongitude());
+
+        return firstLocation.distanceTo(secondLocation);
     }
 }

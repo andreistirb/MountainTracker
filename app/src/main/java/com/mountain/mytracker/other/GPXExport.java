@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Environment;
@@ -15,7 +16,11 @@ import com.mountain.mytracker.db.DatabaseHelper;
 public class GPXExport {
 	
 	private DatabaseHelper db;
-	File root = android.os.Environment.getExternalStorageDirectory(); 
+	File root = android.os.Environment.getExternalStorageDirectory();
+
+    public GPXExport(Context context){
+        db = new DatabaseHelper(context);
+    }
 	
 	public boolean isExternalStorageWritable() {
 	    String state = Environment.getExternalStorageState();
@@ -31,7 +36,7 @@ public class GPXExport {
 	    return file;
 	}
 	
-	public void createFile(Integer mTrackNo, String filename, String track_name, DatabaseHelper db){
+	public void createFile(Integer mTrackNo, String filename, String track_name){
 		
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);

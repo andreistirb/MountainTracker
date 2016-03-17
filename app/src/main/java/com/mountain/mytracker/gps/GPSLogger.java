@@ -1,15 +1,11 @@
 package com.mountain.mytracker.gps;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
@@ -28,13 +24,11 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.Track.TrackPoint;
-import com.mountain.mytracker.activity.R;
-import com.mountain.mytracker.activity.TrackLoggerActivity;
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
-import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.NewDatabaseHelper;
+import com.mountain.mytracker.Track.UserTrack;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.text.DateFormat;
@@ -99,8 +93,9 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     PendingIntent mPendingIntent;
     boolean shouldGeofence = false;
 
+    private UserTrack userTrack;
 
-    Track mTrack, factoryTrack;
+    private Track factoryTrack;
 
     // the service is being created
     @Override
@@ -113,7 +108,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         factoryDB = new NewDatabaseHelper(this.getBaseContext());*/
 
         /*mGeofenceList = new ArrayList<Geofence>();*/
-        mTrack = new Track(this.getApplicationContext());
+        userTrack = new UserTrack(this.getApplicationContext());
 
         //location
         buildGoogleApiClient();
@@ -126,6 +121,8 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //Battery
         batteryIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryStatus = this.registerReceiver(null, batteryIntentFilter);
+
+        notification = new Intent("broadcastGPS");
 
         super.onCreate();
     }
@@ -140,13 +137,17 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //track_name = intent.getExtras().getString("track_name");
         if (intent.hasExtra("factoryTrackId")) {
             //track_id = intent.getExtras().getString("track_id");
-            factoryTrack = new Track(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
-            mTrack.createDatabaseEntry(factoryTrack.getTrackId());
+            factoryTrack = new FactoryTrack(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
+            userTrack.createDatabaseEntry(factoryTrack.getTrackId());
             //new ParseAsync().execute();
             shouldGeofence = true;
         }
         else
-            mTrack.createDatabaseEntry(null);
+            userTrack.createDatabaseEntry(null);
+
+        notification.putExtra("mTrackId", userTrack.getTrackId());
+        sendBroadcast(notification);
+
         Log.v("in gpslogger", "am primit numele");
 
         // start tracking
@@ -225,6 +226,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         if (shouldGeofence) {
             //removeGeofences();
         }
+        userTrack.updateDatabase();
         this.stopSelf();
     }
 
@@ -299,10 +301,11 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         mTrackPoint = new TrackPoint(mTrackId, location.getLatitude(), location.getLongitude(),
                 location.getAltitude(), location.getSpeed(), location.getAccuracy(),
-                location.getTime(), this.getApplicationContext());
+                location.getElapsedRealtimeNanos(), this.getApplicationContext());
+
         mTrackPoint.toDatabase();
-        mTrack.addTrackPoint(mTrackPoint);
-        mTrack.addTrackGeoPoint(new GeoPoint(mTrackPoint.getLatitude(), mTrackPoint.getLongitude()));
+        userTrack.addTrackPoint(mTrackPoint);
+        userTrack.addTrackGeoPoint(new GeoPoint(mTrackPoint.getLatitude(), mTrackPoint.getLongitude()));
 
         sendBroadcast(notification);
 
@@ -340,7 +343,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     }*/
 
     private void buildNotification() {
-        notification = new Intent("broadcastGPS");
+
         notification.putExtra("altitude", mCurrentLocation.getAltitude());
         notification.putExtra("latitude", mCurrentLocation.getLatitude());
         notification.putExtra("longitude", mCurrentLocation.getLongitude());
@@ -354,7 +357,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //notification.putExtra("min_alt", min_alt);
     }
 
-    private void computeDistance(Location location) {
+    /*private void computeDistance(Location location) {
         float distance_to = 0;
         if (trackPointsCount == 0) {
             mOldLocation = location;
@@ -366,18 +369,18 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         distance_to = ((float) Math.floor(distance_to) / 1000);
         distance += distance_to;
-    }
+    }*/
 
-    private void computeTime(Location location) {
+    /*private void computeTime(Location location) {
         if (trackPointsCount == 0) {
             first_fix = location.getTime();
             time = 0;
         } else {
             time = location.getTime() - first_fix;
         }
-    }
+    }*/
 
-    private void computeSpeed(Location location) {
+   /* private void computeSpeed(Location location) {
         if (trackPointsCount == 0) {
             max_speed = 0;
             sum_speed = 0;
@@ -388,15 +391,15 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         }
         sum_speed += location.getSpeed();
         avg_speed = sum_speed / trackPointsCount;
-    }
+    }*/
 
-    private void computeAlt(Location location) {
+    /*private void computeAlt(Location location) {
         if (max_alt < location.getAltitude()) {
             max_alt = location.getAltitude();
         }
         if (min_alt > location.getAltitude())
             min_alt = location.getAltitude();
-    }
+    }*/
 
     /*private Notification getNotification() {
         Notification n = new Notification(R.drawable.cruce_galbena,

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.gps.GPSLogger;
@@ -35,7 +36,7 @@ public class TrackLoggerActivity extends Activity {
 	//private boolean service_started;
     //private boolean is_default_track = false;
 
-    private Track mTrack, factoryTrack;
+    private FactoryTrack factoryTrack;
 
     //track data
     long time;
@@ -81,19 +82,17 @@ public class TrackLoggerActivity extends Activity {
 		context = this;
 		checkGPS();
 
-        mTrack = new Track(this.getApplicationContext());
-
 		this.setContentView(R.layout.track_logger_layout);
 
         /*if(this.getIntent().hasExtra("track_name")){
             track_name = this.getIntent().getExtras().getString("track_name");
-            this.setTitle(track_name);
+            this.setName(track_name);
         }*/
 
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
             //is_default_track = true;
-            factoryTrack = new Track(factoryTrackId, this.getApplicationContext());
+            factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
             setTitle(factoryTrack.getTrackName());
 		}
 
@@ -101,7 +100,6 @@ public class TrackLoggerActivity extends Activity {
 
 		if(this.getIntent().hasExtra("mTrackId")){
 			mTrackId = this.getIntent().getExtras().getInt("mTrackId");
-            mTrack = new Track(mTrackId, this.getApplicationContext());
 			//service_started = true;
 		}
 
@@ -127,9 +125,11 @@ public class TrackLoggerActivity extends Activity {
 		
 	}
 
+    //TO-DO should add onSavedInstanceState...
+
 	public void onResume() {
 
-		//this.setTitle(track_name);
+		//this.setName(track_name);
 
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
@@ -189,7 +189,8 @@ public class TrackLoggerActivity extends Activity {
 				//}
                 if(factoryTrack != null)
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-				MapViewActivityIntent.putExtra("mTrackId", mTrackId);
+                if(mTrackId != null)
+				    MapViewActivityIntent.putExtra("mTrackId", mTrackId);
 				context.startActivity(MapViewActivityIntent);
 			}
 		});
@@ -256,7 +257,6 @@ public class TrackLoggerActivity extends Activity {
 		}
 	}
 
-    //TO-DO should add onSavedInstanceState...
 
 	/*public GPSLogger getGPSLogger() {
 

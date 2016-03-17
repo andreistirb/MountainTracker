@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.NewDatabaseHelper;
@@ -19,12 +20,12 @@ public class TrackDetailsActivity extends Activity {
 	private TextView track_details_mark;
 	private TextView track_details_description;
 	private TextView track_details_availability;
-    private Track factoryTrack;
+    private FactoryTrack factoryTrack;
 
 	public void onCreate(Bundle savedInstanceState){
 
-		NewDatabaseHelper db;
-		String traseu, traseu_id;
+		//NewDatabaseHelper db;
+		//String traseu, traseu_id;
 		TextView track_details_duration, track_details_difficulty, track_details_mark,
 				track_details_description, track_details_availability;
 
@@ -33,9 +34,9 @@ public class TrackDetailsActivity extends Activity {
 		this.setContentView(R.layout.track_details_layout);
 		
 		//traseu = this.getIntent().getExtras().getString("track_name");
-		//this.setTitle(traseu);
+		//this.setName(traseu);
         if(this.getIntent().hasExtra("factoryTrackId")) {
-            factoryTrack = new Track(this.getIntent().getExtras().getInt("factoryTrackId"), this.getApplicationContext());
+            factoryTrack = new FactoryTrack(this.getIntent().getExtras().getInt("factoryTrackId"), this.getApplicationContext());
             setTitle(factoryTrack.getTrackName());
             //traseu_id = this.getIntent().getExtras().getString("track_id");
         }
