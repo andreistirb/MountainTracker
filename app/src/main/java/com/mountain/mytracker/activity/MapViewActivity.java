@@ -49,7 +49,12 @@ public class MapViewActivity extends Activity {
 
 			userTrackId = bundle.getInt("userTrackId");
 
-            userTrack.fromDatabase(userTrackId,context);
+            try {
+                userTrack.fromDatabase(userTrackId, context);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
 
 			//GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
 			//		bundle.getDouble("longitude"));
@@ -125,7 +130,12 @@ public class MapViewActivity extends Activity {
         }
 
         if (GPSLogger.isTracking()) {
-            userTrack.fromDatabase(userTrackId, this);
+            try {
+                userTrack.fromDatabase(userTrackId, this);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
             if(userTrack.getTrackPointsCount() > 0) {
                 harta.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
             }

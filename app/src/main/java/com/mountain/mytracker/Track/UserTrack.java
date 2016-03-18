@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.mountain.mytracker.db.DatabaseContract;
@@ -41,6 +42,8 @@ public class UserTrack extends Track {
         super(trackId);
         mDatabase = new DatabaseHelper(context);
 
+        Log.d("in constructor", context.toString());
+
         this.setTime(0L);
         this.setDistance(0F);
         this.setAvg_speed(0F);
@@ -48,7 +51,13 @@ public class UserTrack extends Track {
         this.setMax_alt(0D);
         this.setMin_alt(0D);
 
-        this.fromDatabase(trackId, context);
+        try {
+            this.fromDatabase(trackId, context);
+            Log.v("in constructor", this.getName());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public Float getDistance() {
@@ -115,18 +124,25 @@ public class UserTrack extends Track {
         this.name = name;
     }
 
-    public void fromDatabase(Integer trackId, Context context) {
+    public void fromDatabase(Integer trackId, Context context) throws Exception{
         TrackPoint newTrackPoint;
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         Cursor c;
 
-        qb.setTables(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS);
+        Log.d("in from Database", trackId.toString());
+        /*qb.setTables(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS);
         c = qb.query(mDatabase.getReadableDatabase(), null,
                 DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ",
-                new String[]{trackId.toString()}, null, null, DatabaseContract.DatabaseEntry._ID);
+                new String[]{trackId.toString()}, null, null, null);*/
+        c = mDatabase.getReadableDatabase().query(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS,
+                null, "CAST(" + DatabaseContract.DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
+                new String[]{trackId.toString()}, null, null, null);
+        /*c = mDatabase.getReadableDatabase().query(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS, null, null, null, null, null, null);*/
+
         c.moveToFirst();
 
         if (c.getCount() > 0) {
+            Log.v("found", "asd");
             this.setTime(c.getLong(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TIME)));
             this.setDistance(c.getFloat(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_DISTANCE)));
             this.setFactoryTrackId(c.getInt(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_ID)));
@@ -135,6 +151,9 @@ public class UserTrack extends Track {
             this.setMin_alt(c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT)));
             this.setMax_alt(c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT)));
             this.setName(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_NAME)));
+        }
+        else{
+            throw new Exception();
         }
 
         qb.setTables(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS_POINTS);
@@ -161,6 +180,9 @@ public class UserTrack extends Track {
 
             } while (c.moveToNext());
 
+        }
+        else{
+            throw new Exception();
         }
         mDatabase.close();
     }

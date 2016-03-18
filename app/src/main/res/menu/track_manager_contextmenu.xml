@@ -7,4 +7,10 @@
         android:title="@string/tracker_manager_contextmenu_delete_track">
     </item>
 
+    <item
+        android:id="@+id/contextmenu_rename_track"
+        android:showAsAction="never"
+        android:title="@string/tracker_manager_contextmenu_rename_track">
+    </item>
+
 </menu>

@@ -28,7 +28,7 @@ public class MyTrackDetailsTrackFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userTrackId = getArguments().getInt("userTrackId");
-            userTrack = new UserTrack(userTrackId, this.getContext());
+            userTrack = new UserTrack(userTrackId, getActivity().getApplicationContext());
         }
     }
 

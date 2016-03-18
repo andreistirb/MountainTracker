@@ -17,6 +17,19 @@
         android:layout_weight="1"
         android:textSize="25sp"/>
 
+    <TextView
+        android:id="@+id/tracker_manager_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/sample_text"
+        android:textColor="#fffa"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif-light"
+        android:layout_weight="1"
+        android:textSize="25sp"/>
+
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
