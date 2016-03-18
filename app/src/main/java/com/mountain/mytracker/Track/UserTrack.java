@@ -158,7 +158,7 @@ public class UserTrack extends Track {
 
         qb.setTables(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS_POINTS);
         c = qb.query(mDatabase.getReadableDatabase(), null,
-                DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ",
+                "CAST(" + DatabaseContract.DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
                 new String[]{trackId.toString()}, null, null, DatabaseContract.DatabaseEntry._ID);
         c.moveToFirst();
         if (c.getCount() > 0) {
