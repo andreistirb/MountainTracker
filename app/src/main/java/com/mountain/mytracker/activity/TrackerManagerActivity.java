@@ -23,7 +23,7 @@ import com.mountain.mytracker.other.NameDialog;
  * Aici o sa fie lista cu traseele inregistrate de utilizator
  */
 
-public class TrackerManagerActivity extends ListActivity implements NameDialog.NoticeDialogListener {
+public class TrackerManagerActivity extends ListActivity /*implements NameDialog.NoticeDialogListener*/ {
 
 	private static final long TRACK_ID_NO_TRACK = -1;
 	private DatabaseHelper db;
@@ -32,7 +32,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	private String[] selectionArgs;
 	Intent mTrackLoggerActivity;
 	
-	@Override
+	/*@Override
 	public void onDialogPositiveClick(String titlu){
 		String currentTrackName;
         UserTrack mUserTrack;
@@ -47,7 +47,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		Log.v("dupa dialog", currentTrackName);
 		this.startActivity(mTrackLoggerActivity);
 		
-	}
+	}*/
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,8 +82,9 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		switch(item.getItemId()){
 		
 		case R.id.trackmgr_menu_newtrack: {
-			DialogFragment dialog = new NameDialog();
-			dialog.show(getFragmentManager(), "dialog");
+            this.startActivity(mTrackLoggerActivity);
+			//DialogFragment dialog = new NameDialog();
+			//dialog.show(getFragmentManager(), "dialog");
 		}
 		
 		}
