@@ -14,7 +14,7 @@ import com.mountain.mytracker.db.DatabaseContract;
 
 public class MyTrackDetailsActivity extends FragmentActivity implements ActionBar.TabListener {
 
-    private Integer mTrackNo;
+    private Integer userTrackId;
 
     AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -65,9 +65,9 @@ public class MyTrackDetailsActivity extends FragmentActivity implements ActionBa
         }
 
         if (this.getIntent().hasExtra(DatabaseContract.DatabaseEntry.COL_TRACK_NO)) {
-            //mTrackNo = this.getIntent().getExtras().getInt(DatabaseEntry.COL_TRACK_NO);
-            mTrackNo = this.getIntent().getExtras().getInt("track_id");
-            Log.v("in detalii", mTrackNo.toString());
+            //userTrackId = this.getIntent().getExtras().getInt(DatabaseEntry.COL_TRACK_NO);
+            userTrackId = this.getIntent().getExtras().getInt("userTrackId");
+            Log.v("in detalii", userTrackId.toString());
         }
 
     }
@@ -98,14 +98,14 @@ public class MyTrackDetailsActivity extends FragmentActivity implements ActionBa
                 case 0: {
                     Fragment fragment = new MyTrackDetailsTrackFragment();
                     Bundle args = new Bundle();
-                    args.putInt("track_id", mTrackNo);
+                    args.putInt("userTrackId", userTrackId);
                     fragment.setArguments(args);
                     return fragment;
                 }
                 default:
                     Fragment fragment = new MyTrackDetailsMapFragment();
                     Bundle args = new Bundle();
-                    args.putInt("track_id", mTrackNo);
+                    args.putInt("userTrackId", userTrackId);
                     fragment.setArguments(args);
                     return fragment;
             }

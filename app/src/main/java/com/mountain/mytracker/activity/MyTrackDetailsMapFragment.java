@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.DatabaseHelper;
 
@@ -25,9 +26,10 @@ import java.util.ArrayList;
 
 public class MyTrackDetailsMapFragment extends Fragment {
 
-    private Integer mTrackNo;
-    private DatabaseHelper db;
+    private Integer userTrackId;
+    //private DatabaseHelper db;
     private MapView harta;
+    private UserTrack userTrack;
 
     public MyTrackDetailsMapFragment() {
         // Required empty public constructor
@@ -37,8 +39,9 @@ public class MyTrackDetailsMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTrackNo = getArguments().getInt("track_id");
-            db = new DatabaseHelper(getActivity().getApplicationContext());
+            userTrackId = getArguments().getInt("userTrackId");
+            userTrack = new UserTrack(userTrackId, this.getContext());
+            //db = new DatabaseHelper(getActivity().getApplicationContext());
         }
     }
 
@@ -54,20 +57,20 @@ public class MyTrackDetailsMapFragment extends Fragment {
         hartaController = harta.getController();
         setMap();
 
-        String selection = DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ";
-        String[] selectionArgs = new String[] { mTrackNo.toString() };
-        Log.v("in map view", mTrackNo.toString());
+
+        /*String selection = DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ";
+        String[] selectionArgs = new String[] { userTrackId.toString() };
+        Log.v("in map view", userTrackId.toString());
         String table = DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS_POINTS;
         String sortOrder = DatabaseContract.DatabaseEntry.COL_ORD;
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(table);
         Cursor c = qb.query(db.getReadableDatabase(), null, selection, selectionArgs, null,
-                null, sortOrder);
-        if(c.getCount() > 0) {
-            track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), track));
+                null, sortOrder);*/
+        if(userTrack.getTrackPointsCount() > 0) {
+            harta.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), userTrack.getTrackGeoPoints()));
             hartaController.setZoom(14);
-            hartaController.setCenter(track.get(0));
+            hartaController.setCenter(userTrack.getTrackGeoPoints().get(0));
         }
 
         return rootView;
@@ -89,7 +92,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
     }
 
     // gets track points from database and builds an ArrayList of GeoPoints
-    private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
+    /*private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
         ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
         c.moveToFirst();
         do {
@@ -102,6 +105,6 @@ public class MyTrackDetailsMapFragment extends Fragment {
         } while (c.moveToNext());
 
         return traseu;
-    }
+    }*/
 
 }

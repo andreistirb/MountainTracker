@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.TrackListAdapter;
@@ -32,14 +33,22 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	Intent mTrackLoggerActivity;
 	
 	@Override
-	public void onDialogPositiveClick(String titlu){
+	public void onDialogPositiveClick(String title, Integer trackId){
 		String currentTrackName;
+        UserTrack mUserTrack;
 
-		currentTrackName = titlu;
-		mTrackLoggerActivity.putExtra("track_name", titlu);
+		currentTrackName = title;
+        mUserTrack = new UserTrack(trackId, this.getApplicationContext());
+//        Log.v("dupa dialog", mUserTrack.getName());
+        mUserTrack.setName(currentTrackName);
+
+        mUserTrack.updateDatabase();
+        Log.v("dupa dialog", trackId.toString());
+
+		//mTrackLoggerActivity.putExtra("mTrackId", mUserTrack.getTrackId());
 		Log.v("dupa dialog", currentTrackName);
-		this.startActivity(mTrackLoggerActivity);
-		
+		//this.startActivity(mTrackLoggerActivity);
+		updateList();
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		this.setContentView(R.layout.tracker_manager);
 		this.setTitle(getString(R.string.activity_tracker_manager));
 
-		db = new DatabaseHelper(this);
+		db = new DatabaseHelper(this.getApplicationContext());
 
 		table = DatabaseEntry.TABLE_MY_TRACKS;
 		
@@ -59,10 +68,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	public void onResume(){
 		super.onResume();
 		
-		c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
-		c.moveToFirst();
-		this.setListAdapter(new TrackListAdapter(TrackerManagerActivity.this,c));
-		this.registerForContextMenu(this.getListView());
+		updateList();
 	}
 	
 	@Override
@@ -75,8 +81,9 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		switch(item.getItemId()){
 		
 		case R.id.trackmgr_menu_newtrack: {
-			DialogFragment dialog = new NameDialog();
-			dialog.show(getFragmentManager(), "dialog");
+            this.startActivity(mTrackLoggerActivity);
+			//DialogFragment dialog = new NameDialog();
+			//dialog.show(getFragmentManager(), "dialog");
 		}
 		
 		}
@@ -93,7 +100,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		currentTrackId = traseu.getInt(traseu.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
 		mTrackNo = traseu.getString(traseu.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
 		i.putExtra(DatabaseEntry.COL_TRACK_NO, mTrackNo);
-		i.putExtra("track_id",currentTrackId);
+		i.putExtra("userTrackId",currentTrackId);
 		this.startActivity(i);
 	}
 
@@ -104,15 +111,28 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
+        Integer trackId;
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         c.moveToFirst();
         c.moveToPosition(info.position);
+        trackId = c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
 
         switch(item.getItemId()){
             case R.id.contextmenu_delete_track : {
-                deleteTrack(c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
-                Log.i("delete row","deleting row");
+                deleteTrack(trackId.toString());
+                updateList();
+                //Log.i("delete row","deleting row");
+                break;
+            }
+
+            case R.id.contextmenu_rename_track : {
+                Bundle fragmentArgs = new Bundle();
+                fragmentArgs.putInt(DatabaseEntry.COL_TRACK_NO,trackId);
+
+                DialogFragment dialog = new NameDialog();
+                dialog.setArguments(fragmentArgs);
+                dialog.show(getFragmentManager(), "dialog");
                 break;
             }
         }
@@ -120,7 +140,14 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
     }
 
     private void deleteTrack(String track_id){
-        db.getWritableDatabase().delete(DatabaseEntry.TABLE_MY_TRACKS,DatabaseEntry.COL_TRACK_NO + " = " + track_id, null);
+        db.getWritableDatabase().delete(DatabaseEntry.TABLE_MY_TRACKS, DatabaseEntry.COL_TRACK_NO + " = " + track_id, null);
+    }
+
+    private void updateList(){
+        c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
+        c.moveToFirst();
+        this.setListAdapter(new TrackListAdapter(/*TrackerManagerActivity.this*/this.getApplicationContext(),c));
+        this.registerForContextMenu(this.getListView());
     }
 
 }

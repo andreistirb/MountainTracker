@@ -1,4 +1,6 @@
 package com.mountain.mytracker.db;
+
+import java.io.Serializable;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,7 +11,7 @@ import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
  * Helper pentru baza de date a traseelor
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 
 	private static final String DB_NAME = "MyTracks.db";
 	private static final int DB_VERSION = 1;
@@ -18,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_TABLE_TRACK = "CREATE TABLE "
 			+ DatabaseEntry.TABLE_MY_TRACKS + " ( "
 			+ DatabaseEntry._ID + " integer primary key autoincrement, "
-			+ DatabaseEntry.COL_TRACK_NO + " , "
+			+ DatabaseEntry.COL_TRACK_NO + " , " //should be integer autoincrement!!!
 			+ DatabaseEntry.COL_TRACK_NAME + " , "
 			+ DatabaseEntry.COL_TRACK_ID + " , "
 			+ DatabaseEntry.COL_DISTANCE + " , "

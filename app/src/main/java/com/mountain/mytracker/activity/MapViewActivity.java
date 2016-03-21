@@ -5,18 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
-import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.NewDatabaseHelper;
+import com.mountain.mytracker.Track.FactoryTrack;
+import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.gps.GPSLogger;
 
 import org.osmdroid.api.IMapController;
@@ -31,38 +27,55 @@ import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
-	private static final float polylineWidth = 3.0f;
-
-	private String traseu_id;
-	private MapView harta;
+    //private String numeTraseu;
 	private IMapController hartaController;
-	private ArrayList<GeoPoint> mTrack;
+	///private ArrayList<GeoPoint> track;
+	//private ArrayList<GeoPoint> mTrack;
+	private static final float polylineWidth = 3.0f;
+	private MapView harta;
 	private MyLocationOverlay mLocationOverlay;
-	private NewDatabaseHelper db;
-	private DatabaseHelper mDatabase;
-	private Integer mTrackNo;
+	//private DatabaseHelper mDatabase;
+	private Integer userTrackId;
 	private boolean has_track;
+	private FactoryTrack factoryTrack;
+    private UserTrack userTrack;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
+            int pointsNo;
 
-			mTrackNo = bundle.getInt("mTrackNo");
+			userTrackId = bundle.getInt("userTrackId");
 
-			GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
-					bundle.getDouble("longitude"));
-			mTrack.add(curent);
+            try {
+                userTrack.fromDatabase(userTrackId, context);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
 
-            harta.getOverlays().add(buildPolyline(context,mTrack,Color.RED));
-			hartaController.setCenter(curent);
+			//GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
+			//		bundle.getDouble("longitude"));
+			//mTrack.add(curent);
+            try {
+                harta.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
+                pointsNo = userTrack.getTrackPointsCount();
+                if(pointsNo > 0)
+                    hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo-1));
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
 			mLocationOverlay.enableMyLocation();
 		}
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
-		String numeTraseu;
+        Integer factoryTrackId;
+
 
 		super.onCreate(savedInstanceState);
         has_track = false;
@@ -70,73 +83,83 @@ public class MapViewActivity extends Activity {
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
-		numeTraseu = this.getIntent().getExtras().getString("track_name");
-		if(this.getIntent().hasExtra("track_id")){
-			traseu_id = this.getIntent().getExtras().getString("track_id");
+        /*if(this.getIntent().hasExtra("track_name")){
+            numeTraseu = this.getIntent().getExtras().getString("track_name");
+            setName(numeTraseu);
+        }*/
+
+		if(this.getIntent().hasExtra("factoryTrackId")){
+			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
+			factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
 			has_track = true;
-		}
-		if(this.getIntent().hasExtra("mTrackNo")){
-			mTrackNo = this.getIntent().getExtras().getInt("mTrackNo");
+            setTitle(factoryTrack.getTrackName());
 		}
 
-        mTrack = new ArrayList<GeoPoint>();
+		if(this.getIntent().hasExtra("userTrackId")){
+			userTrackId = this.getIntent().getExtras().getInt("userTrackId");
+            userTrack = new UserTrack(userTrackId, this.getApplicationContext());
+		}
+
+        /*if(this.getIntent().hasExtra("factoryTrackObj"))
+            factoryTrack = (Track) this.getIntent().getSerializableExtra("factoryTrackObj");*/
+
+        //mTrack = new ArrayList<GeoPoint>();
 		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = harta.getController();
 		mLocationOverlay = new MyLocationOverlay(this,harta);
 		
 		/* ca sa aducem punctele traseului din baza de date */
-		db = new NewDatabaseHelper(this);
-		mDatabase = new DatabaseHelper(this);
+		//mDatabase = new DatabaseHelper(this);
 
         harta.getOverlays().add(mLocationOverlay);
         setMap();
-        setTitle(numeTraseu);
 
 	}
 
 	@Override
 	public void onResume() {
-		ArrayList<GeoPoint> track;
+		//ArrayList<GeoPoint> track;
 
         if(has_track){
+            // search for track points
+			//factoryTrack.fromFactoryDatabase(factoryTrackId, this);
+            harta.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
 
-            // cautam punctele traseului
-            String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
-            String[] selectionArgs = new String[] { traseu_id };
-            Log.v("in map view", traseu_id);
-            String table = DatabaseEntry.TABLE_TRACK_POINTS;
-            String sortOrder = DatabaseEntry.COL_ORD;
-
-            Cursor c = db.myQuery(table, null, selection, selectionArgs, null,
-                    null, sortOrder);
-            track = buildGeoPoint(c);
-            harta.getOverlays().add(buildPolyline(this,track,Color.BLUE));
             hartaController.setZoom(14);
-            hartaController.setCenter(track.get(0));
+            hartaController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
         }
 
         if (GPSLogger.isTracking()) {
-			SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-			qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
-			Cursor c = qb.query(mDatabase.getReadableDatabase(), null,
-					DatabaseEntry.COL_TRACK_NO + " = ? ",
-					new String[] { mTrackNo.toString() }, null, null,
-					DatabaseEntry._ID);
-			c.moveToFirst();
-			if(c.getCount() > 0){
-				Integer x = c.getCount();
-				Log.v("in mapViewActivitysid", x.toString());
-				do {
-					mTrack.add(new GeoPoint(c.getDouble(c
-							.getColumnIndex(DatabaseEntry.COL_LAT)), c.getDouble(c
-							.getColumnIndex(DatabaseEntry.COL_LON))));
-				} while (c.moveToNext());
+            try {
+                userTrack.fromDatabase(userTrackId, this);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            if(userTrack.getTrackPointsCount() > 0) {
+                harta.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
+            }
+			//SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+			//qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
+			//Cursor c = qb.query(mDatabase.getReadableDatabase(), null,
+			//		DatabaseEntry.COL_TRACK_NO + " = ? ",
+			//		new String[] { userTrackId.toString() }, null, null,
+			//		DatabaseEntry._ID);
+			//c.moveToFirst();
+			//if(c.getCount() > 0){
+			//	Integer x = c.getCount();
+			//	Log.v("in mapViewActivitysid", x.toString());
+			//	do {
+			//		mTrack.add(new GeoPoint(c.getDouble(c
+			//				.getColumnIndex(DatabaseEntry.COL_LAT)), c.getDouble(c
+			//				.getColumnIndex(DatabaseEntry.COL_LON))));
+			//	} while (c.moveToNext());
 				
-			}
-			else{
-				Integer x = c.getCount();
-				Log.v("in mapViewActivity", x.toString());
-			}
+			//}
+			//else{
+			//	Integer x = c.getCount();
+			//	Log.v("in mapViewActivity", x.toString());
+			//}
 		}
 		super.onResume();
 	}
@@ -207,18 +230,18 @@ public class MapViewActivity extends Activity {
     }
 
 	// gets track points from database and builds an ArrayList of GeoPoints
-	private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-		ArrayList<GeoPoint> traseu = new ArrayList<GeoPoint>();
+	/*private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
+		ArrayList<GeoPoint> factoryTrack = new ArrayList<GeoPoint>();
 		c.moveToFirst();
 		do {
 			double latitude = c.getDouble(c
 					.getColumnIndex(DatabaseEntry.COL_LAT));
 			double longitude = c.getDouble(c
 					.getColumnIndex(DatabaseEntry.COL_LON));
-			traseu.add(new GeoPoint(latitude, longitude));
+			factoryTrack.add(new GeoPoint(latitude, longitude));
 		} while (c.moveToNext());
 
-		return traseu;
-	}
+		return factoryTrack;
+	}*/
 
 }

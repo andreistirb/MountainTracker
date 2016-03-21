@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -95,22 +96,22 @@ public class MountainTrackListActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.mountain_track_list_contextmenu_show: {
 			Intent i = new Intent(this, MapViewActivity.class);
-			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			//i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
+			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_details: {
 			Intent i = new Intent(this, TrackDetailsActivity.class);
-			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			//i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
+			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_try:{
 			Intent i = new Intent(this, TrackLoggerActivity.class);
-			i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-			i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+			//i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
+			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 			this.startActivity(i);
 		}
 		}
@@ -121,8 +122,8 @@ public class MountainTrackListActivity extends ListActivity {
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
 		Intent i = new Intent(this, TrackLoggerActivity.class);
 		Cursor c = (Cursor) lv.getItemAtPosition(position);
-		i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-		i.putExtra("track_id", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+		//i.putExtra("track_name", c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
+		i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
 		this.startActivity(i);
 	}
 }

@@ -52,6 +52,7 @@
     <!-->TrackerManagerActivity<-->
     <string name="activity_tracker_manager">My Tracks</string>
     <string name="tracker_manager_contextmenu_delete_track">Delete track</string>
+    <string name="tracker_manager_contextmenu_rename_track">Rename track</string>
     <string name="tracker_manager_menu_newtrack">New Track</string>
     <string name="tracker_manager_menu_delete_all">Delete all</string>
 
