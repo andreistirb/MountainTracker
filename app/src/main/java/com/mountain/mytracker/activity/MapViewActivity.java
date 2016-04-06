@@ -27,14 +27,10 @@ import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
-    //private String numeTraseu;
 	private IMapController hartaController;
-	///private ArrayList<GeoPoint> track;
-	//private ArrayList<GeoPoint> mTrack;
 	private static final float polylineWidth = 3.0f;
-	private MapView harta;
+	private MapView mMapView;
 	private MyLocationOverlay mLocationOverlay;
-	//private DatabaseHelper mDatabase;
 	private Integer userTrackId;
 	private boolean has_track;
 	private FactoryTrack factoryTrack;
@@ -56,11 +52,8 @@ public class MapViewActivity extends Activity {
                 e.printStackTrace();
             }
 
-			//GeoPoint curent = new GeoPoint(bundle.getDouble("latitude"),
-			//		bundle.getDouble("longitude"));
-			//mTrack.add(curent);
             try {
-                harta.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
+                mMapView.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
                 pointsNo = userTrack.getTrackPointsCount();
                 if(pointsNo > 0)
                     hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo-1));
@@ -83,11 +76,6 @@ public class MapViewActivity extends Activity {
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
-        /*if(this.getIntent().hasExtra("track_name")){
-            numeTraseu = this.getIntent().getExtras().getString("track_name");
-            setName(numeTraseu);
-        }*/
-
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
 			factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
@@ -100,30 +88,20 @@ public class MapViewActivity extends Activity {
             userTrack = new UserTrack(userTrackId, this.getApplicationContext());
 		}
 
-        /*if(this.getIntent().hasExtra("factoryTrackObj"))
-            factoryTrack = (Track) this.getIntent().getSerializableExtra("factoryTrackObj");*/
+		mMapView = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
+		hartaController = mMapView.getController();
+		mLocationOverlay = new MyLocationOverlay(this, mMapView);
 
-        //mTrack = new ArrayList<GeoPoint>();
-		harta = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
-		hartaController = harta.getController();
-		mLocationOverlay = new MyLocationOverlay(this,harta);
-		
-		/* ca sa aducem punctele traseului din baza de date */
-		//mDatabase = new DatabaseHelper(this);
-
-        harta.getOverlays().add(mLocationOverlay);
+        mMapView.getOverlays().add(mLocationOverlay);
         setMap();
 
 	}
 
 	@Override
 	public void onResume() {
-		//ArrayList<GeoPoint> track;
 
         if(has_track){
-            // search for track points
-			//factoryTrack.fromFactoryDatabase(factoryTrackId, this);
-            harta.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
+            mMapView.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
 
             hartaController.setZoom(14);
             hartaController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
@@ -137,29 +115,8 @@ public class MapViewActivity extends Activity {
                 e.printStackTrace();
             }
             if(userTrack.getTrackPointsCount() > 0) {
-                harta.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
+                mMapView.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
             }
-			//SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-			//qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
-			//Cursor c = qb.query(mDatabase.getReadableDatabase(), null,
-			//		DatabaseEntry.COL_TRACK_NO + " = ? ",
-			//		new String[] { userTrackId.toString() }, null, null,
-			//		DatabaseEntry._ID);
-			//c.moveToFirst();
-			//if(c.getCount() > 0){
-			//	Integer x = c.getCount();
-			//	Log.v("in mapViewActivitysid", x.toString());
-			//	do {
-			//		mTrack.add(new GeoPoint(c.getDouble(c
-			//				.getColumnIndex(DatabaseEntry.COL_LAT)), c.getDouble(c
-			//				.getColumnIndex(DatabaseEntry.COL_LON))));
-			//	} while (c.moveToNext());
-				
-			//}
-			//else{
-			//	Integer x = c.getCount();
-			//	Log.v("in mapViewActivity", x.toString());
-			//}
 		}
 		super.onResume();
 	}
@@ -181,31 +138,31 @@ public class MapViewActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()){
 			case R.id.mapview_menu_download_view_area : {
-				CacheManager cacheManager = new CacheManager(harta);
-				int zoomMin = harta.getZoomLevel();
-				int zoomMax = harta.getZoomLevel()+4;
-				cacheManager.downloadAreaAsync(this, harta.getBoundingBox(), zoomMin, zoomMax);
+				CacheManager cacheManager = new CacheManager(mMapView);
+				int zoomMin = mMapView.getZoomLevel();
+				int zoomMax = mMapView.getZoomLevel()+4;
+				cacheManager.downloadAreaAsync(this, mMapView.getBoundingBox(), zoomMin, zoomMax);
 				break;
 			}
 			case R.id.mapview_menu_delete_view_area : {
-				CacheManager cacheManager = new CacheManager(harta);
-				int zoomMin = harta.getZoomLevel();
-				int zoomMax = harta.getZoomLevel()+7;
-				cacheManager.cleanAreaAsync(this, harta.getBoundingBox(), zoomMin, zoomMax);
+				CacheManager cacheManager = new CacheManager(mMapView);
+				int zoomMin = mMapView.getZoomLevel();
+				int zoomMax = mMapView.getZoomLevel()+7;
+				cacheManager.cleanAreaAsync(this, mMapView.getBoundingBox(), zoomMin, zoomMax);
 				break;
 			}
 			case R.id.mapview_menu_tile_mapnik : {
-				harta.setTileSource(TileSourceFactory.MAPNIK);
+				mMapView.setTileSource(TileSourceFactory.MAPNIK);
 				item.setChecked(true);
 				break;
 			}
 			case R.id.mapview_menu_tile_cyclemap : {
-				harta.setTileSource(TileSourceFactory.CYCLEMAP);
+				mMapView.setTileSource(TileSourceFactory.CYCLEMAP);
 				item.setChecked(true);
 				break;
 			}
 			case R.id.mapview_menu_tile_mapquest_osm : {
-				harta.setTileSource(TileSourceFactory.MAPQUESTOSM);
+				mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
 				item.setChecked(true);
 				break;
 			}
@@ -214,10 +171,10 @@ public class MapViewActivity extends Activity {
 	}
 
     private void setMap(){
-        harta.setClickable(true);
-        harta.setBuiltInZoomControls(true);
-        harta.setTileSource(TileSourceFactory.CYCLEMAP);
-        harta.setMultiTouchControls(true);
+        mMapView.setClickable(true);
+        mMapView.setBuiltInZoomControls(true);
+        mMapView.setTileSource(TileSourceFactory.CYCLEMAP);
+        mMapView.setMultiTouchControls(true);
         hartaController.setZoom(14);
     }
 
@@ -228,20 +185,5 @@ public class MapViewActivity extends Activity {
         track.setWidth(polylineWidth);
         return track;
     }
-
-	// gets track points from database and builds an ArrayList of GeoPoints
-	/*private ArrayList<GeoPoint> buildGeoPoint(Cursor c) {
-		ArrayList<GeoPoint> factoryTrack = new ArrayList<GeoPoint>();
-		c.moveToFirst();
-		do {
-			double latitude = c.getDouble(c
-					.getColumnIndex(DatabaseEntry.COL_LAT));
-			double longitude = c.getDouble(c
-					.getColumnIndex(DatabaseEntry.COL_LON));
-			factoryTrack.add(new GeoPoint(latitude, longitude));
-		} while (c.moveToNext());
-
-		return factoryTrack;
-	}*/
 
 }

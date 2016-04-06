@@ -15,9 +15,7 @@ import com.mountain.mytracker.other.GPXExport;
 public class MyTrackDetailsTrackFragment extends Fragment {
 
     private Integer userTrackId;
-    //private DatabaseHelper db;
     Button export_btn;
-    private String track_name;
     private UserTrack userTrack;
 
     public MyTrackDetailsTrackFragment() {
@@ -70,41 +68,6 @@ public class MyTrackDetailsTrackFragment extends Fragment {
                 }
             });
 
-            //db = new DatabaseHelper(getActivity().getApplicationContext());
-
-            //String table = DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS;
-
-            //Cursor c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
-            //c.moveToFirst();
-
-
-            //if (c.move(mTrackNo - 1)) {
-
-            /*Integer durationi = userTrack.getTrack
-
-                duration.setText(String.format("%d:%02d:%02d", durationi / 3600, (durationi % 3600) / 60, (durationi % 60)));
-                distance.setText(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_DISTANCE)));
-                avg_speed.setText(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_MED_SPEED)));
-                max_speed.setText(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_MAX_SPEED)));
-                min_alt.setText(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT)));
-                max_alt.setText(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT)));
-
-                Log.v("in mytrackdetails", c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_NO)));
-
-                track_name = c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_NAME));
-
-
-                export_btn.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        GPXExport gpx = new GPXExport();
-                        gpx.createFile(mTrackNo, mTrackNo.toString() + "track.gpx", track_name, db);
-                        Toast.makeText(getActivity(), "Export successful",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });*/
-            //}
         }
 
         return rootView;

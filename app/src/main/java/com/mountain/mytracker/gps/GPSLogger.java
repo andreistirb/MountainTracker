@@ -39,7 +39,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
 
     //database
-   // private DatabaseHelper mDatabase;
 
     //Google Api
     private GoogleApiClient mGoogleApiClient;
@@ -56,7 +55,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     private String mLastUpdateTime;
     private boolean allowSendingNotifications = false;
     private ArrayList<GeoPoint> trackPoints;
-    //private NewDatabaseHelper factoryDB;
+
 
     private Intent notification;
 
@@ -70,9 +69,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     private boolean isGPSEnabled;
 
     private Integer mTrackId;   //id-ul traseului inregistrat de user
-    //private String track_name;  //numele traseului (ori cel predefinit, din baza de date implicita,
-    //ori cel dat de user
-    //private String track_id;    //id-ul traseului din baza de date implicita
+
 
     private int trackPointsCount; //pentru a determina prima locatie
 
@@ -101,12 +98,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public void onCreate() {
 
-        /*trackPointsCount = 0;*/
-
-        //database
-        /*mDatabase = new DatabaseHelper(this.getBaseContext());
-        factoryDB = new NewDatabaseHelper(this.getBaseContext());*/
-
         /*mGeofenceList = new ArrayList<Geofence>();*/
         userTrack = new UserTrack(this.getApplicationContext());
 
@@ -133,13 +124,10 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
         mGoogleApiClient.connect();
 
-        // receive available info
-        //track_name = intent.getExtras().getString("track_name");
+
         if (intent.hasExtra("factoryTrackId")) {
-            //track_id = intent.getExtras().getString("track_id");
             factoryTrack = new FactoryTrack(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
             userTrack.createDatabaseEntry(factoryTrack.getTrackId());
-            //new ParseAsync().execute();
             shouldGeofence = true;
         }
         else
@@ -206,15 +194,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //nmgr.notify(1, getNotification());
 
-/*        if (!checkEmptyDatabase(mDatabase)) {
-            mTrackId = 1;
-        } else {
-            mTrackId = getTrackNo(mDatabase) + 1;
-        }*/
-//        createEntry(mTrackId);
-        /*trackPointsCount = 0;*/
-        //min_alt = 9999;
-        //max_alt = 0;
         Log.v("in startTracking()", "notification");
         isTracking = true;
     }
@@ -224,7 +203,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         isTracking = false;
         mVibrator.vibrate(500);
         if (shouldGeofence) {
-            //removeGeofences();
         }
         userTrack.updateDatabase();
         this.stopSelf();
@@ -291,11 +269,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         TrackPoint mTrackPoint;
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        //computeTime(location);
-        //computeSpeed(location);
-        //computeDistance(location);
-        //computeAlt(location);
-        //insertLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), mCurrentLocation.getAltitude());
 
         buildNotification();
 
@@ -327,21 +300,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
 
     }
 
-    /*public void insertLocation(double latitude, double longitude,
-                               double altitude) {
-        ContentValues row = new ContentValues();
-        row.put(DatabaseEntry.COL_ALT, altitude);
-        row.put(DatabaseEntry.COL_LAT, latitude);
-        row.put(DatabaseEntry.COL_LON, longitude);
-        row.put(DatabaseEntry.COL_TRACK_NO, mTrackId.toString());
-        mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS_POINTS,
-                null, row);
-        Integer x = mTrackId;
-        Log.v("cand insereaza in Db", x.toString());
-        mDatabase.close();
-
-    }*/
-
     private void buildNotification() {
 
         notification.putExtra("altitude", mCurrentLocation.getAltitude());
@@ -356,50 +314,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         //notification.putExtra("max_alt", max_alt);
         //notification.putExtra("min_alt", min_alt);
     }
-
-    /*private void computeDistance(Location location) {
-        float distance_to = 0;
-        if (trackPointsCount == 0) {
-            mOldLocation = location;
-            trackPointsCount++;
-        } else {
-            distance_to = location.distanceTo(mOldLocation);
-            mOldLocation = location;
-        }
-
-        distance_to = ((float) Math.floor(distance_to) / 1000);
-        distance += distance_to;
-    }*/
-
-    /*private void computeTime(Location location) {
-        if (trackPointsCount == 0) {
-            first_fix = location.getTime();
-            time = 0;
-        } else {
-            time = location.getTime() - first_fix;
-        }
-    }*/
-
-   /* private void computeSpeed(Location location) {
-        if (trackPointsCount == 0) {
-            max_speed = 0;
-            sum_speed = 0;
-            max_speed = location.getSpeed();
-        } else {
-            if (location.getSpeed() > max_speed)
-                max_speed = location.getSpeed();
-        }
-        sum_speed += location.getSpeed();
-        avg_speed = sum_speed / trackPointsCount;
-    }*/
-
-    /*private void computeAlt(Location location) {
-        if (max_alt < location.getAltitude()) {
-            max_alt = location.getAltitude();
-        }
-        if (min_alt > location.getAltitude())
-            min_alt = location.getAltitude();
-    }*/
 
     /*private Notification getNotification() {
         Notification n = new Notification(R.drawable.cruce_galbena,
@@ -432,63 +346,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         return isTracking;
     }
 
-    /*private boolean checkEmptyDatabase(DatabaseHelper database) {
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(DatabaseEntry.TABLE_MY_TRACKS);
-        Cursor c = qb.query(database.getReadableDatabase(), null, null, null,
-                null, null, null);
-        if (c.getCount() == 0) {
-            Log.v("verifica BD null", "are 0 intrari");
-            c.close();
-            return false;
-        } else {
-            c.close();
-            return true;
-        }
-    }*/
-
-    /*private int getTrackNo(DatabaseHelper database) {
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(DatabaseEntry.TABLE_MY_TRACKS);
-        Cursor c = qb.query(database.getReadableDatabase(),
-                new String[]{"max(" + DatabaseEntry.COL_TRACK_NO + ")"},
-                null, null, null, null, null);
-        c.moveToFirst();
-        return c.getInt(c.getColumnIndex("max(" + DatabaseEntry.COL_TRACK_NO
-                + ")"));
-    }*/
-
-//    public void createEntry(int mTrackNo) {
-//        ContentValues row = new ContentValues();
-//        row.put(DatabaseEntry.COL_TRACK_NAME, track_name);
-//        row.put(DatabaseEntry.COL_TRACK_NO, mTrackNo);
-//        row.put(DatabaseEntry.COL_TRACK_ID, track_id);
-//        mDatabase.getWritableDatabase().insert(DatabaseEntry.TABLE_MY_TRACKS, null, row);
-//        Integer x = mTrackNo;
-//        Log.v("creeaza o intrare in Db", x.toString());
-//        mDatabase.close();
-//    }
-
-    /*private void populateTrackPoints() {
-
-        String selection = DatabaseEntry.COL_TRACK_ID + " = ? ";
-        String[] selectionArgs = new String[]{track_id};
-        Log.v("in map view", track_id);
-        String table = DatabaseEntry.TABLE_TRACK_POINTS;
-        String sortOrder = DatabaseEntry.COL_ORD;
-
-        Cursor c = factoryDB.myQuery(table, null, selection, selectionArgs, null,
-                null, sortOrder);
-        c.moveToFirst();
-        do {
-            double latitude = c.getDouble(c
-                    .getColumnIndex(DatabaseEntry.COL_LAT));
-            double longitude = c.getDouble(c
-                    .getColumnIndex(DatabaseEntry.COL_LON));
-            trackPoints.add(new GeoPoint(latitude, longitude));
-        } while (c.moveToNext());
-
-    }*/
 
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
