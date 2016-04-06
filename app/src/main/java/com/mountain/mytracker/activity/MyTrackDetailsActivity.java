@@ -65,7 +65,6 @@ public class MyTrackDetailsActivity extends FragmentActivity implements ActionBa
         }
 
         if (this.getIntent().hasExtra(DatabaseContract.DatabaseEntry.COL_TRACK_NO)) {
-            //userTrackId = this.getIntent().getExtras().getInt(DatabaseEntry.COL_TRACK_NO);
             userTrackId = this.getIntent().getExtras().getInt("userTrackId");
             Log.v("in detalii", userTrackId.toString());
         }

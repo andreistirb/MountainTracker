@@ -23,18 +23,12 @@ import com.mountain.mytracker.gps.GPSLogger;
 public class TrackLoggerActivity extends Activity {
 
 	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
-	private GPSLogger gpsLogger;
 	boolean GPSflag = false;
-	//private String track_name;
 	private Integer factoryTrackId, mTrackId;
     private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private Context context;
-	private DatabaseHelper mDatabase;
-	//private Integer ;
 	public boolean detalii_btn; //daca sa apara sau nu butonul detalii
-	//private boolean service_started;
-    //private boolean is_default_track = false;
 
     private FactoryTrack factoryTrack;
 
@@ -78,20 +72,13 @@ public class TrackLoggerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//service_started = false;
 		context = this;
 		checkGPS();
 
 		this.setContentView(R.layout.track_logger_layout);
 
-        /*if(this.getIntent().hasExtra("track_name")){
-            track_name = this.getIntent().getExtras().getString("track_name");
-            this.setName(track_name);
-        }*/
-
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-            //is_default_track = true;
             factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
             setTitle(factoryTrack.getTrackName());
 		}
@@ -100,10 +87,8 @@ public class TrackLoggerActivity extends Activity {
 
 		if(this.getIntent().hasExtra("mTrackId")){
 			mTrackId = this.getIntent().getExtras().getInt("mTrackId");
-			//service_started = true;
 		}
 
-		//mDatabase = new DatabaseHelper(this.getApplicationContext());
 
 		GPSLoggerServiceIntent = new Intent(this, GPSLogger.class);
 		MapViewActivityIntent = new Intent(this, MapViewActivity.class);
@@ -129,7 +114,6 @@ public class TrackLoggerActivity extends Activity {
 
 	public void onResume() {
 
-		//this.setName(track_name);
 
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
@@ -144,8 +128,6 @@ public class TrackLoggerActivity extends Activity {
                 public void onClick(View arg0) {
                     if (factoryTrack != null) {
                         TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-                        //TrackDetailsActivityIntent.putExtra("track_name", track_name);
-                        //TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                         context.startActivity(TrackDetailsActivityIntent);
                     }
                 }
@@ -158,11 +140,9 @@ public class TrackLoggerActivity extends Activity {
 
                 Log.v("in trackloggeractivity", "click");
 				
-				//GPSLoggerServiceIntent.putExtra("track_name", track_name);
                 if(factoryTrack != null)
 				    GPSLoggerServiceIntent.putExtra("factoryTrackId", factoryTrackId);
 
-				//service_started = true;
 				startService(GPSLoggerServiceIntent);
 			}
 		});
@@ -171,10 +151,6 @@ public class TrackLoggerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				//service_started = false;
-				
-				//updateDatabase();
-				
 				stopService(GPSLoggerServiceIntent);
 			}
 		});
@@ -183,10 +159,6 @@ public class TrackLoggerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				//MapViewActivityIntent.putExtra("track_name", track_name);
-				//if(!detalii_btn){
-				//	MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-				//}
                 if(factoryTrack != null)
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                 if(mTrackId != null)
@@ -256,27 +228,5 @@ public class TrackLoggerActivity extends Activity {
 							}).create().show();
 		}
 	}
-
-
-	/*public GPSLogger getGPSLogger() {
-
-		return this.gpsLogger;
-	}*/
-
-	/*public void setGPSLogger(GPSLogger l) {
-		this.gpsLogger = l;
-	}*/
-
-	/*public void updateDatabase(){
-		ContentValues row = new ContentValues();
-		row.put(DatabaseEntry.COL_MAX_SPEED, max_speed);
-		row.put(DatabaseEntry.COL_MED_SPEED, avg_speed) ;
-		row.put(DatabaseEntry.COL_DISTANCE, distance);
-		row.put(DatabaseEntry.COL_TIME, time);
-		row.put(DatabaseEntry.COL_TRACK_MAX_ALT, this.max_alt);
-		row.put(DatabaseEntry.COL_TRACK_MIN_ALT, this.min_alt);
-		mDatabase.getWritableDatabase().update(DatabaseEntry.TABLE_MY_TRACKS, row, DatabaseEntry.COL_TRACK_NO + " = " + mTrackId, null);
-		Log.v("in trackLogger", "s-o updatat baza de date");
-	}*/
 
 }

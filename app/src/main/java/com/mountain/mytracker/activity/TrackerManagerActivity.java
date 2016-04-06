@@ -28,8 +28,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	private static final long TRACK_ID_NO_TRACK = -1;
 	private DatabaseHelper db;
 	private Cursor c;
-	private String table, selection, sortOrder;
-	private String[] selectionArgs;
+	private String table;
 	Intent mTrackLoggerActivity;
 	
 	@Override
@@ -39,15 +38,9 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
 		currentTrackName = title;
         mUserTrack = new UserTrack(trackId, this.getApplicationContext());
-//        Log.v("dupa dialog", mUserTrack.getName());
         mUserTrack.setName(currentTrackName);
-
         mUserTrack.updateDatabase();
-        Log.v("dupa dialog", trackId.toString());
 
-		//mTrackLoggerActivity.putExtra("mTrackId", mUserTrack.getTrackId());
-		Log.v("dupa dialog", currentTrackName);
-		//this.startActivity(mTrackLoggerActivity);
 		updateList();
 	}
 
@@ -82,10 +75,8 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		
 		case R.id.trackmgr_menu_newtrack: {
             this.startActivity(mTrackLoggerActivity);
-			//DialogFragment dialog = new NameDialog();
-			//dialog.show(getFragmentManager(), "dialog");
 		}
-		
+
 		}
 		return true;
 	}
@@ -122,7 +113,6 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
             case R.id.contextmenu_delete_track : {
                 deleteTrack(trackId.toString());
                 updateList();
-                //Log.i("delete row","deleting row");
                 break;
             }
 
@@ -146,7 +136,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
     private void updateList(){
         c = db.getReadableDatabase().query(table, null, null, null, null, null, null);
         c.moveToFirst();
-        this.setListAdapter(new TrackListAdapter(/*TrackerManagerActivity.this*/this.getApplicationContext(),c));
+        this.setListAdapter(new TrackListAdapter(this.getApplicationContext(),c));
         this.registerForContextMenu(this.getListView());
     }
 
