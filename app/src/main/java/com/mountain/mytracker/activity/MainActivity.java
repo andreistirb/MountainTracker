@@ -14,19 +14,11 @@ public class MainActivity extends Activity {
 
 	Button about_btn, my_tracks, mountain_list;
 
-    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
-
     @Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main_layout);
 
-        int i;
-        //check if Google Play services are available
-        if ((i = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)) != ConnectionResult.SUCCESS){
-            GooglePlayServicesUtil.getErrorDialog(i, this, REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
-        }
-		
 		mountain_list = (Button) this.findViewById(R.id.main_mountain_btn);		
 		mountain_list.setOnClickListener(new View.OnClickListener() {
 			

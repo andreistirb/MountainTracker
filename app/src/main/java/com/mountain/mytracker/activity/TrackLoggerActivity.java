@@ -47,7 +47,7 @@ public class TrackLoggerActivity extends Activity {
 				Double longitude = bundle.getDouble("longitude");
 				Double latitude = bundle.getDouble("latitude");
 				Float speeds = bundle.getFloat("speed");
-				time = bundle.getLong("time") / 1000;
+				time = bundle.getLong("time") / 1000000000;
                 distance = bundle.getFloat("distance");
                 max_speed = bundle.getFloat("max_speed");
                 avg_speed = bundle.getFloat("avg_speed");
@@ -66,7 +66,7 @@ public class TrackLoggerActivity extends Activity {
         lon.setText(Double.toString(Math.floor(longitude * 10000) / 10000));
         lat.setText(Double.toString(Math.floor(latitude * 10000) / 10000));
         this.speed.setText(Double.toString(Math.floor(speeds * 100) / 100));
-        timp.setText(String.format("%d:%02d:%02d", time/3600, (time%3600)/60, (time%60)));
+        timp.setText(String.format("%d:%02d:%02d", time / 3600, (time % 3600) / 60, (time % 60)));
     }
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -179,14 +179,19 @@ public class TrackLoggerActivity extends Activity {
 	}
 
 	public void onPause() {
-		unregisterReceiver(receiver);
+        try{
+            unregisterReceiver(receiver);
+        }
+		catch (RuntimeException e){
+            e.printStackTrace();
+        }
 		super.onPause();
 	}
 
 	@Override
 	public void onDestroy() {
-		try {
-			unregisterReceiver(receiver);
+        try {
+            unregisterReceiver(receiver);
 		}
 		catch(RuntimeException e){
 			e.printStackTrace();
