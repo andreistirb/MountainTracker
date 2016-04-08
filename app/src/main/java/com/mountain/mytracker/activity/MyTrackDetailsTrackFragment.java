@@ -2,6 +2,7 @@ package com.mountain.mytracker.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,11 @@ public class MyTrackDetailsTrackFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userTrackId = getArguments().getInt("userTrackId");
+            Log.v("onCreate", userTrackId.toString());
             userTrack = new UserTrack(userTrackId, getActivity().getApplicationContext());
+            if(userTrack != null){
+                Log.v("onCreate", userTrack.getName());
+            }
         }
     }
 
@@ -48,7 +53,9 @@ public class MyTrackDetailsTrackFragment extends Fragment {
 
         if (userTrack != null) {
 
-            Long trackDuration = userTrack.getTime();
+            Log.v("oncreateview", userTrack.getTrackId().toString());
+
+            Long trackDuration = (userTrack.getTime()) / 1000000000;
 
             duration.setText(String.format("%d:%02d:%02d", trackDuration / 3600, (trackDuration % 3600) / 60, trackDuration % 60));
             distance.setText(userTrack.getDistance().toString());

@@ -280,6 +280,8 @@ public class UserTrack extends Track {
 
     public void updateDatabase() {
 
+        Integer returnCode;
+
         this.computeTime();
         this.computeAvgSpeed();
         this.computeMaxSpeed();
@@ -295,9 +297,11 @@ public class UserTrack extends Track {
         row.put(DatabaseContract.DatabaseEntry.COL_MAX_SPEED, max_speed);
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT, min_alt);
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT, max_alt);
-        mDatabase.getWritableDatabase().update(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS, row,
+        returnCode = mDatabase.getWritableDatabase().update(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS, row,
                 DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ",
                 new String[]{trackId.toString()});
+
+        Log.d("updateDatabase", returnCode.toString());
         mDatabase.close();
     }
 
