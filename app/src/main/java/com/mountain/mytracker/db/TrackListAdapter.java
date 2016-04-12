@@ -28,11 +28,11 @@ public class TrackListAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor){
-		TextView vId = (TextView) view.findViewById(R.id.tracker_manager_id);
+		//TextView vId = (TextView) view.findViewById(R.id.tracker_manager_id);
 		TextView vName = (TextView) view.findViewById(R.id.tracker_manager_name);
 		//TextView vDetails = (TextView) view.findViewById(R.id.tracklist_item_details);
 		
-		vId.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
+		//vId.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO)));
 		vName.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
 	//	vName.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_NAME)));
 	//	vDetails.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_DETAILS)));
