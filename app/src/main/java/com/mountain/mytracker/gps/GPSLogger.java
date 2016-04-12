@@ -1,39 +1,38 @@
 package com.mountain.mytracker.gps;
 
+import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.location.LocationListener;
 import android.os.BatteryManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationRequest;
 import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.Track.TrackPoint;
 import com.mountain.mytracker.Track.UserTrack;
-
+import com.mountain.mytracker.activity.R;
+import com.mountain.mytracker.activity.TrackLoggerActivity;
 import org.osmdroid.util.GeoPoint;
-
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class GPSLogger extends Service implements LocationListener {
-
-    //database
 
     //Location
     private Location mCurrentLocation;
@@ -56,11 +55,6 @@ public class GPSLogger extends Service implements LocationListener {
     private IntentFilter batteryIntentFilter;
     private Intent batteryStatus;
     private int batteryLevel;
-
-    //track data
-    private long time, first_fix;
-    private float max_speed, sum_speed, avg_speed;
-    private double max_alt, min_alt;
 
     //implementing GeoFence
     ArrayList<Geofence> mGeofenceList;
@@ -112,15 +106,20 @@ public class GPSLogger extends Service implements LocationListener {
 
         sendBroadcast(notification);
 
-        mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
-
-        Log.v("in gpslogger", "am primit numele");
-
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+                mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+            }
+        }
         // start tracking
         startTracking();
 
         Log.v(TAG, "Service onStartCommand(-," + flags + "," + startId + ")");
         //startForeground(1, getNotification());
+
+        Log.v("in gpslogger", "am primit numele");
 
         return Service.START_STICKY;
     }
@@ -165,9 +164,27 @@ public class GPSLogger extends Service implements LocationListener {
     private void startTracking() {
 
         mVibrator.vibrate(500);
-        //NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //nmgr.notify(1, getNotification());
+        NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.cruce_galbena)
+                .setContentTitle(getResources().getString(R.string.notification_ticker_text))
+                .setContentText("Hello");
+
+        Intent startTrackLoggerIntent = new Intent(this, TrackLoggerActivity.class);
+        startTrackLoggerIntent.putExtra("mTrackId", mTrackId);
+        if (factoryTrack != null) {
+            startTrackLoggerIntent.putExtra("factoryTrackId", factoryTrack.getTrackId());
+        }
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                startTrackLoggerIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationBuilder.setContentIntent(resultPendingIntent);
+
+        nmgr.notify(1, mNotificationBuilder.build());
 
         Log.v("in startTracking()", "notification");
         isTracking = true;
@@ -176,10 +193,11 @@ public class GPSLogger extends Service implements LocationListener {
     private void stopTracking() {
         isTracking = false;
         mVibrator.vibrate(500);
-        if (shouldGeofence) {
-        }
         userTrack.updateDatabase();
-        mLocationManager.removeUpdates(this);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED){
+            mLocationManager.removeUpdates(this);
+        }
         this.stopSelf();
     }
 
@@ -204,11 +222,22 @@ public class GPSLogger extends Service implements LocationListener {
         TrackPoint mTrackPoint;
         mCurrentLocation = location;
 
-        mTrackPoint = new TrackPoint(
-                mTrackId,
-                location.getLatitude(), location.getLongitude(),
-                location.getAltitude(), location.getSpeed(), location.getAccuracy(),
-                location.getElapsedRealtimeNanos(), this.getApplicationContext());
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mTrackPoint = new TrackPoint(
+                    mTrackId,
+                    location.getLatitude(), location.getLongitude(),
+                    location.getAltitude(), location.getSpeed(), location.getAccuracy(),
+                    location.getElapsedRealtimeNanos(), this.getApplicationContext());
+            Log.i("in locationChanged", "api mai mare de 16");
+        }
+        else{
+            mTrackPoint = new TrackPoint(
+                    mTrackId,
+                    location.getLatitude(), location.getLongitude(),
+                    location.getAltitude(), location.getSpeed(), location.getAccuracy(),
+                    location.getTime() * 1000000, this.getApplicationContext());
+            Log.i("in locationChanged", "api mai mic sau egal cu 16");
+        }
 
         mTrackPoint.toDatabase();
         userTrack.addTrackPoint(mTrackPoint);
@@ -282,13 +311,12 @@ public class GPSLogger extends Service implements LocationListener {
         return isTracking;
     }
 
-
-    private GeofencingRequest getGeofencingRequest() {
+    /*private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT);
         builder.addGeofences(mGeofenceList);
         return builder.build();
-    }
+    }*/
 
     /*private void addGeofences() {
         if (!mGoogleApiClient.isConnected()) {
