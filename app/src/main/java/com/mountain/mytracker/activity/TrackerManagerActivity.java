@@ -39,7 +39,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		currentTrackName = title;
         mUserTrack = new UserTrack(trackId, this.getApplicationContext());
         mUserTrack.setName(currentTrackName);
-        mUserTrack.updateDatabase();
+        mUserTrack.updateDatabaseName(currentTrackName);
 
 		updateList();
 	}

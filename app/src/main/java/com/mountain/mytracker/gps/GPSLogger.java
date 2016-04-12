@@ -1,77 +1,53 @@
 package com.mountain.mytracker.gps;
 
+import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.location.LocationListener;
 import android.os.BatteryManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.Track.TrackPoint;
 import com.mountain.mytracker.Track.UserTrack;
-
+import com.mountain.mytracker.activity.R;
+import com.mountain.mytracker.activity.TrackLoggerActivity;
 import org.osmdroid.util.GeoPoint;
-
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class GPSLogger extends Service implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
-
-    //database
-
-    //Google Api
-    private GoogleApiClient mGoogleApiClient;
+public class GPSLogger extends Service implements LocationListener {
 
     //Location
-    protected Location mLastLocation;
-    private Location mOldLocation;
     private Location mCurrentLocation;
-    private LocationRequest mLocationRequest;
     private LocationManager mLocationManager;
-
-    private float distance;
-
-    private String mLastUpdateTime;
-    private boolean allowSendingNotifications = false;
-    private ArrayList<GeoPoint> trackPoints;
-
+    private String provider;
 
     private Intent notification;
 
     private static final String TAG = GPSLogger.class.getSimpleName();
 
-    int mStartMode; // indicates how to behave if the service is killed
-    IBinder mBinder; // interface for clients that bind
-    boolean mAllowRebind; // indicates whether onRebind should be used
     private static boolean isTracking; // variabila globala care arata daca
-    // serviciul este pornit sau nu
-    private boolean isGPSEnabled;
+                                       // serviciul este pornit sau nu
+
 
     private Integer mTrackId;   //id-ul traseului inregistrat de user
-
-
-    private int trackPointsCount; //pentru a determina prima locatie
 
     private Vibrator mVibrator;
 
@@ -79,11 +55,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     private IntentFilter batteryIntentFilter;
     private Intent batteryStatus;
     private int batteryLevel;
-
-    //track data
-    private long time, first_fix;
-    private float max_speed, sum_speed, avg_speed;
-    private double max_alt, min_alt;
 
     //implementing GeoFence
     ArrayList<Geofence> mGeofenceList;
@@ -98,13 +69,11 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public void onCreate() {
 
-        /*mGeofenceList = new ArrayList<Geofence>();*/
         userTrack = new UserTrack(this.getApplicationContext());
 
         //location
-        buildGoogleApiClient();
-        distance = 0.0f;
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        provider = "gps";
 
         //Vibrator
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -122,8 +91,6 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        mGoogleApiClient.connect();
-
 
         if (intent.hasExtra("factoryTrackId")) {
             factoryTrack = new FactoryTrack(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
@@ -133,16 +100,31 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         else
             userTrack.createDatabaseEntry(null);
 
+        mTrackId = userTrack.getTrackId();
+
         notification.putExtra("mTrackId", userTrack.getTrackId());
+
         sendBroadcast(notification);
 
-        Log.v("in gpslogger", "am primit numele");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
 
+                Log.i("gpslogger", "inside check for build version");
+                mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+
+            }
+        }
+        else{
+            mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+        }
         // start tracking
         startTracking();
 
         Log.v(TAG, "Service onStartCommand(-," + flags + "," + startId + ")");
         //startForeground(1, getNotification());
+
+        Log.v("in gpslogger", "am primit numele");
 
         return Service.START_STICKY;
     }
@@ -181,112 +163,100 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
             stopTracking();
         }
 
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-
         stopNotifyBackgroundService();
     }
 
     private void startTracking() {
 
         mVibrator.vibrate(500);
-        //NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //nmgr.notify(1, getNotification());
+        NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.cruce_galbena)
+                .setContentTitle(getResources().getString(R.string.notification_ticker_text))
+                .setContentText("Hello");
+
+        Intent startTrackLoggerIntent = new Intent(this, TrackLoggerActivity.class);
+        startTrackLoggerIntent.putExtra("mTrackId", mTrackId);
+        if (factoryTrack != null) {
+            startTrackLoggerIntent.putExtra("factoryTrackId", factoryTrack.getTrackId());
+        }
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                startTrackLoggerIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationBuilder.setContentIntent(resultPendingIntent);
+
+        nmgr.notify(1, mNotificationBuilder.build());
 
         Log.v("in startTracking()", "notification");
         isTracking = true;
     }
 
     private void stopTracking() {
-        stopLocationUpdates();
         isTracking = false;
         mVibrator.vibrate(500);
-        if (shouldGeofence) {
-        }
         userTrack.updateDatabase();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED){
+            mLocationManager.removeUpdates(this);
+        }
         this.stopSelf();
     }
 
-    //Google API - Location
-
-    /**
-     * Runs when a GoogleApiClient object successfully connects.
-     */
     @Override
-    public void onConnected(Bundle connectionHint) {
-        // Provides a simple way of getting a device's location and is well suited for
-        // applications that do not require a fine-grained location and that do not need location
-        // updates. Gets the best and most recent location currently available, which may be null
-        // in rare cases when a location is not available.
-        //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        startLocationUpdates();
-        Log.i("conectat googleapi", "conectat");
+    public void onStatusChanged(String provider, int status, Bundle extras){
 
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        Log.i(TAG, "Connection failed : ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    public void onProviderEnabled(String provider){
+
     }
 
     @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason. We call connect() to
-        // attempt to re-establish the connection.
+    public void onProviderDisabled(String provider){
 
-        Log.i(TAG, "Connection suspended, trying to reconnect");
-        mGoogleApiClient.connect();
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        createLocationRequest();
-    }
-
-    //Location Request
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(15000);
-        mLocationRequest.setFastestInterval(10000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    protected void startLocationUpdates() {
-        //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
 
     @Override
     public void onLocationChanged(Location location) {
         TrackPoint mTrackPoint;
         mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
 
-        buildNotification();
-
-        mTrackPoint = new TrackPoint(mTrackId, location.getLatitude(), location.getLongitude(),
-                location.getAltitude(), location.getSpeed(), location.getAccuracy(),
-                location.getElapsedRealtimeNanos(), this.getApplicationContext());
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mTrackPoint = new TrackPoint(
+                    mTrackId,
+                    location.getLatitude(), location.getLongitude(),
+                    location.getAltitude(), location.getSpeed(), location.getAccuracy(),
+                    location.getElapsedRealtimeNanos(), this.getApplicationContext());
+            Log.i("in locationChanged", "api mai mare de 16");
+        }
+        else{
+            mTrackPoint = new TrackPoint(
+                    mTrackId,
+                    location.getLatitude(), location.getLongitude(),
+                    location.getAltitude(), location.getSpeed(), location.getAccuracy(),
+                    location.getTime() * 1000000, this.getApplicationContext());
+            Log.i("in locationChanged", "api mai mic sau egal cu 16");
+        }
 
         mTrackPoint.toDatabase();
         userTrack.addTrackPoint(mTrackPoint);
         userTrack.addTrackGeoPoint(new GeoPoint(mTrackPoint.getLatitude(), mTrackPoint.getLongitude()));
+        userTrack.updateDatabase();
 
+        buildNotification();
         sendBroadcast(notification);
 
         Log.v("in sender", "trimit date");
         Log.v("in sender", String.valueOf(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)));
 
         batteryLevel = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        if (batteryLevel >= 40) {
+        /*if (batteryLevel >= 40) {
             mLocationRequest.setInterval(15000);
             mLocationRequest.setFastestInterval(10000);
         } else if (batteryLevel > 20 && batteryLevel < 40) {
@@ -295,7 +265,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         } else if (batteryLevel <= 20) {
             mLocationRequest.setInterval(60000);
             mLocationRequest.setFastestInterval(30000);
-        }
+        }*/
         //if (shouldGeofence) { }
 
     }
@@ -306,9 +276,9 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         notification.putExtra("latitude", mCurrentLocation.getLatitude());
         notification.putExtra("longitude", mCurrentLocation.getLongitude());
         notification.putExtra("speed", mCurrentLocation.getSpeed());
-        //notification.putExtra("time", time);
+        notification.putExtra("time", userTrack.getTime());
         notification.putExtra("mTrackId", mTrackId);
-        //notification.putExtra("distance", distance);
+        notification.putExtra("distance", userTrack.getDistance());
         //notification.putExtra("max_speed", max_speed);
         //notification.putExtra("avg_speed", avg_speed);
         //notification.putExtra("max_alt", max_alt);
@@ -346,13 +316,12 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         return isTracking;
     }
 
-
-    private GeofencingRequest getGeofencingRequest() {
+    /*private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT);
         builder.addGeofences(mGeofenceList);
         return builder.build();
-    }
+    }*/
 
     /*private void addGeofences() {
         if (!mGoogleApiClient.isConnected()) {
@@ -380,17 +349,7 @@ public class GPSLogger extends Service implements GoogleApiClient.ConnectionCall
         }
     }*/
 
-    @Override
-    public void onResult(Status status) {
 
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        if (mPendingIntent != null)
-            return mPendingIntent;
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
 
     /*private void addGeofence(GeoPoint point) {
 

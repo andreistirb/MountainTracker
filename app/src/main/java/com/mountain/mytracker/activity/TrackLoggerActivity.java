@@ -1,5 +1,6 @@
 package com.mountain.mytracker.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -7,9 +8,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,6 +41,8 @@ public class TrackLoggerActivity extends Activity {
     long time;
     float max_speed, avg_speed, distance;
     //double max_alt,min_alt;
+
+    private Activity activity;
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -47,7 +54,7 @@ public class TrackLoggerActivity extends Activity {
 				Double longitude = bundle.getDouble("longitude");
 				Double latitude = bundle.getDouble("latitude");
 				Float speeds = bundle.getFloat("speed");
-				time = bundle.getLong("time") / 1000;
+				time = bundle.getLong("time") / 1000000000;
                 distance = bundle.getFloat("distance");
                 max_speed = bundle.getFloat("max_speed");
                 avg_speed = bundle.getFloat("avg_speed");
@@ -66,13 +73,14 @@ public class TrackLoggerActivity extends Activity {
         lon.setText(Double.toString(Math.floor(longitude * 10000) / 10000));
         lat.setText(Double.toString(Math.floor(latitude * 10000) / 10000));
         this.speed.setText(Double.toString(Math.floor(speeds * 100) / 100));
-        timp.setText(String.format("%d:%02d:%02d", time/3600, (time%3600)/60, (time%60)));
+        timp.setText(String.format("%d:%02d:%02d", time / 3600, (time % 3600) / 60, (time % 60)));
     }
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		context = this;
+		context = this.getBaseContext();
+        activity = this;
 		checkGPS();
 
 		this.setContentView(R.layout.track_logger_layout);
@@ -128,7 +136,7 @@ public class TrackLoggerActivity extends Activity {
                 public void onClick(View arg0) {
                     if (factoryTrack != null) {
                         TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-                        context.startActivity(TrackDetailsActivityIntent);
+                        activity.startActivity(TrackDetailsActivityIntent);
                     }
                 }
             });
@@ -143,7 +151,16 @@ public class TrackLoggerActivity extends Activity {
                 if(factoryTrack != null)
 				    GPSLoggerServiceIntent.putExtra("factoryTrackId", factoryTrackId);
 
-				startService(GPSLoggerServiceIntent);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }
+                    startService(GPSLoggerServiceIntent);
+                }
+                else{
+                    startService(GPSLoggerServiceIntent);
+                }
 			}
 		});
 
@@ -163,7 +180,7 @@ public class TrackLoggerActivity extends Activity {
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                 if(mTrackId != null)
 				    MapViewActivityIntent.putExtra("mTrackId", mTrackId);
-				context.startActivity(MapViewActivityIntent);
+				activity.startActivity(MapViewActivityIntent);
 			}
 		});
 
@@ -171,7 +188,7 @@ public class TrackLoggerActivity extends Activity {
 
             @Override
             public void onClick(View v){
-                context.startActivity(TrackerManagerActivityIntent);
+                activity.startActivity(TrackerManagerActivityIntent);
             }
         });
 
@@ -179,14 +196,19 @@ public class TrackLoggerActivity extends Activity {
 	}
 
 	public void onPause() {
-		unregisterReceiver(receiver);
+        try{
+            unregisterReceiver(receiver);
+        }
+		catch (RuntimeException e){
+            e.printStackTrace();
+        }
 		super.onPause();
 	}
 
 	@Override
 	public void onDestroy() {
-		try {
-			unregisterReceiver(receiver);
+        try {
+            unregisterReceiver(receiver);
 		}
 		catch(RuntimeException e){
 			e.printStackTrace();
