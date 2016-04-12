@@ -190,19 +190,20 @@ public class UserTrack extends Track {
     public void createDatabaseEntry(Integer trackId) {
         ContentValues row = new ContentValues();
         Integer mTrackId;
-        String mTrackName;
 
         if (!checkEmptyDatabase()) {
             mTrackId = 1;
         } else {
             mTrackId = getTrackNo() + 1;
         }
-        mTrackName = "Track#" + mTrackId.toString();
+        name = "Track#" + mTrackId.toString();
+
+        Log.i("createDatabaseEntry", name);
 
         this.trackId = mTrackId;
 
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NO, mTrackId);
-        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, mTrackName);
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, name);
         if (trackId != null) {
             row.put(DatabaseContract.DatabaseEntry.COL_TRACK_ID, trackId);
             this.factoryTrackId = trackId;
@@ -269,7 +270,7 @@ public class UserTrack extends Track {
 
     private void computeMaxAlt(){
         if(this.getTrackPointsCount() > 0) {
-            Double max_alt = 9999D;
+            Double max_alt = 0D;
             for (int i = 0; i < this.getTrackPointsCount() - 1; i++) {
                 if (max_alt < this.getTrackPoints().get(i).getAltitude())
                     max_alt = this.getTrackPoints().get(i).getAltitude();
@@ -289,6 +290,8 @@ public class UserTrack extends Track {
         this.computeMaxAlt();
         this.computeDistance();
 
+        Log.d("updateDatabase", this.getTime().toString());
+
         ContentValues row = new ContentValues();
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, name);
         row.put(DatabaseContract.DatabaseEntry.COL_TIME, time);
@@ -298,11 +301,25 @@ public class UserTrack extends Track {
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT, min_alt);
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT, max_alt);
         returnCode = mDatabase.getWritableDatabase().update(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS, row,
-                DatabaseContract.DatabaseEntry.COL_TRACK_NO + " = ? ",
+                "CAST(" + DatabaseContract.DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
                 new String[]{trackId.toString()});
 
         Log.d("updateDatabase", returnCode.toString());
         mDatabase.close();
+    }
+
+    public int updateDatabaseName(String trackName){
+        int returnCode;
+
+        ContentValues row = new ContentValues();
+
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, trackName);
+        returnCode = mDatabase.getWritableDatabase().update(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS,row,
+                "CAST(" + DatabaseContract.DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
+                new String[]{trackId.toString()});
+        mDatabase.close();
+
+        return returnCode;
     }
 
     private int getTrackNo() {

@@ -108,10 +108,15 @@ public class GPSLogger extends Service implements LocationListener {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                Log.i("gpslogger", "inside check for build version");
                 mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+
             }
+        }
+        else{
+            mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
         }
         // start tracking
         startTracking();
