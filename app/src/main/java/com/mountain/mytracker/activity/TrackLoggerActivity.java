@@ -79,7 +79,7 @@ public class TrackLoggerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		context = this.getApplicationContext();
+		context = this.getBaseContext();
         activity = this;
 		checkGPS();
 
@@ -136,7 +136,7 @@ public class TrackLoggerActivity extends Activity {
                 public void onClick(View arg0) {
                     if (factoryTrack != null) {
                         TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-                        context.startActivity(TrackDetailsActivityIntent);
+                        activity.startActivity(TrackDetailsActivityIntent);
                     }
                 }
             });
@@ -180,7 +180,7 @@ public class TrackLoggerActivity extends Activity {
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                 if(mTrackId != null)
 				    MapViewActivityIntent.putExtra("mTrackId", mTrackId);
-				context.startActivity(MapViewActivityIntent);
+				activity.startActivity(MapViewActivityIntent);
 			}
 		});
 
@@ -188,7 +188,7 @@ public class TrackLoggerActivity extends Activity {
 
             @Override
             public void onClick(View v){
-                context.startActivity(TrackerManagerActivityIntent);
+                activity.startActivity(TrackerManagerActivityIntent);
             }
         });
 
