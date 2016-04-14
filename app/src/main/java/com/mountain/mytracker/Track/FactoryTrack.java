@@ -2,6 +2,7 @@ package com.mountain.mytracker.Track;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
 
 import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.NewDatabaseHelper;
@@ -110,8 +111,12 @@ public class FactoryTrack extends Track {
             Double latitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_LAT));
             Double longitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_LON));
             Double altitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_ALT));
+            Location l = new Location("gps");
+            l.setLatitude(latitude);
+            l.setLongitude(longitude);
+            l.setAltitude(altitude);
 
-            newTrackPoint = new TrackPoint(trackId, latitude, longitude, altitude, null, null, null, context);
+            newTrackPoint = new TrackPoint(trackId, l, context);
             this.addTrackPoint(newTrackPoint);
             this.addTrackGeoPoint(new GeoPoint(latitude,longitude));
 

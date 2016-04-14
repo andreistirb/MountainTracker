@@ -1,7 +1,6 @@
 package com.mountain.mytracker.gps;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -18,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -47,7 +45,7 @@ public class GPSLogger extends Service implements LocationListener {
                                        // serviciul este pornit sau nu
 
 
-    private Integer mTrackId;   //id-ul traseului inregistrat de user
+    private Integer userTrackId;   //id-ul traseului inregistrat de user
 
     private Vibrator mVibrator;
 
@@ -100,9 +98,9 @@ public class GPSLogger extends Service implements LocationListener {
         else
             userTrack.createDatabaseEntry(null);
 
-        mTrackId = userTrack.getTrackId();
+        userTrackId = userTrack.getTrackId();
 
-        notification.putExtra("mTrackId", userTrack.getTrackId());
+        notification.putExtra("userTrackId", userTrack.getTrackId());
 
         sendBroadcast(notification);
 
@@ -177,7 +175,7 @@ public class GPSLogger extends Service implements LocationListener {
                 .setContentText("Hello");
 
         Intent startTrackLoggerIntent = new Intent(this, TrackLoggerActivity.class);
-        startTrackLoggerIntent.putExtra("mTrackId", mTrackId);
+        startTrackLoggerIntent.putExtra("userTrackId", userTrackId);
         if (factoryTrack != null) {
             startTrackLoggerIntent.putExtra("factoryTrackId", factoryTrack.getTrackId());
         }
@@ -199,7 +197,7 @@ public class GPSLogger extends Service implements LocationListener {
         isTracking = false;
         mVibrator.vibrate(500);
         userTrack.updateDatabase();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED){
             mLocationManager.removeUpdates(this);
         }
@@ -227,9 +225,11 @@ public class GPSLogger extends Service implements LocationListener {
         TrackPoint mTrackPoint;
         mCurrentLocation = location;
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        mTrackPoint = new TrackPoint(userTrackId, location, this.getApplicationContext());
+
+        /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             mTrackPoint = new TrackPoint(
-                    mTrackId,
+                    userTrackId,
                     location.getLatitude(), location.getLongitude(),
                     location.getAltitude(), location.getSpeed(), location.getAccuracy(),
                     location.getElapsedRealtimeNanos(), this.getApplicationContext());
@@ -237,16 +237,16 @@ public class GPSLogger extends Service implements LocationListener {
         }
         else{
             mTrackPoint = new TrackPoint(
-                    mTrackId,
+                    userTrackId,
                     location.getLatitude(), location.getLongitude(),
                     location.getAltitude(), location.getSpeed(), location.getAccuracy(),
                     location.getTime() * 1000000, this.getApplicationContext());
             Log.i("in locationChanged", "api mai mic sau egal cu 16");
-        }
+        }*/
 
         mTrackPoint.toDatabase();
         userTrack.addTrackPoint(mTrackPoint);
-        userTrack.addTrackGeoPoint(new GeoPoint(mTrackPoint.getLatitude(), mTrackPoint.getLongitude()));
+        userTrack.addTrackGeoPoint(new GeoPoint(mTrackPoint.getLocation().getLatitude(), mTrackPoint.getLocation().getLongitude()));
         userTrack.updateDatabase();
 
         buildNotification();
@@ -277,7 +277,7 @@ public class GPSLogger extends Service implements LocationListener {
         notification.putExtra("longitude", mCurrentLocation.getLongitude());
         notification.putExtra("speed", mCurrentLocation.getSpeed());
         notification.putExtra("time", userTrack.getTime());
-        notification.putExtra("mTrackId", mTrackId);
+        notification.putExtra("userTrackId", userTrackId);
         notification.putExtra("distance", userTrack.getDistance());
         //notification.putExtra("max_speed", max_speed);
         //notification.putExtra("avg_speed", avg_speed);
@@ -292,7 +292,7 @@ public class GPSLogger extends Service implements LocationListener {
 
         Intent startTrackLogger = new Intent(this, TrackLoggerActivity.class);
         startTrackLogger.putExtra("track_name", );
-        startTrackLogger.putExtra("mTrackId", mTrackId);
+        startTrackLogger.putExtra("userTrackId", userTrackId);
         if (factoryTrack != null) {
             startTrackLogger.putExtra("factoryTrackId", factoryTrack.getTrackId());
         }

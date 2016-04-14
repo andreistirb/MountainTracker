@@ -41,34 +41,35 @@ public class MapViewActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
+            UserTrack localUserTrack;
             int pointsNo;
 
-			userTrackId = bundle.getInt("userTrackId");
+            if (bundle != null) {
+                userTrackId = bundle.getInt("userTrackId");
 
-            try {
-                userTrack.fromDatabase(userTrackId, context);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+                try {
+                    userTrack = new UserTrack(userTrackId, context);
+                    //userTrack.fromDatabase(userTrackId, context);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            try {
-                mMapView.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
-                pointsNo = userTrack.getTrackPointsCount();
-                if(pointsNo > 0)
-                    hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo-1));
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+                try {
+                    mMapView.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
+                    pointsNo = userTrack.getTrackPointsCount();
+                    if (pointsNo > 0)
+                        hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo - 1));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-			mLocationOverlay.enableMyLocation();
+                mLocationOverlay.enableMyLocation();
+            }
 		}
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
         Integer factoryTrackId;
-
 
 		super.onCreate(savedInstanceState);
         has_track = false;

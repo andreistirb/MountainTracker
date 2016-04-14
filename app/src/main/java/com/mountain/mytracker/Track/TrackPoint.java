@@ -22,27 +22,40 @@ public class TrackPoint implements Serializable {
 
     //Attributes
     private Integer trackId;
-    private Double altitude, latitude, longitude;
-    private Float speed, accuracy;
-    private Long time;
+
+    /*private Double altitude, latitude, longitude;
+        private Float speed, accuracy;
+        private Long time;*/
+    private Location location;
 
     //Database
     private DatabaseHelper mDatabase;
     private NewDatabaseHelper factoryDatabase;
 
 
-    public TrackPoint(int trackId, Double latitude, Double longitude, Double altitude,
-                      Float speed, Float accuracy, Long time, Context context){
+    public TrackPoint(int trackId, /*Double latitude, Double longitude, Double altitude,
+                      Float speed, Float accuracy, Long time,*/Location mLocation, Context context){
         this.trackId = trackId;
-        this.altitude = altitude;
+
+        this.location = mLocation;
+
+        /*this.altitude = altitude;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
         this.accuracy = accuracy;
-        this.time = time;
+        this.time = time;*/
 
         this.mDatabase = new DatabaseHelper(context);
         this.factoryDatabase = new NewDatabaseHelper(context);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Integer getTrackId() {
@@ -53,7 +66,7 @@ public class TrackPoint implements Serializable {
         this.trackId = trackId;
     }
 
-    public Double getAltitude() {
+    /*public Double getAltitude() {
         return altitude;
     }
 
@@ -99,14 +112,14 @@ public class TrackPoint implements Serializable {
 
     public void setTime(Long time) {
         this.time = time;
-    }
+    }*/
 
     public void toDatabase(){
         ContentValues row = new ContentValues();
 
-        row.put(DatabaseEntry.COL_ALT, altitude);
-        row.put(DatabaseEntry.COL_LAT, latitude);
-        row.put(DatabaseEntry.COL_LON, longitude);
+        row.put(DatabaseEntry.COL_ALT, location.getAltitude());
+        row.put(DatabaseEntry.COL_LAT, location.getLatitude());
+        row.put(DatabaseEntry.COL_LON, location.getLongitude());
         //Must modify database to contain this columns
         //row.put(DatabaseEntry.COL_ACC, accuracy);
         //row.put(DatabaseEntry.COL_SPD, speed);
@@ -116,7 +129,7 @@ public class TrackPoint implements Serializable {
         mDatabase.close();
     }
 
-    public Float distanceBetween(TrackPoint secondTrackPoint){
+    /*public Float distanceBetween(TrackPoint secondTrackPoint){
         Location firstLocation = new Location("firstLocation");
         firstLocation.setLatitude(this.getLatitude());
         firstLocation.setLongitude(this.getLongitude());
@@ -126,5 +139,5 @@ public class TrackPoint implements Serializable {
         secondLocation.setLongitude(secondTrackPoint.getLongitude());
 
         return firstLocation.distanceTo(secondLocation);
-    }
+    }*/
 }

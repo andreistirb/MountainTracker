@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.location.Location;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
 
@@ -167,6 +169,10 @@ public class UserTrack extends Track {
                 Double latitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_LAT));
                 Double longitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_LON));
                 Double altitude = c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_ALT));
+                Location l = new Location("gps");
+                l.setLatitude(latitude);
+                l.setLongitude(longitude);
+                l.setAltitude(altitude);
 
                 // TO-DO
                 // Must modify database to contain this columns!!!
@@ -174,7 +180,7 @@ public class UserTrack extends Track {
                 //Float accuracy = c.getFloat(c.getColumnIndex(DatabaseEntry.COL_ACC));
                 //Long time = c.getLong(c.getColumnIndex(DatabaseEntry.COL_TMP));
 
-                newTrackPoint = new TrackPoint(trackId, latitude, longitude, altitude, null, null, null, context);
+                newTrackPoint = new TrackPoint(trackId, l, context);
                 this.addTrackPoint(newTrackPoint);
                 this.addTrackGeoPoint(new GeoPoint(latitude, longitude));
 
@@ -214,9 +220,17 @@ public class UserTrack extends Track {
 
     private void computeTime(){
 
+        Long firstTime, lastTime;
+
         if(this.getTrackPointsCount() > 0) {
-            Long firstTime = trackPoints.get(0).getTime();
-            Long lastTime = trackPoints.get(this.getTrackPointsCount() - 1).getTime();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+                firstTime = trackPoints.get(0).getLocation().getElapsedRealtimeNanos();
+                lastTime = trackPoints.get(this.getTrackPointsCount() - 1).getLocation().getElapsedRealtimeNanos();
+            }
+            else {
+                firstTime = trackPoints.get(0).getLocation().getTime();
+                lastTime = trackPoints.get(this.getTrackPointsCount() - 1).getLocation().getTime();
+            }
 
             this.setTime(lastTime - firstTime);
         }
@@ -227,7 +241,7 @@ public class UserTrack extends Track {
         if(this.getTrackPointsCount() > 0) {
             Float totalDistance = 0F;
             for (int i = 0; i < this.getTrackPointsCount() - 2; i++) {
-                totalDistance += this.getTrackPoints().get(i).distanceBetween(this.getTrackPoints().get(i + 1));
+                totalDistance += this.getTrackPoints().get(i).getLocation().distanceTo(this.getTrackPoints().get(i + 1).getLocation());
             }
             this.setDistance(totalDistance);
         }
@@ -238,7 +252,7 @@ public class UserTrack extends Track {
         if(this.getTrackPointsCount() > 0) {
             Float total_speed = 0F;
             for (int i = 0; i < this.getTrackPointsCount() - 1; i++) {
-                total_speed += this.getTrackPoints().get(i).getSpeed();
+                total_speed += this.getTrackPoints().get(i).getLocation().getSpeed();
             }
             this.setAvg_speed(total_speed / this.getTrackPointsCount());
         }
@@ -249,8 +263,8 @@ public class UserTrack extends Track {
         if(this.getTrackPointsCount() > 0) {
             Float max_speed = 0F;
             for (int i = 0; i < this.getTrackPointsCount() - 1; i++) {
-                if (max_speed < this.getTrackPoints().get(i).getSpeed())
-                    max_speed = this.getTrackPoints().get(i).getSpeed();
+                if (max_speed < this.getTrackPoints().get(i).getLocation().getSpeed())
+                    max_speed = this.getTrackPoints().get(i).getLocation().getSpeed();
             }
             this.setMax_speed(max_speed);
         }
@@ -261,8 +275,8 @@ public class UserTrack extends Track {
         if(this.getTrackPointsCount() > 0) {
             Double min_alt = 9999D;
             for (int i = 0; i < this.getTrackPointsCount() - 1; i++) {
-                if (min_alt > this.getTrackPoints().get(i).getAltitude())
-                    min_alt = this.getTrackPoints().get(i).getAltitude();
+                if (min_alt > this.getTrackPoints().get(i).getLocation().getAltitude())
+                    min_alt = this.getTrackPoints().get(i).getLocation().getAltitude();
             }
             this.setMin_alt(min_alt);
         }
@@ -272,8 +286,8 @@ public class UserTrack extends Track {
         if(this.getTrackPointsCount() > 0) {
             Double max_alt = 0D;
             for (int i = 0; i < this.getTrackPointsCount() - 1; i++) {
-                if (max_alt < this.getTrackPoints().get(i).getAltitude())
-                    max_alt = this.getTrackPoints().get(i).getAltitude();
+                if (max_alt < this.getTrackPoints().get(i).getLocation().getAltitude())
+                    max_alt = this.getTrackPoints().get(i).getLocation().getAltitude();
             }
             this.setMax_alt(max_alt);
         }
