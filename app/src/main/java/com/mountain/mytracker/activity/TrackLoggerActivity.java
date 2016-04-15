@@ -21,15 +21,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mountain.mytracker.Track.FactoryTrack;
-import com.mountain.mytracker.Track.Track;
-import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.gps.GPSLogger;
 
 public class TrackLoggerActivity extends Activity {
 
 	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
 	boolean GPSflag = false;
-	private Integer factoryTrackId, mTrackId;
+	private Integer factoryTrackId, userTrackId;
     private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private Context context;
@@ -53,16 +51,16 @@ public class TrackLoggerActivity extends Activity {
 				Double altitude = bundle.getDouble("altitude");
 				Double longitude = bundle.getDouble("longitude");
 				Double latitude = bundle.getDouble("latitude");
-				Float speeds = bundle.getFloat("speed");
+				Float speeds = bundle.getFloat("speed") * 3.6F;
 				time = bundle.getLong("time") / 1000000000;
-                distance = bundle.getFloat("distance");
+                distance = bundle.getFloat("distance") / 1000;
                 max_speed = bundle.getFloat("max_speed");
                 avg_speed = bundle.getFloat("avg_speed");
                 //max_alt = bundle.getDouble("max_alt");
                 //min_alt = bundle.getDouble("min_alt");
                 listDetails(altitude, latitude, longitude, speeds);
 				Log.v("In receiver", "am primit date");
-                mTrackId = bundle.getInt("mTrackId");
+                userTrackId = bundle.getInt("userTrackId");
 			}
 		}
 	};
@@ -93,8 +91,8 @@ public class TrackLoggerActivity extends Activity {
 
 		detalii_btn = this.getIntent().hasExtra("detalii") && this.getIntent().getExtras().getBoolean("detalii");
 
-		if(this.getIntent().hasExtra("mTrackId")){
-			mTrackId = this.getIntent().getExtras().getInt("mTrackId");
+		if(this.getIntent().hasExtra("userTrackId")){
+			userTrackId = this.getIntent().getExtras().getInt("userTrackId");
 		}
 
 
@@ -178,8 +176,10 @@ public class TrackLoggerActivity extends Activity {
 			public void onClick(View v) {
                 if(factoryTrack != null)
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
-                if(mTrackId != null)
-				    MapViewActivityIntent.putExtra("mTrackId", mTrackId);
+                if(userTrackId != null) {
+                    MapViewActivityIntent.putExtra("userTrackId", userTrackId);
+                    Log.d("onClick harta", userTrackId.toString());
+                }
 				activity.startActivity(MapViewActivityIntent);
 			}
 		});
