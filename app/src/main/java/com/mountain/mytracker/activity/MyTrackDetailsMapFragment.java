@@ -51,7 +51,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
         if(userTrack.getTrackPointsCount() > 0) {
             mMapView.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), userTrack.getTrackGeoPoints()));
-            hartaController.setZoom(14);
+            hartaController.setZoom(16);
             hartaController.setCenter(userTrack.getTrackGeoPoints().get(0));
         }
 

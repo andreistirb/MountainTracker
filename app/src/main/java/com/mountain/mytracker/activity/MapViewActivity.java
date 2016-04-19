@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,18 +22,19 @@ import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MyLocationOverlay;
+
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 
 public class MapViewActivity extends Activity {
 
-	private IMapController hartaController;
+	private IMapController mapController;
 	private static final float polylineWidth = 3.0f;
 	private MapView mMapView;
-	private MyLocationOverlay mLocationOverlay;
+	private MyLocationNewOverlay mLocationOverlay;
 	private Integer userTrackId;
-	private boolean has_track;
+	private boolean has_track = false;
 	private FactoryTrack factoryTrack;
     private UserTrack userTrack;
 
@@ -41,7 +43,6 @@ public class MapViewActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle bundle = intent.getExtras();
-            UserTrack localUserTrack;
             int pointsNo;
 
             if (bundle != null) {
@@ -49,7 +50,6 @@ public class MapViewActivity extends Activity {
 
                 try {
                     userTrack = new UserTrack(userTrackId, context);
-                    //userTrack.fromDatabase(userTrackId, context);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -58,7 +58,7 @@ public class MapViewActivity extends Activity {
                     mMapView.getOverlays().add(buildPolyline(context, userTrack.getTrackGeoPoints(), Color.RED));
                     pointsNo = userTrack.getTrackPointsCount();
                     if (pointsNo > 0)
-                        hartaController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo - 1));
+                        mapController.setCenter(userTrack.getTrackGeoPoints().get(pointsNo - 1));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -72,7 +72,6 @@ public class MapViewActivity extends Activity {
         Integer factoryTrackId;
 
 		super.onCreate(savedInstanceState);
-        has_track = false;
 
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
@@ -87,11 +86,12 @@ public class MapViewActivity extends Activity {
 		if(this.getIntent().hasExtra("userTrackId")){
 			userTrackId = this.getIntent().getExtras().getInt("userTrackId");
             userTrack = new UserTrack(userTrackId, this.getApplicationContext());
+            setTitle(userTrack.getTrackName());
 		}
 
 		mMapView = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
-		hartaController = mMapView.getController();
-		mLocationOverlay = new MyLocationOverlay(this, mMapView);
+		mapController = mMapView.getController();
+		mLocationOverlay = new MyLocationNewOverlay(this, mMapView);
 
         mMapView.getOverlays().add(mLocationOverlay);
         setMap();
@@ -103,20 +103,17 @@ public class MapViewActivity extends Activity {
 
         if(has_track){
             mMapView.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
-
-            hartaController.setZoom(14);
-            hartaController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
+            mapController.setZoom(16);
+            mapController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
         }
 
         if (GPSLogger.isTracking()) {
-            try {
-                userTrack.fromDatabase(userTrackId, this);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+            Log.d("in onResume MapView", "isTracking");
+
             if(userTrack.getTrackPointsCount() > 0) {
+                Log.d("inside if ", "count>0");
                 mMapView.getOverlays().add(buildPolyline(this, userTrack.getTrackGeoPoints(), Color.RED));
+                mapController.setCenter(userTrack.getTrackGeoPoints().get(0));
             }
 		}
 		super.onResume();
@@ -176,7 +173,7 @@ public class MapViewActivity extends Activity {
         mMapView.setBuiltInZoomControls(true);
         mMapView.setTileSource(TileSourceFactory.CYCLEMAP);
         mMapView.setMultiTouchControls(true);
-        hartaController.setZoom(14);
+        mapController.setZoom(16);
     }
 
     private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color){
