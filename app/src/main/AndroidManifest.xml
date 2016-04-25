@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mountain.mytracker.activity"
-    android:versionCode="1"
-    android:versionName="1.0" >
+<manifest package="com.mountain.mytracker.activity"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="23"/>
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.INTERNET" >
+    <uses-permission android:name="android.permission.INTERNET">
     </uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE" >
+    <uses-permission android:name="android.permission.VIBRATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE">
     </uses-permission>
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+        android:maxSdkVersion="18"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" >
+                <action android:name="android.intent.action.MAIN">
                 </action>
 
-                <category android:name="android.intent.category.LAUNCHER" >
+                <category android:name="android.intent.category.LAUNCHER">
                 </category>
             </intent-filter>
         </activity>
@@ -79,12 +78,11 @@
 
         <service
             android:name="com.mountain.mytracker.gps.GPSLogger"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.mountain.mytracker.activity.intent.GPS_SERVICE" />
+                <action android:name="com.mountain.mytracker.activity.intent.GPS_SERVICE"/>
             </intent-filter>
         </service>
-
         <service
             android:name="com.mountain.mytracker.gps.GeofenceTransitionsIntentService"
             android:exported="false">
@@ -93,14 +91,16 @@
         <provider
             android:name="com.mountain.mytracker.db.MountainTrackerContentProvider"
             android:authorities="com.mountain.mytracker.activity.provider"
-            android:exported="false" >
+            android:exported="false">
         </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" >
+            android:value="@integer/google_play_services_version">
         </meta-data>
 
+        <activity android:name="com.mountain.mytracker.other.SettingsActivity">
+        </activity>
     </application>
 
 </manifest>

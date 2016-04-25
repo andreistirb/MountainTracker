@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.mountain.mytracker.other.SettingsActivity;
 
 public class MainActivity extends Activity {
 
@@ -49,6 +50,15 @@ public class MainActivity extends Activity {
 				
 			}
 		});
+
+        Button settings_btn = (Button) this.findViewById(R.id.main_settings_btn);
+        settings_btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(v.getContext(), SettingsActivity.class);
+                startActivity(i);
+            }
+        });
 
 
 	}
