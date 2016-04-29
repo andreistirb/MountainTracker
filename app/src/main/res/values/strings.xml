@@ -101,6 +101,21 @@
     <string name="OSM_by_MapQuest">OSM by MapQuest</string>
     <string name="Open_Cycle_Map">Open Cycle Map</string>
 
+    <!--> Settings <!-->
+        <!-->Categories<!-->
+        <string name="GPS_category_title">GPS</string>
+        <string name="map_category_title">MAP</string>
+
+    <string name="geofencing_checkbox_preference_title">Geofencing</string>
+    <string name="geofencing_checkbox_preference_summary">Enable/disable the service that leads the path</string>
+
+    <string name="gpsfix_list_preference_title">Gps fix frequency</string>
+    <string name="gpsfix_list_preference_summary">Choose the frequency of GPS fixes</string>
+
+    <string name="map_tile_source_preference_title">Tile source</string>
+    <string name="map_tile_source_preference_summary">Choose the tile source for map</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

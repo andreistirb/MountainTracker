@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="pref_sync"
-        android:title="titlu"
-        android:defaultValue="true" />
+
+    <PreferenceCategory
+        android:title="@string/GPS_category_title"
+        android:key="pref_key_gps_settings">
+
+        <CheckBoxPreference
+            android:key="pref_geofencing_settings"
+            android:title="@string/geofencing_checkbox_preference_title"
+            android:defaultValue="true"
+            android:summary="@string/geofencing_checkbox_preference_summary"/>
+
+        <ListPreference
+            android:title="@string/gpsfix_list_preference_title"
+            android:summary="@string/gpsfix_list_preference_summary"
+            android:key="pref_key_gpsfix_settings"
+            android:entries="@array/gpsfix_entries_array"
+            android:entryValues="@array/gpsfix_entry_values_array"
+            android:defaultValue="2">
+        </ListPreference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/map_category_title"
+        android:key="pref_key_map_settings">
+
+        <ListPreference
+            android:title="@string/map_tile_source_preference_title"
+            android:summary="@string/map_tile_source_preference_summary"
+            android:key="pref_key_map_tile_source_settings"
+            android:entries="@array/map_tile_source_entries_array"
+            android:entryValues="@array/map_tile_source_entry_values_array"
+            android:defaultValue="2">
+
+        </ListPreference>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
