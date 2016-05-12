@@ -115,6 +115,9 @@
     <string name="map_tile_source_preference_title">Tile source</string>
     <string name="map_tile_source_preference_summary">Choose the tile source for map</string>
 
+    <!--> Navigation Drawer <!-->
+    <string name="navigation_drawer_open">Navigation</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

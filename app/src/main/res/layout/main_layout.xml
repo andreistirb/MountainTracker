@@ -53,16 +53,6 @@
             android:textColor="#ffffff"
             android:textSize="25sp" />
 
-        <Button
-            android:id="@+id/main_settings_btn"
-            android:layout_width="165dp"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.42"
-            android:text="Settings"
-            android:fontFamily="sans-serif-light"
-            android:textColor="#ffffff"
-            android:textSize="25sp"/>
     </LinearLayout>
 
     <ImageView
