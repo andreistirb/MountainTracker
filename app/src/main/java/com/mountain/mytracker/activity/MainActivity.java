@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
@@ -32,6 +34,9 @@ public class MainActivity extends Activity {
         mNavigationDrawerItems = getResources().getStringArray(R.array.navigation_drawer_items);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.navigation_drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.navigation_drawer_list);
+
+        //Set default preferences
+        PreferenceManager.setDefaultValues(this, R.xml.main_settings, false);
 
         //Set the adapter for the list view and list's click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
