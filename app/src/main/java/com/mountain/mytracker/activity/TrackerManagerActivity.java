@@ -72,10 +72,23 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
-		
-		case R.id.trackmgr_menu_newtrack: {
-            this.startActivity(mTrackLoggerActivity);
-		}
+
+            case R.id.trackmgr_menu_newtrack: {
+                this.startActivity(mTrackLoggerActivity);
+                break;
+            }
+
+            case R.id.trackmgr_menu_delete_all: {
+                int trackCount;
+                String trackId;
+                trackCount = this.getListView().getCount();
+                for(int i=0; i<trackCount; i++){
+                    Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
+                    trackId = trackCursor.getString(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+                    deleteTrack(trackId);
+                }
+                updateList();
+            }
 
 		}
 		return true;
