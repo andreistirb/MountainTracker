@@ -12,11 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.TrackListAdapter;
+import com.mountain.mytracker.other.GPXExport;
 import com.mountain.mytracker.other.NameDialog;
 
 /**
@@ -122,11 +124,13 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
     @Override
     public boolean onContextItemSelected(MenuItem item){
         Integer trackId;
+        String trackName;
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         c.moveToFirst();
         c.moveToPosition(info.position);
         trackId = c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+        trackName = c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME));
 
         switch(item.getItemId()){
             case R.id.contextmenu_delete_track : {
@@ -142,6 +146,14 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
                 DialogFragment dialog = new NameDialog();
                 dialog.setArguments(fragmentArgs);
                 dialog.show(getFragmentManager(), "dialog");
+                break;
+            }
+
+            case R.id.contextmenu_export_track : {
+                GPXExport gpx = new GPXExport(this.getApplicationContext());
+                gpx.createFile(trackId, trackName + ".gpx", trackName);
+                Toast.makeText(this.getApplicationContext(), "Export successful",
+                        Toast.LENGTH_LONG).show();
                 break;
             }
         }
