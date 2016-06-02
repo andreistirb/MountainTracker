@@ -4,14 +4,14 @@
 		android:title="@string/tracker_manager_menu_newtrack"
 		android:icon="@android:drawable/ic_menu_add"
 		android:showAsAction="ifRoom|withText"></item>
-    
-    <!--  <item android:id="@+id/trackmgr_menu_refresh"
-        android:title="@string/menu_refresh"
-        android:showAsAction="ifRoom|withText"
-        android:icon="@android:drawable/ic_menu_send" ></item> -->
-    
+
     <item android:id="@+id/trackmgr_menu_delete_all"
         android:title="@string/tracker_manager_menu_delete_all"
         android:showAsAction="never" ></item>
+
+	<item
+        android:id="@+id/trackmgr_menu_backup"
+        android:title="@string/tracker_managet_menu_backup"
+        android:showAsAction="never"></item>
 
 </menu>

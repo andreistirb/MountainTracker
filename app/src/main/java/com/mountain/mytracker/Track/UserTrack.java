@@ -26,7 +26,6 @@ public class UserTrack extends Track {
     private Float avg_speed, max_speed, distance;
     private Long time;
     private DatabaseHelper mDatabase;
-    private String name;
 
     public UserTrack(Context context) {
         super();
@@ -55,7 +54,7 @@ public class UserTrack extends Track {
 
         try {
             this.fromDatabase(trackId, context);
-            Log.v("in constructor", this.getName());
+            Log.v("in constructor", this.getTrackName());
         }
         catch (Exception e){
             e.printStackTrace();
@@ -118,14 +117,6 @@ public class UserTrack extends Track {
         this.min_alt = min_alt;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void fromDatabase(Integer trackId, Context context) throws Exception{
         TrackPoint newTrackPoint;
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -152,7 +143,7 @@ public class UserTrack extends Track {
             this.setMax_speed(c.getFloat(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_MAX_SPEED)));
             this.setMin_alt(c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT)));
             this.setMax_alt(c.getDouble(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT)));
-            this.setName(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_NAME)));
+            this.setTrackName(c.getString(c.getColumnIndex(DatabaseContract.DatabaseEntry.COL_TRACK_NAME)));
         }
         else{
             throw new Exception();
@@ -202,14 +193,14 @@ public class UserTrack extends Track {
         } else {
             mTrackId = getTrackNo() + 1;
         }
-        name = "Track#" + mTrackId.toString();
+        trackName = "Track#" + mTrackId.toString();
 
-        Log.i("createDatabaseEntry", name);
+        Log.i("createDatabaseEntry", trackName);
 
         this.trackId = mTrackId;
 
         row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NO, mTrackId);
-        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, name);
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, trackName);
         if (trackId != null) {
             row.put(DatabaseContract.DatabaseEntry.COL_TRACK_ID, trackId);
             this.factoryTrackId = trackId;
@@ -307,7 +298,7 @@ public class UserTrack extends Track {
         Log.d("updateDatabase", this.getTime().toString());
 
         ContentValues row = new ContentValues();
-        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, name);
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, trackName);
         row.put(DatabaseContract.DatabaseEntry.COL_TIME, time);
         row.put(DatabaseContract.DatabaseEntry.COL_DISTANCE, distance);
         row.put(DatabaseContract.DatabaseEntry.COL_MED_SPEED, avg_speed);

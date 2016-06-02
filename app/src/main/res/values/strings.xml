@@ -55,6 +55,7 @@
     <string name="tracker_manager_contextmenu_rename_track">Rename track</string>
     <string name="tracker_manager_menu_newtrack">New Track</string>
     <string name="tracker_manager_menu_delete_all">Delete all</string>
+    <string name="tracker_managet_menu_backup">Backup</string>
 
     <!-->TrackLoggerActivity<-->
     <string name="track_logger_start">Start</string>

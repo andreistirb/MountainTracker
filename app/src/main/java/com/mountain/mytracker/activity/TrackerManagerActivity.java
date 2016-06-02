@@ -38,7 +38,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
 		currentTrackName = title;
         mUserTrack = new UserTrack(trackId, this.getApplicationContext());
-        mUserTrack.setName(currentTrackName);
+        mUserTrack.setTrackName(currentTrackName);
         mUserTrack.updateDatabaseName(currentTrackName);
 
 		updateList();
@@ -88,6 +88,12 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
                     deleteTrack(trackId);
                 }
                 updateList();
+                break;
+            }
+
+            case R.id.trackmgr_menu_backup: {
+
+                break;
             }
 
 		}
