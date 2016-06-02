@@ -22,19 +22,19 @@ public class GPXExport {
         db = new DatabaseHelper(context);
     }
 	
-	public boolean isExternalStorageWritable() {
+	/*public boolean isExternalStorageWritable() {
 	    String state = Environment.getExternalStorageState();
 
 		return (Environment.MEDIA_MOUNTED.equals(state));
-	}
+	}*/
 	
-	public File getFileDir(String mDirName) {
+	/*public File getFileDir(String mDirName) {
 	    File file = new File(Environment.getExternalStoragePublicDirectory(null), mDirName);
 	    if (!file.mkdirs()) {
 	        Log.e("in gpxexport", "Directory not created");
 	    }
 	    return file;
-	}
+	}*/
 	
 	public void createFile(Integer mTrackNo, String filename, String track_name){
 		

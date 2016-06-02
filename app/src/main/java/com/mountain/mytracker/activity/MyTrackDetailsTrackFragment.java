@@ -29,9 +29,6 @@ public class MyTrackDetailsTrackFragment extends Fragment {
             userTrackId = getArguments().getInt("userTrackId");
             Log.v("onCreate", userTrackId.toString());
             userTrack = new UserTrack(userTrackId, getActivity().getApplicationContext());
-            if(userTrack != null){
-                Log.v("onCreate", userTrack.getName());
-            }
         }
     }
 
@@ -58,7 +55,7 @@ public class MyTrackDetailsTrackFragment extends Fragment {
             Long trackDuration = (userTrack.getTime()) / 1000000000;
 
             duration.setText(String.format("%d:%02d:%02d", trackDuration / 3600, (trackDuration % 3600) / 60, trackDuration % 60));
-            distance.setText(userTrack.getDistance().toString());
+            distance.setText(String.format("%f",userTrack.getDistance()));
             avg_speed.setText(userTrack.getAvg_speed().toString());
             max_speed.setText(userTrack.getMax_speed().toString());
             min_alt.setText(userTrack.getMin_alt().toString());

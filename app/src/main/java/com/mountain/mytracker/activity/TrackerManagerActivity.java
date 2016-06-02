@@ -25,7 +25,6 @@ import com.mountain.mytracker.other.NameDialog;
 
 public class TrackerManagerActivity extends ListActivity implements NameDialog.NoticeDialogListener {
 
-	private static final long TRACK_ID_NO_TRACK = -1;
 	private DatabaseHelper db;
 	private Cursor c;
 	private String table;
@@ -83,7 +82,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	
 	@Override
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
-		int currentTrackId = 0;
+		int currentTrackId;
 		Intent i;
 		String mTrackNo;
 		i = new Intent(this, MyTrackDetailsActivity.class);

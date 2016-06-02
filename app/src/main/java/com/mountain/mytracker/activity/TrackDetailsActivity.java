@@ -7,11 +7,6 @@ import com.mountain.mytracker.Track.FactoryTrack;
 
 public class TrackDetailsActivity extends Activity {
 
-	private TextView track_details_duration;
-	private TextView track_details_difficulty;
-	private TextView track_details_mark;
-	private TextView track_details_description;
-	private TextView track_details_availability;
     private FactoryTrack factoryTrack;
 
 	public void onCreate(Bundle savedInstanceState){

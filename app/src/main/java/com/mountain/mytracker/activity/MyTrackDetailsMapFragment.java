@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class MyTrackDetailsMapFragment extends Fragment {
 
-    private Integer userTrackId;
     private MapView mMapView;
     private UserTrack userTrack;
 
@@ -31,6 +30,8 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Integer userTrackId;
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userTrackId = getArguments().getInt("userTrackId");

@@ -7,15 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.location.Location;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.DatabaseHelper;
 
 import org.osmdroid.util.GeoPoint;
-
-import java.util.ArrayList;
 
 /**
  * Created by astirb on 17.02.2016.
@@ -190,6 +187,7 @@ public class UserTrack extends Track {
         else{
             throw new Exception();
         }
+        c.close();
         mDatabase.close();
     }
 
