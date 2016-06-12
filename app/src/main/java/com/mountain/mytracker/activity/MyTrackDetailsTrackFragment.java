@@ -30,7 +30,7 @@ public class MyTrackDetailsTrackFragment extends Fragment {
             Log.v("onCreate", userTrackId.toString());
             userTrack = new UserTrack(userTrackId, getActivity().getApplicationContext());
             if(userTrack != null){
-                Log.v("onCreate", userTrack.getName());
+                Log.v("onCreate", userTrack.getTrackName());
             }
         }
     }
