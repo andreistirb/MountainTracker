@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +25,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 
 import java.util.ArrayList;
 
@@ -35,6 +41,7 @@ public class MapViewActivity extends Activity {
 	private boolean has_track;
 	private FactoryTrack factoryTrack;
     private UserTrack userTrack;
+	private SharedPreferences mSharedPreferences;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -88,6 +95,8 @@ public class MapViewActivity extends Activity {
 			userTrackId = this.getIntent().getExtras().getInt("userTrackId");
             userTrack = new UserTrack(userTrackId, this.getApplicationContext());
 		}
+
+		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		mMapView = (MapView) this.findViewById(R.id.displaytrackmap_osmView);
 		hartaController = mMapView.getController();
@@ -172,10 +181,56 @@ public class MapViewActivity extends Activity {
 	}
 
     private void setMap(){
+		Integer tileSource;
+        Boolean mapCompass, mapRotate;
+
+        tileSource = Integer.parseInt(mSharedPreferences.getString("pref_key_map_tile_source_settings","2"));
+        mapCompass = mSharedPreferences.getBoolean("pref_key_compass_settings",false);
+        mapRotate = mSharedPreferences.getBoolean("pref_key_rotation_settings", false);
+
         mMapView.setClickable(true);
         mMapView.setBuiltInZoomControls(true);
-        mMapView.setTileSource(TileSourceFactory.CYCLEMAP);
-        mMapView.setMultiTouchControls(true);
+
+		//setting the tile source based on user settings
+		switch(tileSource){
+			case 0: {
+				mMapView.setTileSource(TileSourceFactory.MAPNIK);
+                Log.w("setting tile source","mapnik");
+				break;
+			}
+			case 1: {
+				mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+                Log.w("setting tile source","mapquest");
+				break;
+			}
+			case 2: {
+				mMapView.setTileSource(TileSourceFactory.CYCLEMAP);
+                Log.w("setting tile source", "cyclemap");
+				break;
+			}
+			default: {
+				mMapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+                Log.w("setting tile source","default");
+                break;
+			}
+		}
+
+        //setting the compass
+        if (mapCompass == true){
+                Log.w("set compass on map", "true");
+                CompassOverlay mCompassOverlay = new CompassOverlay(this, new InternalCompassOrientationProvider(this), mMapView);
+                mMapView.getOverlays().add(mCompassOverlay);
+        }
+
+        //setting multi gesture map rotate
+        if(mapRotate == true){
+            RotationGestureOverlay mRotationGestureOverlay = new RotationGestureOverlay(this, mMapView);
+            mRotationGestureOverlay.setEnabled(true);
+            mMapView.setMultiTouchControls(true);
+            mMapView.getOverlays().add(mRotationGestureOverlay);
+        }
+
+        //setting zoom
         hartaController.setZoom(14);
     }
 

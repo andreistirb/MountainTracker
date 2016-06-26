@@ -8,7 +8,7 @@
         <CheckBoxPreference
             android:key="pref_geofencing_settings"
             android:title="@string/geofencing_checkbox_preference_title"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:summary="@string/geofencing_checkbox_preference_summary"/>
 
         <ListPreference
@@ -17,7 +17,7 @@
             android:key="pref_key_gpsfix_settings"
             android:entries="@array/gpsfix_entries_array"
             android:entryValues="@array/gpsfix_entry_values_array"
-            android:defaultValue="2">
+            android:defaultValue="5">
         </ListPreference>
 
     </PreferenceCategory>
@@ -32,9 +32,22 @@
             android:key="pref_key_map_tile_source_settings"
             android:entries="@array/map_tile_source_entries_array"
             android:entryValues="@array/map_tile_source_entry_values_array"
-            android:defaultValue="2">
+            android:defaultValue="0">
 
         </ListPreference>
+
+        <CheckBoxPreference
+            android:title="@string/map_compass_preference_title"
+            android:summary="@string/map_compass_preference_summary"
+            android:defaultValue="false"
+            android:key="pref_key_compass_settings" />
+
+        <CheckBoxPreference
+            android:title="@string/map_rotation_preference_title"
+            android:summary="@string/map_rotation_preference_summary"
+            android:defaultValue="false"
+            android:key="pref_key_rotation_settings" />
+
 
     </PreferenceCategory>
 
