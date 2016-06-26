@@ -1,30 +1,50 @@
 package com.mountain.mytracker.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class UserLocationActivity extends Activity {
 
-    private MapView mMapView;
     private MyLocationNewOverlay mMyLocationNewOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        MapView mMapView;
+        IMapController mMapController;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_location);
+        setTitle(R.string.user_location_activity);
 
         mMapView = (MapView) this.findViewById(R.id.user_location_mapView);
         mMyLocationNewOverlay = new MyLocationNewOverlay(this, mMapView);
         mMapView.getOverlays().add(mMyLocationNewOverlay);
+        mMapController = mMapView.getController();
+
+        mMapView.setClickable(true);
+        mMapView.setBuiltInZoomControls(true);
+        mMapView.setMultiTouchControls(true);
+        mMapController.setZoom(16);
     }
 
     @Override
@@ -34,6 +54,8 @@ public class UserLocationActivity extends Activity {
         checkGPS();
 
         mMyLocationNewOverlay.enableMyLocation();
+        mMyLocationNewOverlay.enableFollowLocation();
+
     }
 
     @Override
@@ -41,6 +63,7 @@ public class UserLocationActivity extends Activity {
         super.onPause();
 
         mMyLocationNewOverlay.disableMyLocation();
+        mMyLocationNewOverlay.disableFollowLocation();
     }
 
     public void checkGPS() {

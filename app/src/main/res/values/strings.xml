@@ -72,6 +72,9 @@
     <string name="track_logger_details">Details</string>
     <string name="track_logger_trekking">My Tracks</string>
 
+    <!-->UserLocationActivity<-->
+    <string name="user_location_activity">Current Location</string>
+
     <!-->GPSLogger<-->
     <string name="notification_ticker_text">Track is recording</string>
     <string name="notification_title">Recording track</string>
