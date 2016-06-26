@@ -8,6 +8,7 @@
     <string name="main_mountain">Mountains</string>
     <string name="main_tracks_btn">My Tracks</string>
     <string name="main_logo_description">Logo</string>
+    <string name="main_map">Map</string>
 
     <!-->MountainListActivity<-->
     <string name="activity_mountain_list">Mountains</string>
@@ -73,10 +74,13 @@
     <string name="track_logger_details">Details</string>
     <string name="track_logger_trekking">My Tracks</string>
 
+    <!-->UserLocationActivity<-->
+    <string name="user_location_activity">Current Location</string>
+
     <!-->GPSLogger<-->
-	<string name="notification_ticker_text">Track is recording</string>
-	<string name="notification_title">Recording track</string>
-	<string name="notification_text">Click here to enter the application</string>
+    <string name="notification_ticker_text">Track is recording</string>
+    <string name="notification_title">Recording track</string>
+    <string name="notification_text">Click here to enter the application</string>
 
     <!-->Name Dialog<-->
     <string name="new_track_dialog">New track</string>
@@ -102,4 +106,5 @@
     <string name="OSM_Standard">OSM Standard</string>
     <string name="OSM_by_MapQuest">OSM by MapQuest</string>
     <string name="Open_Cycle_Map">Open Cycle Map</string>
+    <string name="title_activity_user_location">UserLocationActivity</string>
 </resources>

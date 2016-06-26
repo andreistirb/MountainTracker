@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-	Button about_btn, my_tracks, mountain_list;
+	Button about_btn, my_tracks, mountain_list, map_button;
 
     @Override
 	public void onCreate(Bundle savedInstanceState){
@@ -46,6 +46,17 @@ public class MainActivity extends Activity {
 				
 			}
 		});
+
+		map_button = (Button) this.findViewById(R.id.main_map_button);
+        map_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(v.getContext(), UserLocationActivity.class);
+                startActivity(i);
+            }
+
+        });
 
 
 	}
