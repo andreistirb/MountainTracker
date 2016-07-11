@@ -226,7 +226,7 @@ public class MapViewActivity extends Activity {
         }
 
         //setting zoom
-        mapController.setZoom(14);
+        mapController.setZoom(16);
     }
 
     private Polyline buildPolyline(Context context, ArrayList<GeoPoint> trackPoints, int color){
