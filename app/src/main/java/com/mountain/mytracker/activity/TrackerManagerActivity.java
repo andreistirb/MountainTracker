@@ -12,11 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.TrackListAdapter;
+import com.mountain.mytracker.other.GPXExport;
 import com.mountain.mytracker.other.NameDialog;
 
 /**
@@ -25,7 +27,6 @@ import com.mountain.mytracker.other.NameDialog;
 
 public class TrackerManagerActivity extends ListActivity implements NameDialog.NoticeDialogListener {
 
-	private static final long TRACK_ID_NO_TRACK = -1;
 	private DatabaseHelper db;
 	private Cursor c;
 	private String table;
@@ -38,7 +39,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
 		currentTrackName = title;
         mUserTrack = new UserTrack(trackId, this.getApplicationContext());
-        mUserTrack.setName(currentTrackName);
+        mUserTrack.setTrackName(currentTrackName);
         mUserTrack.updateDatabaseName(currentTrackName);
 
 		updateList();
@@ -72,10 +73,29 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
-		
-		case R.id.trackmgr_menu_newtrack: {
-            this.startActivity(mTrackLoggerActivity);
-		}
+
+            case R.id.trackmgr_menu_newtrack: {
+                this.startActivity(mTrackLoggerActivity);
+                break;
+            }
+
+            case R.id.trackmgr_menu_delete_all: {
+                int trackCount;
+                String trackId;
+                trackCount = this.getListView().getCount();
+                for(int i=0; i<trackCount; i++){
+                    Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
+                    trackId = trackCursor.getString(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+                    deleteTrack(trackId);
+                }
+                updateList();
+                break;
+            }
+
+            case R.id.trackmgr_menu_backup: {
+
+                break;
+            }
 
 		}
 		return true;
@@ -83,7 +103,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	
 	@Override
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
-		int currentTrackId = 0;
+		int currentTrackId;
 		Intent i;
 		String mTrackNo;
 		i = new Intent(this, MyTrackDetailsActivity.class);
@@ -103,11 +123,13 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
     @Override
     public boolean onContextItemSelected(MenuItem item){
         Integer trackId;
+        String trackName;
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         c.moveToFirst();
         c.moveToPosition(info.position);
         trackId = c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+        trackName = c.getString(c.getColumnIndex(DatabaseEntry.COL_TRACK_NAME));
 
         switch(item.getItemId()){
             case R.id.contextmenu_delete_track : {
@@ -123,6 +145,14 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
                 DialogFragment dialog = new NameDialog();
                 dialog.setArguments(fragmentArgs);
                 dialog.show(getFragmentManager(), "dialog");
+                break;
+            }
+
+            case R.id.contextmenu_export_track : {
+                GPXExport gpx = new GPXExport(this.getApplicationContext());
+                gpx.createFile(trackId, trackName + ".gpx", trackName);
+                Toast.makeText(this.getApplicationContext(), "Export successful",
+                        Toast.LENGTH_LONG).show();
                 break;
             }
         }

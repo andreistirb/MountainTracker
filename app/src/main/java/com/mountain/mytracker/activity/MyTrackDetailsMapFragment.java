@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 public class MyTrackDetailsMapFragment extends Fragment {
 
-    private Integer userTrackId;
     private MapView mMapView;
     private UserTrack userTrack;
     private SharedPreferences mSharedPreferences;
@@ -38,6 +37,8 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Integer userTrackId;
+
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userTrackId = getArguments().getInt("userTrackId");
@@ -61,7 +62,7 @@ public class MyTrackDetailsMapFragment extends Fragment {
 
         if(userTrack.getTrackPointsCount() > 0) {
             mMapView.getOverlays().add(buildPolyline(getActivity().getApplicationContext(), userTrack.getTrackGeoPoints()));
-            hartaController.setZoom(14);
+            hartaController.setZoom(16);
             hartaController.setCenter(userTrack.getTrackGeoPoints().get(0));
         }
 

@@ -8,6 +8,7 @@
     <string name="main_mountain">Mountains</string>
     <string name="main_tracks_btn">My Tracks</string>
     <string name="main_logo_description">Logo</string>
+    <string name="main_map">Map</string>
 
     <!-->MountainListActivity<-->
     <string name="activity_mountain_list">Mountains</string>
@@ -53,8 +54,10 @@
     <string name="activity_tracker_manager">My Tracks</string>
     <string name="tracker_manager_contextmenu_delete_track">Delete track</string>
     <string name="tracker_manager_contextmenu_rename_track">Rename track</string>
+    <string name="tracker_manager_contextmenu_export_track">Export GPX track</string>
     <string name="tracker_manager_menu_newtrack">New Track</string>
     <string name="tracker_manager_menu_delete_all">Delete all</string>
+    <string name="tracker_managet_menu_backup">Backup</string>
 
     <!-->TrackLoggerActivity<-->
     <string name="track_logger_start">Start</string>
@@ -70,6 +73,10 @@
     <string name="track_logger_time">Time</string>
     <string name="track_logger_details">Details</string>
     <string name="track_logger_trekking">My Tracks</string>
+
+    <!-->UserLocationActivity<-->
+    <string name="user_location_activity">Current Location</string>
+    <string name="title_activity_user_location">UserLocationActivity</string>
 
     <!-->GPSLogger<-->
     <string name="notification_ticker_text">Track is recording</string>
@@ -126,5 +133,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

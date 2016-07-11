@@ -22,7 +22,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import com.google.android.gms.location.Geofence;
 import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.Track.TrackPoint;
@@ -30,7 +29,6 @@ import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.activity.R;
 import com.mountain.mytracker.activity.TrackLoggerActivity;
 import org.osmdroid.util.GeoPoint;
-import java.util.ArrayList;
 
 public class GPSLogger extends Service implements LocationListener {
 
@@ -52,13 +50,9 @@ public class GPSLogger extends Service implements LocationListener {
     private Vibrator mVibrator;
 
     //track battery level
-    private IntentFilter batteryIntentFilter;
     private Intent batteryStatus;
     private int batteryLevel;
 
-    //implementing GeoFence
-    ArrayList<Geofence> mGeofenceList;
-    PendingIntent mPendingIntent;
     boolean shouldGeofence = false;
 
     private UserTrack userTrack;
@@ -72,6 +66,8 @@ public class GPSLogger extends Service implements LocationListener {
     // the service is being created
     @Override
     public void onCreate() {
+
+        IntentFilter batteryIntentFilter;
 
         userTrack = new UserTrack(this.getApplicationContext());
 

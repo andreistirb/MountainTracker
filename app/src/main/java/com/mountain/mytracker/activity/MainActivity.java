@@ -17,10 +17,9 @@ import android.widget.ListView;
 
 import com.mountain.mytracker.other.NavigationDrawerItemClickListener;
 
-
 public class MainActivity extends Activity {
 
-	private Button about_btn, my_tracks, mountain_list;
+	private Button about_btn, my_tracks, mountain_list, map_button;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavigationDrawerItems;
@@ -100,6 +99,16 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		map_button = (Button) this.findViewById(R.id.main_map_button);
+        map_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(v.getContext(), UserLocationActivity.class);
+                startActivity(i);
+            }
+
+        });
 	}
 
     @Override

@@ -2,16 +2,11 @@ package com.mountain.mytracker.Track;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.location.Location;
-import android.util.Log;
 
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.NewDatabaseHelper;
-
-import org.osmdroid.util.GeoPoint;
-
 import java.io.Serializable;
 
 /**

@@ -1,20 +1,6 @@
 package com.mountain.mytracker.Track;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.provider.ContactsContract;
-import android.util.Log;
-
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
-import com.mountain.mytracker.db.DatabaseHelper;
-import com.mountain.mytracker.db.NewDatabaseHelper;
-
 import org.osmdroid.util.GeoPoint;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
