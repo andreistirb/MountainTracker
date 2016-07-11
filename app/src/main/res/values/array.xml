@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gpsfix_entries_array">
+        <item>1 second</item>
+        <item>3 seconds</item>
+        <item>5 seconds</item>
+        <item>10 seconds</item>
+        <item>25 seconds</item>
+        <item>60 seconds</item>
+        <item>5 minutes</item>
+        <item>25 minutes</item>
+        <item>1 hour</item>
+    </string-array>
+
+    <string-array name="gpsfix_entry_values_array">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>60</item>
+        <item>300</item>
+        <item>1500</item>
+        <item>3600</item>
+    </string-array>
+
+
+    <string-array name="map_tile_source_entries_array">
+        <item>OSM Standard</item>
+        <item>OSM by MapQuest</item>
+        <item>Open Cycle Map</item>
+    </string-array>
+
+    <string-array name="map_tile_source_entry_values_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string-array name="navigation_drawer_items">
+        <item>Settings</item>
+        <item>Send Feedback</item>
+    </string-array>
+</resources>

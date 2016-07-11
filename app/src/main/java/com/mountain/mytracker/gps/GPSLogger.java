@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -57,6 +59,10 @@ public class GPSLogger extends Service implements LocationListener {
 
     private Track factoryTrack;
 
+    private SharedPreferences mSharedPreferences;
+
+    private Integer gpsFixInterval;
+
     // the service is being created
     @Override
     public void onCreate() {
@@ -78,6 +84,8 @@ public class GPSLogger extends Service implements LocationListener {
 
         notification = new Intent("broadcastGPS");
 
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         super.onCreate();
     }
 
@@ -98,6 +106,9 @@ public class GPSLogger extends Service implements LocationListener {
 
         notification.putExtra("userTrackId", userTrack.getTrackId());
 
+        gpsFixInterval = Integer.parseInt(mSharedPreferences.getString("pref_key_gpsfix_settings","5")) * 1000;
+        Log.w("gpsFixInterval", gpsFixInterval.toString());
+
         sendBroadcast(notification);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -105,12 +116,12 @@ public class GPSLogger extends Service implements LocationListener {
                     == PackageManager.PERMISSION_GRANTED) {
 
                 Log.i("gpslogger", "inside check for build version");
-                mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+                mLocationManager.requestLocationUpdates(provider, gpsFixInterval, 10, this);
 
             }
         }
         else{
-            mLocationManager.requestLocationUpdates(provider, 5000, 10, this);
+            mLocationManager.requestLocationUpdates(provider, gpsFixInterval, 10, this);
         }
         // start tracking
         startTracking();

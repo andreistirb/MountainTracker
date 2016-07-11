@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mountain.mytracker.activity"
-    android:versionCode="1"
-    android:versionName="1.0">
+<manifest package="com.mountain.mytracker.activity"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="23"/>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+        android:maxSdkVersion="18"/>
 
     <application
         android:allowBackup="true"
@@ -37,35 +37,35 @@
         <activity
             android:name=".TrackerManagerActivity"
             android:label="@string/activity_tracker_manager"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MountainListActivity"
             android:label="@string/activity_mountain_list"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MountainTrackListActivity"
             android:label="@string/activity_mountain_tracks_list"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MapViewActivity"
             android:label=""
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TrackDetailsActivity"
             android:label=""
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TrackLoggerActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MyTrackDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.mountain.mytracker.gps.GPSLogger"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.mountain.mytracker.activity.intent.GPS_SERVICE" />
+                <action android:name="com.mountain.mytracker.activity.intent.GPS_SERVICE"/>
             </intent-filter>
         </service>
         <service
@@ -75,15 +75,20 @@
         <provider
             android:name="com.mountain.mytracker.db.MountainTrackerContentProvider"
             android:authorities="com.mountain.mytracker.activity.provider"
-            android:exported="false"></provider>
+            android:exported="false">
+        </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"></meta-data>
+            android:value="@integer/google_play_services_version">
+        </meta-data>
+
+        <activity android:name="com.mountain.mytracker.other.SettingsActivity">
+        </activity>
 
         <activity
             android:name=".UserLocationActivity"
-            android:label="@string/title_activity_user_location"></activity>
+            android:label="@string/title_activity_user_location"/>
     </application>
 
 </manifest>

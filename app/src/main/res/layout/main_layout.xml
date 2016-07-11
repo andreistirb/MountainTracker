@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigation_drawer_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background= "@drawable/background"
@@ -58,7 +63,6 @@
             android:textColor="#ffffff"
             android:textSize="25sp" />
 
-
     </LinearLayout>
 
     <ImageView
@@ -72,3 +76,15 @@
         android:src="@drawable/logo" />
 
 </RelativeLayout>
+    
+    <ListView
+        android:id="@+id/navigation_drawer_list"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="3dp"
+        android:background="#ffeeee"></ListView>
+
+</android.support.v4.widget.DrawerLayout>
