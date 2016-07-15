@@ -41,5 +41,6 @@
     <string-array name="navigation_drawer_items">
         <item>Settings</item>
         <item>Send Feedback</item>
+        <item>About Mountain Tracker</item>
     </string-array>
 </resources>

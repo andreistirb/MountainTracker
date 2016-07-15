@@ -45,17 +45,6 @@
         </Button>
 
         <Button
-            android:id="@+id/main_about_btn"
-            android:layout_width="165dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:layout_weight="0.42"
-            android:text="@string/main_about_btn"
-            android:fontFamily="sans-serif-light"
-            android:textColor="#ffffff"
-            android:textSize="25sp" />
-
-        <Button
             android:id="@+id/main_map_button"
             android:layout_width="165dp"
             android:layout_height="50dp"
