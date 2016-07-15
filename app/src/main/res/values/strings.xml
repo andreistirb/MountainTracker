@@ -81,7 +81,7 @@
     <!-->GPSLogger<-->
     <string name="notification_ticker_text">Track is recording</string>
     <string name="notification_title">Recording track</string>
-    <string name="notification_text">Click here to enter the application</string>
+    <string name="notification_text">Touch to enter the application</string>
 
     <!-->Name Dialog<-->
     <string name="new_track_dialog">New track</string>
