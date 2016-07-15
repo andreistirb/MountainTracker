@@ -9,7 +9,8 @@
             android:key="pref_geofencing_settings"
             android:title="@string/geofencing_checkbox_preference_title"
             android:defaultValue="false"
-            android:summary="@string/geofencing_checkbox_preference_summary"/>
+            android:summary="@string/geofencing_checkbox_preference_summary"
+            android:enabled="false"/>
 
         <ListPreference
             android:title="@string/gpsfix_list_preference_title"
@@ -40,7 +41,8 @@
             android:title="@string/map_compass_preference_title"
             android:summary="@string/map_compass_preference_summary"
             android:defaultValue="false"
-            android:key="pref_key_compass_settings" />
+            android:key="pref_key_compass_settings"
+            android:enabled="false"/>
 
         <CheckBoxPreference
             android:title="@string/map_rotation_preference_title"
