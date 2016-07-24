@@ -29,7 +29,7 @@ public class UserTrackBackup {
 
         dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         date = new Date();
-        fileName = "backup_" + dateFormat.format(date).toString() + ".mtr";
+        fileName = "backup_" + dateFormat.format(date).toString() + ".txt";//".mtr";
 
         backupFile = new File(directory, fileName);
 

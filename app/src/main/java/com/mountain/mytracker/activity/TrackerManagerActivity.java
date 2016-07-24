@@ -20,6 +20,9 @@ import com.mountain.mytracker.db.DatabaseHelper;
 import com.mountain.mytracker.db.TrackListAdapter;
 import com.mountain.mytracker.other.GPXExport;
 import com.mountain.mytracker.other.NameDialog;
+import com.mountain.mytracker.other.UserTrackBackup;
+
+import java.util.ArrayList;
 
 /**
  * Aici o sa fie lista cu traseele inregistrate de utilizator
@@ -93,6 +96,29 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
             }
 
             case R.id.trackmgr_menu_backup: {
+
+                UserTrackBackup mUserTrackBackup;
+                ArrayList<UserTrack> mUserTrackList;
+                UserTrack mUserTrack;
+                Integer trackId;
+
+                mUserTrackList = new ArrayList<>();
+
+                int trackCount = this.getListView().getCount();
+                for(int i=0; i<trackCount; i++){
+                    Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
+                    trackId = trackCursor.getInt(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+                    mUserTrack = new UserTrack(trackId, this.getApplicationContext());
+                    mUserTrackList.add(mUserTrack);
+                }
+
+
+
+                mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+                mUserTrackBackup.backUpList();
+
+                Toast.makeText(this.getApplicationContext(), "Backup successful", Toast.LENGTH_LONG).show();
+
 
                 break;
             }
