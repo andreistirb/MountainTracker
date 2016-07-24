@@ -22,6 +22,7 @@ import com.mountain.mytracker.other.GPXExport;
 import com.mountain.mytracker.other.NameDialog;
 import com.mountain.mytracker.other.UserTrackBackup;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -112,12 +113,29 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
                     mUserTrackList.add(mUserTrack);
                 }
 
-
-
                 mUserTrackBackup = new UserTrackBackup(mUserTrackList);
                 mUserTrackBackup.backUpList();
 
                 Toast.makeText(this.getApplicationContext(), "Backup successful", Toast.LENGTH_LONG).show();
+
+                break;
+            }
+
+            case R.id.trackmgr_menu_restore_backup: {
+
+                ArrayList<UserTrack> mUserTrackList;
+                UserTrack mUserTrack;
+                UserTrackBackup mUserTrackBackup;
+                File mFile;
+
+                //choose the file
+
+                mUserTrackList = new ArrayList<>();
+
+                mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+
+                //do the backup
+                mUserTrackBackup.restoreBackup(mFile);
 
 
                 break;

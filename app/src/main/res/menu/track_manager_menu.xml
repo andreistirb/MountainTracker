@@ -3,16 +3,23 @@
     <item android:id="@+id/trackmgr_menu_newtrack"
 		android:title="@string/tracker_manager_menu_newtrack"
 		android:icon="@android:drawable/ic_menu_add"
-		android:showAsAction="ifRoom|withText"></item>
+		android:showAsAction="ifRoom|withText"/>
 
     <item android:id="@+id/trackmgr_menu_delete_all"
         android:title="@string/tracker_manager_menu_delete_all"
-        android:showAsAction="never" ></item>
+        android:showAsAction="never" />
 
 	<item
         android:id="@+id/trackmgr_menu_backup"
-        android:title="@string/tracker_managet_menu_backup"
-        android:showAsAction="never"></item>
+        android:title="@string/tracker_manager_menu_backup"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/trackmgr_menu_restore_backup"
+        android:title="@string/tracker_manager_menu_restore_backup"
+        android:showAsAction="never"/>
+
+
 
 
 </menu>
