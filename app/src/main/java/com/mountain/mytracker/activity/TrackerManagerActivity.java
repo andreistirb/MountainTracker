@@ -1,5 +1,6 @@
 package com.mountain.mytracker.activity;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -134,8 +135,13 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
                 mUserTrackBackup = new UserTrackBackup(mUserTrackList);
 
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                startActivityForResult(intent, 42);
+
                 //do the backup
-                mUserTrackBackup.restoreBackup(mFile);
+                //mUserTrackBackup.restoreBackup(mFile);
 
 
                 break;
@@ -144,6 +150,14 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		}
 		return true;
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData){
+
+        if(requestCode == 42 && resultCode == Activity.RESULT_OK){
+            Log.v("iei", "iei");
+        }
+    }
 	
 	@Override
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
