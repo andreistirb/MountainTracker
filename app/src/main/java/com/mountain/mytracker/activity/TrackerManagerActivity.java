@@ -5,7 +5,9 @@ import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -36,6 +38,10 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	private Cursor c;
 	private String table;
 	Intent mTrackLoggerActivity;
+
+    //used for restoring backup
+    private UserTrackBackup mUserTrackBackup;
+    private ArrayList<UserTrack> mUserTrackList;
 	
 	@Override
 	public void onDialogPositiveClick(String title, Integer trackId){
@@ -124,26 +130,14 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
             case R.id.trackmgr_menu_restore_backup: {
 
-                ArrayList<UserTrack> mUserTrackList;
-                UserTrack mUserTrack;
-                UserTrackBackup mUserTrackBackup;
-                File mFile;
-
-                //choose the file
-
+                //instantiate objects needed for restoring backup
                 mUserTrackList = new ArrayList<>();
-
                 mUserTrackBackup = new UserTrackBackup(mUserTrackList);
 
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
                 startActivityForResult(intent, 42);
-
-                //do the backup
-                //mUserTrackBackup.restoreBackup(mFile);
-
-
                 break;
             }
 
@@ -151,12 +145,36 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 		return true;
 	}
 
+    //callback for file picker
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData){
 
         if(requestCode == 42 && resultCode == Activity.RESULT_OK){
-            Log.v("iei", "iei");
+            Uri uri;
+            if(resultData != null){
+                uri = resultData.getData();
+                restoreBackup(uri);
+            }
         }
+    }
+
+    private void restoreBackup(Uri uri){
+
+        Cursor c = getContentResolver().query(uri, null, null, null, null, null);
+        File f;
+
+        try{
+            if(c != null && c.moveToFirst()){
+                String displayName = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                f = new File(displayName);
+            }
+            c.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 	
 	@Override
