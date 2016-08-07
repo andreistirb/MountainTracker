@@ -182,7 +182,7 @@ public class UserTrack extends Track {
         mDatabase.close();
     }
 
-    public void createDatabaseEntry(Integer trackId) {
+    public void createDatabaseEntry(Integer trackId, String trackname) {
         ContentValues row = new ContentValues();
         Integer mTrackId;
 
@@ -191,7 +191,10 @@ public class UserTrack extends Track {
         } else {
             mTrackId = getTrackNo() + 1;
         }
-        trackName = "Track#" + mTrackId.toString();
+        if(trackname != null)
+            trackName = trackname;
+        else
+            trackName = "Track#" + mTrackId.toString();
 
         Log.i("createDatabaseEntry", trackName);
 
@@ -323,6 +326,14 @@ public class UserTrack extends Track {
         mDatabase.close();
 
         return returnCode;
+    }
+
+    public void toDatabase(){
+        createDatabaseEntry(null, this.getTrackName());
+        updateDatabase();
+        for(int i=0; i<this.getTrackPointsCount(); i++){
+            this.trackPoints.get(i).toDatabase();
+        }
     }
 
     private int getTrackNo() {

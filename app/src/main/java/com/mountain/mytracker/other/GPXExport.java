@@ -41,7 +41,7 @@ public class GPXExport {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(DatabaseEntry.TABLE_MY_TRACKS_POINTS);
 		Cursor c = qb.query(db.getReadableDatabase(), null,
-				DatabaseEntry.COL_TRACK_NO + " = ? ",
+				"CAST(" + DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
 				new String[] { mTrackNo.toString() }, null, null,
 				DatabaseEntry._ID);
 		c.moveToFirst();

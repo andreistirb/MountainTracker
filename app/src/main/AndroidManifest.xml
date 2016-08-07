@@ -37,7 +37,11 @@
         <activity
             android:name=".TrackerManagerActivity"
             android:label="@string/activity_tracker_manager"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MountainListActivity"
             android:label="@string/activity_mountain_list"
