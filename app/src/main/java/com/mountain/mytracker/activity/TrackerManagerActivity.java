@@ -24,6 +24,7 @@ import com.mountain.mytracker.db.TrackListAdapter;
 import com.mountain.mytracker.other.GPXExport;
 import com.mountain.mytracker.other.NameDialog;
 import com.mountain.mytracker.other.UserTrackBackup;
+import com.mountain.mytracker.other.UserTrackRestoreBackUp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -162,11 +163,21 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
         Cursor c = getContentResolver().query(uri, null, null, null, null, null);
         File f;
+        UserTrackRestoreBackUp mUserTrackRestoreBackup;
+        ArrayList<UserTrack> mUserTrackArrayList;
+
+        mUserTrackArrayList = new ArrayList<>();
 
         try{
             if(c != null && c.moveToFirst()){
                 String displayName = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 f = new File(displayName);
+                mUserTrackRestoreBackup = new UserTrackRestoreBackUp(f, this.getApplicationContext());
+                mUserTrackRestoreBackup.restoreUserTrack();
+                mUserTrackArrayList = mUserTrackRestoreBackup.getmUserTrackArrayList();
+                for(int i=0;i<mUserTrackArrayList.size();i++){
+                    //mUserTrackArrayList.get(i).toDatabase();
+                }
             }
             c.close();
         }
