@@ -1,6 +1,7 @@
 package com.mountain.mytracker.gps;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -179,7 +180,7 @@ public class GPSLogger extends Service implements LocationListener {
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.cruce_galbena)
                 .setContentTitle(getResources().getString(R.string.notification_ticker_text))
-                .setContentText("Hello");
+                .setContentText(getResources().getString(R.string.notification_text));
 
         Intent startTrackLoggerIntent = new Intent(this, TrackLoggerActivity.class);
         startTrackLoggerIntent.putExtra("userTrackId", userTrackId);
@@ -193,6 +194,7 @@ public class GPSLogger extends Service implements LocationListener {
                 startTrackLoggerIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationBuilder.setContentIntent(resultPendingIntent);
+        mNotificationBuilder.mNotification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
         nmgr.notify(1, mNotificationBuilder.build());
 

@@ -19,7 +19,7 @@ import com.mountain.mytracker.other.NavigationDrawerItemClickListener;
 
 public class MainActivity extends Activity {
 
-	private Button about_btn, my_tracks, mountain_list, map_button;
+	private Button my_tracks, mountain_list, map_button;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavigationDrawerItems;
@@ -77,17 +77,7 @@ public class MainActivity extends Activity {
 				startActivity(i);				
 			}
 		});
-		about_btn = (Button) this.findViewById(R.id.main_about_btn);
-		about_btn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
-                myWebLink.setData(Uri.parse(getString(R.string.app_website)));//"http://cdascalu.com/projects/mountaintracker/index.html"));
-                    startActivity(myWebLink);
-			}
-		});
-		
+
 		my_tracks = (Button) this.findViewById(R.id.main_tracks_btn);
 		my_tracks.setOnClickListener(new View.OnClickListener() {
 			
