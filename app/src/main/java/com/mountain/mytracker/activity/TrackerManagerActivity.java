@@ -133,7 +133,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
                 //instantiate objects needed for restoring backup
                 mUserTrackList = new ArrayList<>();
-                mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+                //mUserTrackBackup = new UserTrackBackup(mUserTrackList);
 
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -171,12 +171,12 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
         try{
             if(c != null && c.moveToFirst()){
                 String displayName = c.getString(c.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                f = new File(displayName);
+                f = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/MountainTracker", displayName);
                 mUserTrackRestoreBackup = new UserTrackRestoreBackUp(f, this.getApplicationContext());
                 mUserTrackRestoreBackup.restoreUserTrack();
                 mUserTrackArrayList = mUserTrackRestoreBackup.getmUserTrackArrayList();
                 for(int i=0;i<mUserTrackArrayList.size();i++){
-                    //mUserTrackArrayList.get(i).toDatabase();
+                    mUserTrackArrayList.get(i).toDatabase();
                 }
             }
             c.close();

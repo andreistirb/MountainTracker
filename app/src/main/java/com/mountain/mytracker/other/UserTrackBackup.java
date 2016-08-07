@@ -64,48 +64,47 @@ public class UserTrackBackup {
         pw.println("<track>");
         pw.println("<metadata>");
 
-        pw.println("<trackId>");
-        pw.println(userTrack.getTrackId());
+        pw.print("<trackId>");
+        pw.print(userTrack.getTrackId());
         pw.println("</trackId>");
 
-        pw.println("<trackName>");
-        pw.println(userTrack.getTrackName());
+        pw.print("<trackName>");
+        pw.print(userTrack.getTrackName());
         pw.println("</trackName>");
 
         if(userTrack.getFactoryTrackId() != null) {
-            pw.println("<factoryTrackId>");
-            pw.println(userTrack.getFactoryTrackId());
-            pw.println("</factoryTrackId");
+            pw.print("<factoryTrackId>");
+            pw.print(userTrack.getFactoryTrackId());
+            pw.println("</factoryTrackId>");
         }
 
-        pw.println("<max_alt>");
-        pw.println(userTrack.getMax_alt());
+        pw.print("<max_alt>");
+        pw.print(userTrack.getMax_alt());
         pw.println("</max_alt>");
 
-        pw.println("<min_alt>");
-        pw.println(userTrack.getMin_alt());
+        pw.print("<min_alt>");
+        pw.print(userTrack.getMin_alt());
         pw.println("</min_alt>");
 
-        pw.println("<avg_speed>");
-        pw.println(userTrack.getAvg_speed());
+        pw.print("<avg_speed>");
+        pw.print(userTrack.getAvg_speed());
         pw.println("</avg_speed>");
 
-        pw.println("<max_speed>");
-        pw.println(userTrack.getMax_speed());
+        pw.print("<max_speed>");
+        pw.print(userTrack.getMax_speed());
         pw.println("</max_speed>");
 
-        pw.println("<distance>");
-        pw.println(userTrack.getDistance());
+        pw.print("<distance>");
+        pw.print(userTrack.getDistance());
         pw.println("</distance>");
 
-        pw.println("<time>");
-        pw.println(userTrack.getTime());
+        pw.print("<time>");
+        pw.print(userTrack.getTime());
         pw.println("</time>");
 
         pw.println("</metadata>");
 
         pw.println("<trk>");
-        pw.println("<trkseg>");
 
         for(int j=0;j<userTrack.getTrackPointsCount()-1;j++){
             pw.println("<trkpt lat=" + '"' + userTrack.getTrackPoints().get(j).getLocation().getLatitude() + '"' +
@@ -113,7 +112,6 @@ public class UserTrackBackup {
                     "<ele>" + userTrack.getTrackPoints().get(j).getLocation().getAltitude() + "</ele>" + "</trkpt>");
         }
 
-        pw.println("</trkseg>");
         pw.println("</trk>");
         pw.println("</track>");
 
