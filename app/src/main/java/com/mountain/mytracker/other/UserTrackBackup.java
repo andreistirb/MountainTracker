@@ -47,7 +47,7 @@ public class UserTrackBackup {
         try {
             pw.println("<?xml version='1.0' encoding='UTF-8'?>");
             pw.println("<gpx>");
-            for (int i = 0; i < mUserTrackList.size() - 1; i++) {
+            for (int i = 0; i < mUserTrackList.size(); i++) {
                 backUpTrack(mUserTrackList.get(i));
             }
             pw.println("</gpx>");
