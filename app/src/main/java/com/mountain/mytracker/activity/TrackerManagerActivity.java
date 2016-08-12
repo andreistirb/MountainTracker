@@ -1,13 +1,17 @@
 package com.mountain.mytracker.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -39,6 +43,9 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 	private Cursor c;
 	private String table;
 	Intent mTrackLoggerActivity;
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 101;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
 
     //used for restoring backup
     private UserTrackBackup mUserTrackBackup;
@@ -106,45 +113,122 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
 
             case R.id.trackmgr_menu_backup: {
 
-                UserTrackBackup mUserTrackBackup;
-                ArrayList<UserTrack> mUserTrackList;
-                UserTrack mUserTrack;
-                Integer trackId;
+                int permissionCheck = ContextCompat.checkSelfPermission(
+                        this.getApplication().getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-                mUserTrackList = new ArrayList<>();
-
-                int trackCount = this.getListView().getCount();
-                for(int i=0; i<trackCount; i++){
-                    Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
-                    trackId = trackCursor.getInt(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
-                    mUserTrack = new UserTrack(trackId, this.getApplicationContext());
-                    mUserTrackList.add(mUserTrack);
+                if(permissionCheck != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(
+                            this,
+                            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                 }
+                else{
+                    UserTrackBackup mUserTrackBackup;
+                    ArrayList<UserTrack> mUserTrackList;
+                    UserTrack mUserTrack;
+                    Integer trackId;
 
-                mUserTrackBackup = new UserTrackBackup(mUserTrackList);
-                mUserTrackBackup.backUpList();
+                    mUserTrackList = new ArrayList<>();
 
-                Toast.makeText(this.getApplicationContext(), "Backup successful", Toast.LENGTH_LONG).show();
+                    int trackCount = this.getListView().getCount();
+                    for(int i=0; i<trackCount; i++){
+                        Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
+                        trackId = trackCursor.getInt(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+                        mUserTrack = new UserTrack(trackId, this.getApplicationContext());
+                        mUserTrackList.add(mUserTrack);
+                    }
 
+                    mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+                    mUserTrackBackup.backUpList();
+
+                    Toast.makeText(this.getApplicationContext(), "Backup successful", Toast.LENGTH_LONG).show();
+                }
                 break;
             }
 
             case R.id.trackmgr_menu_restore_backup: {
 
-                //instantiate objects needed for restoring backup
-                mUserTrackList = new ArrayList<>();
-                //mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+                int permissionCheck = ContextCompat.checkSelfPermission(
+                        this.getApplication().getApplicationContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                startActivityForResult(intent, 42);
+                if(permissionCheck != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(
+                            this,
+                            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                else{
+                    //instantiate objects needed for restoring backup
+                    mUserTrackList = new ArrayList<>();
+                    //mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, 42);
+                }
                 break;
             }
-
 		}
 		return true;
 	}
+
+    //callback for permission check
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                          int[] grantResults){
+        switch(requestCode){
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE : {
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                    //instantiate objects needed for restoring backup
+                    mUserTrackList = new ArrayList<>();
+                    //mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, 42);
+                }
+                else{
+                    Toast.makeText(this.getApplicationContext(), "Restoring backup was unsuccessful", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE : {
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    UserTrackBackup mUserTrackBackup;
+                    ArrayList<UserTrack> mUserTrackList;
+                    UserTrack mUserTrack;
+                    Integer trackId;
+
+                    mUserTrackList = new ArrayList<>();
+
+                    int trackCount = this.getListView().getCount();
+                    for(int i=0; i<trackCount; i++){
+                        Cursor trackCursor = (Cursor) this.getListView().getItemAtPosition(i);
+                        trackId = trackCursor.getInt(trackCursor.getColumnIndex(DatabaseEntry.COL_TRACK_NO));
+                        mUserTrack = new UserTrack(trackId, this.getApplicationContext());
+                        mUserTrackList.add(mUserTrack);
+                    }
+
+                    mUserTrackBackup = new UserTrackBackup(mUserTrackList);
+                    mUserTrackBackup.backUpList();
+
+                    Toast.makeText(this.getApplicationContext(), "Backup successful", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(this.getApplicationContext(), "Backup was unsuccessful", Toast.LENGTH_LONG).show();
+
+                }
+                break;
+            }
+        }
+    }
 
     //callback for file picker
     @Override
@@ -155,6 +239,7 @@ public class TrackerManagerActivity extends ListActivity implements NameDialog.N
             if(resultData != null){
                 uri = resultData.getData();
                 restoreBackup(uri);
+                Toast.makeText(this.getApplicationContext(), "Backup was successfully restored", Toast.LENGTH_LONG).show();
             }
         }
     }
