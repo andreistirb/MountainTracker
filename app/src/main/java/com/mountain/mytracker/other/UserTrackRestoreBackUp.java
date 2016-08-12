@@ -123,8 +123,8 @@ public class UserTrackRestoreBackUp {
                                     if(trackPoint instanceof Element){
                                         TrackPoint mTrackPoint;
                                         Location mLocation = new Location("gps");
-                                        mLocation.setLatitude(Double.parseDouble(((Element) trackPoint).getAttributes().getNamedItem("lat").getNodeValue()));
-                                        mLocation.setLongitude(Double.parseDouble(((Element) trackPoint).getAttributes().getNamedItem("lon").getNodeValue()));
+                                        mLocation.setLatitude(Double.parseDouble(trackPoint.getAttributes().getNamedItem("lat").getNodeValue()));
+                                        mLocation.setLongitude(Double.parseDouble(trackPoint.getAttributes().getNamedItem("lon").getNodeValue()));
                                         NodeList altList = trackPoint.getChildNodes();
                                         for(int l=0; l<altList.getLength(); l++){
                                             Node altNode = altList.item(l);
