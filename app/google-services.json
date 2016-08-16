@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "61832896312",
+    "firebase_url": "https://mountain-tracker.firebaseio.com",
+    "project_id": "mountain-tracker",
+    "storage_bucket": "mountain-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61832896312:android:99a03b1b44cbbcff",
+        "android_client_info": {
+          "package_name": "com.mountain.mytracker.activity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61832896312-9ukaunl0b0c6oe2797ct406gm0a33524.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mountain.mytracker.activity",
+            "certificate_hash": "A98897C8A7BB3C224EBD9CD4611E3A845E67DC48"
+          }
+        },
+        {
+          "client_id": "61832896312-q9epnvju23457shai7qktvcg6su1eoo5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDf9y4YowFZqqLCXswIfAC5YP1raUMaLXk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61832896312-q9epnvju23457shai7qktvcg6su1eoo5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
