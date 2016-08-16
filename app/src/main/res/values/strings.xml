@@ -29,12 +29,12 @@
     <string name="mountain_track_list_contextmenu_try">Start track</string>
 
     <!-->MyTrackDetailsActivity<-->
-    <string name="my_track_details_duration">Duration:</string>
-    <string name="my_track_details_distance">Distance:</string>
-    <string name="my_track_details_avg_speed">Average speed:</string>
-    <string name="my_track_details_max_speed">Max speed:</string>
-    <string name="my_track_details_min_altitude">Min altitude:</string>
-    <string name="my_track_details_max_altitude">Max altitude:</string>
+    <string name="my_track_details_duration">Duration (h:mm:ss):</string>
+    <string name="my_track_details_distance">Distance (km):</string>
+    <string name="my_track_details_avg_speed">Average speed (km/h):</string>
+    <string name="my_track_details_max_speed">Max speed (km/h):</string>
+    <string name="my_track_details_min_altitude">Min altitude (m):</string>
+    <string name="my_track_details_max_altitude">Max altitude (m):</string>
     <string name="my_track_details_export_button">Export as GPX</string>
     <string name="my_track_details_page1">Track details</string>
     <string name="my_track_details_page2">Map</string>
@@ -46,7 +46,7 @@
     <string name="track_details_difficulty">Difficulty:</string>
     <string name="track_details_mark">Mark:</string>
     <string name="track_details_description">Description:</string>
-    <string name="track_details_availability">Accessibilily:</string>
+    <string name="track_details_availability">Accessibility:</string>
     <string name="track_details_min_alt">Min altitude:</string>
     <string name="track_details_max_alt">Max altitude:</string>
 

@@ -314,6 +314,26 @@ public class UserTrack extends Track {
         mDatabase.close();
     }
 
+    // TO-DO update more info from Location object to Database so that we can remove this method
+    public void updateRestoreDatabase(){
+        Integer returnCode;
+
+        ContentValues row = new ContentValues();
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_NAME, trackName);
+        row.put(DatabaseContract.DatabaseEntry.COL_TIME, time);
+        row.put(DatabaseContract.DatabaseEntry.COL_DISTANCE, distance);
+        row.put(DatabaseContract.DatabaseEntry.COL_MED_SPEED, avg_speed);
+        row.put(DatabaseContract.DatabaseEntry.COL_MAX_SPEED, max_speed);
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MIN_ALT, min_alt);
+        row.put(DatabaseContract.DatabaseEntry.COL_TRACK_MAX_ALT, max_alt);
+        returnCode = mDatabase.getWritableDatabase().update(DatabaseContract.DatabaseEntry.TABLE_MY_TRACKS, row,
+                "CAST(" + DatabaseContract.DatabaseEntry.COL_TRACK_NO + " as TEXT)" + " = ? ",
+                new String[]{trackId.toString()});
+
+        Log.d("updateDatabase", returnCode.toString());
+        mDatabase.close();
+    }
+
     public int updateDatabaseName(String trackName){
         int returnCode;
 
@@ -330,7 +350,7 @@ public class UserTrack extends Track {
 
     public void toDatabase(){
         createDatabaseEntry(null, this.getTrackName());
-        updateDatabase();
+        updateRestoreDatabase();
         for(int i=0; i<this.getTrackPointsCount(); i++){
             this.trackPoints.get(i).toDatabase();
         }
