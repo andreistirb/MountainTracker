@@ -16,7 +16,6 @@ import com.mountain.mytracker.other.GPXExport;
 public class MyTrackDetailsTrackFragment extends Fragment {
 
     private Integer userTrackId;
-    Button export_btn;
     private UserTrack userTrack;
 
     public MyTrackDetailsTrackFragment() {
@@ -46,22 +45,22 @@ public class MyTrackDetailsTrackFragment extends Fragment {
         max_speed = (TextView) rootView.findViewById(R.id.mytrackdetails_max_speed);
         min_alt = (TextView) rootView.findViewById(R.id.mytrackdetails_min_alt);
         max_alt = (TextView) rootView.findViewById(R.id.mytrackdetails_max_alt);
-        export_btn = (Button) rootView.findViewById(R.id.mytrackdetails_export);
 
         if (userTrack != null) {
 
             Log.v("oncreateview", userTrack.getTrackId().toString());
 
             Long trackDuration = (userTrack.getTime()) / 1000000000;
+            Double average_speed = userTrack.getAvg_speed() * 3.6D;
 
             duration.setText(String.format("%d:%02d:%02d", trackDuration / 3600, (trackDuration % 3600) / 60, trackDuration % 60));
-            distance.setText(String.format("%f",userTrack.getDistance()));
-            avg_speed.setText(userTrack.getAvg_speed().toString());
-            max_speed.setText(userTrack.getMax_speed().toString());
-            min_alt.setText(userTrack.getMin_alt().toString());
-            max_alt.setText(userTrack.getMax_alt().toString());
+            distance.setText(String.format("%f",Math.floor(userTrack.getDistance() * 100) / 100000));
+            avg_speed.setText(String.format("%f",Math.floor(userTrack.getAvg_speed()*3.6D * 100D) / 100D));
+            max_speed.setText(String.format("%f",Math.floor(userTrack.getMax_speed()*3.6F * 100) / 100));
+            min_alt.setText(String.format("%d",Math.round(userTrack.getMin_alt())));
+            max_alt.setText(String.format("%d",Math.round(userTrack.getMax_alt())));
 
-            export_btn.setOnClickListener(new View.OnClickListener() {
+            /*export_btn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -70,7 +69,7 @@ public class MyTrackDetailsTrackFragment extends Fragment {
                     Toast.makeText(getActivity(), "Export successful",
                             Toast.LENGTH_LONG).show();
                 }
-            });
+            });*/
 
         }
 

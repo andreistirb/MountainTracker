@@ -111,13 +111,6 @@
             android:layout_height="fill_parent"
             android:paddingTop="30dp">
 
-            <Button
-                android:id="@+id/mytrackdetails_export"
-                style="@style/text_buton"
-                android:text="@string/my_track_details_export_button"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-
         </RelativeLayout>
 
 
