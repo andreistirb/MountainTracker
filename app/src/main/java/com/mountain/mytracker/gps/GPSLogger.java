@@ -96,7 +96,7 @@ public class GPSLogger extends Service implements LocationListener {
 
 
         if (intent.hasExtra("factoryTrackId")) {
-            factoryTrack = new FactoryTrack(intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext());
+            factoryTrack = new FactoryTrack(/*intent.getExtras().getInt("factoryTrackId"), this.getApplicationContext()*/);
             userTrack.createDatabaseEntry(factoryTrack.getTrackId(), null);
             shouldGeofence = true;
         }

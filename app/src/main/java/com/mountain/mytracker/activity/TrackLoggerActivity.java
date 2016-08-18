@@ -85,7 +85,7 @@ public class TrackLoggerActivity extends Activity {
 
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-            factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
+            factoryTrack = new FactoryTrack(/*factoryTrackId, this.getApplicationContext()*/);
             setTitle(factoryTrack.getTrackName());
 		}
 

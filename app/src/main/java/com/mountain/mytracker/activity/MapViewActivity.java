@@ -83,7 +83,7 @@ public class MapViewActivity extends Activity {
 
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-			factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
+			factoryTrack = new FactoryTrack(/*factoryTrackId, this.getApplicationContext()*/);
 			has_track = true;
             setTitle(factoryTrack.getTrackName());
 		}
