@@ -10,46 +10,63 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mountain.mytracker.Track.FactoryTrack;
+import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.MountainTrackListAdapter;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
 public class MountainTrackListActivity extends ListActivity {
 
-	private String selection;
-	private String table;
-	private String sortOrder;
-	private String[] selectionArgs;
-    NewDatabaseHelper db;
-	Cursor c;
+    private DatabaseReference mFireBaseDatabaseReference;
+    private FirebaseListAdapter<FactoryTrack> mFirebaseListAdapter;
+    public static final String TRACK_CHILD = "tracks";
+    public static final String SORT_BY_NAME = "trackName";
+    public static final String SORT_BY_DURATION = "trackDuration";
+    public static final String SORT_BY_DIFFICULTY = "trackDifficulty";
+
+    String mountainName;
+    Integer mountainId;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
-
-		String munte, munte_id;
 
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.mountain_track_list_layout);
 		
 		//seteaza titlul -> numele grupei de munti
-		munte = this.getIntent().getExtras().getString(DatabaseEntry.COL_MOUNTAIN_NAME);
-		this.setTitle(munte);
-		munte_id = this.getIntent().getExtras().getString(DatabaseEntry.COL_MOUNTAIN_ID);
-		
-		//cauta id-ul muntelui 
-		db = new NewDatabaseHelper(this);
-		
-		//cauta traseele cu id-ul muntelui == mountain_id
-		selection = DatabaseEntry.COL_MOUNTAIN_ID + " = ? ";
-		selectionArgs = new String[] { munte_id };
-		table = DatabaseEntry.TABLE_MOUNTAIN_TRACK;
-		sortOrder = DatabaseEntry.COL_TRACK_NAME;
-		
-		c = db.myQuery(table, null, selection, selectionArgs, null, null, sortOrder);
-		
-		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c));
+		mountainName = this.getIntent().getExtras().getString(DatabaseEntry.COL_MOUNTAIN_NAME);
+		this.setTitle(mountainName);
+
+		mountainId = this.getIntent().getExtras().getInt(DatabaseEntry.COL_MOUNTAIN_ID);
+
+        mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+        mFirebaseListAdapter = new FirebaseListAdapter<FactoryTrack>(
+                this,
+                FactoryTrack.class,
+                R.layout.mountain_track_list_item,
+                mFireBaseDatabaseReference.child(TRACK_CHILD).equalTo(mountainId, "mountainId")
+        ) {
+            @Override
+            protected void populateView(View v, FactoryTrack model, int position) {
+                ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
+                ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
+                ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());
+                ((ImageView) v.findViewById(R.id.mountain_track_list_pic)).setImageResource(v.getResources()
+                        .getIdentifier(model.getTrackMark(),
+                        "drawable","com.mountain.mytracker.activity"));
+            }
+        };
+
+        this.setListAdapter(mFirebaseListAdapter);
 		this.registerForContextMenu(this.getListView());
 	}
 	
@@ -59,21 +76,43 @@ public class MountainTrackListActivity extends ListActivity {
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item){
+        String sortOrder;
+
 		switch(item.getItemId()){
 		case R.id.mountain_track_list_menu_sort_name:{
-			sortOrder = DatabaseEntry.COL_TRACK_NAME;
+			sortOrder = SORT_BY_NAME;
 			break;
 		}
 		case R.id.mountain_track_list_menu_sort_dur:{
-			sortOrder = DatabaseEntry.COL_LENGTH;
+			sortOrder = SORT_BY_DURATION;
 			break;
 		}
 		case R.id.mountain_track_list_menu_sort_diff:{
-			sortOrder = DatabaseEntry.COL_DIFF;
-		}		
+			sortOrder = SORT_BY_DIFFICULTY;
+            break;
 		}
-		c = db.myQuery(table, null, selection, selectionArgs, null, null, sortOrder);
-		this.setListAdapter(new MountainTrackListAdapter(MountainTrackListActivity.this,c));
+        default:
+            sortOrder = SORT_BY_NAME;
+		}
+
+        mFirebaseListAdapter = new FirebaseListAdapter<FactoryTrack>(
+                this,
+                FactoryTrack.class,
+                R.layout.mountain_track_list_item,
+                mFireBaseDatabaseReference.child(TRACK_CHILD).equalTo(mountainId, "mountainId").orderByChild(sortOrder)
+        ) {
+            @Override
+            protected void populateView(View v, FactoryTrack model, int position) {
+                ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
+                ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
+                ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());
+                ((ImageView) v.findViewById(R.id.mountain_track_list_pic)).setImageResource(v.getResources()
+                        .getIdentifier(model.getTrackMark(),
+                                "drawable","com.mountain.mytracker.activity"));
+            }
+        };
+
+		this.setListAdapter(mFirebaseListAdapter);
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -85,38 +124,45 @@ public class MountainTrackListActivity extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
+        Integer factoryTrackId;
+        Intent i;
+
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		c.moveToFirst();
-		c.moveToPosition(info.position);
+
+        factoryTrackId = mFirebaseListAdapter.getItem(info.position).getTrackId();
 
 		switch (item.getItemId()) {
 		case R.id.mountain_track_list_contextmenu_show: {
-			Intent i = new Intent(this, MapViewActivity.class);
-			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
-			this.startActivity(i);
+			i = new Intent(this, MapViewActivity.class);
+            i.putExtra("factoryTrackId", factoryTrackId);
+            this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_details: {
-			Intent i = new Intent(this, TrackDetailsActivity.class);
-			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
-			this.startActivity(i);
+			i = new Intent(this, TrackDetailsActivity.class);
+            i.putExtra("factoryTrackId", factoryTrackId);
+            this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_try:{
-			Intent i = new Intent(this, TrackLoggerActivity.class);
-			i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
-			this.startActivity(i);
+			i = new Intent(this, TrackLoggerActivity.class);
+            i.putExtra("factoryTrackId", factoryTrackId);
+            this.startActivity(i);
+            break;
 		}
 		}
+
 		return true;
 	}
 	
 	@Override
 	public void onListItemClick(ListView lv, View v, final int position, final long id){
-		Intent i = new Intent(this, TrackLoggerActivity.class);
-		Cursor c = (Cursor) lv.getItemAtPosition(position);
-		i.putExtra("factoryTrackId", c.getInt(c.getColumnIndex(DatabaseEntry.COL_TRACK_ID)));
+        Integer factoryTrackId;
+
+        Intent i = new Intent(this, TrackLoggerActivity.class);
+        factoryTrackId = mFirebaseListAdapter.getItem(position).getTrackId();
+        i.putExtra("factoryTrackId", factoryTrackId);
 		this.startActivity(i);
 	}
 }

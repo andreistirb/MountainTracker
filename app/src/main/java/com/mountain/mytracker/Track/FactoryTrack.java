@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.mountain.mytracker.db.DatabaseContract;
 import com.mountain.mytracker.db.NewDatabaseHelper;
 
@@ -15,18 +18,31 @@ import org.osmdroid.util.GeoPoint;
 public class FactoryTrack extends Track {
     private String trackDifficulty, trackMark, trackLength, trackDescription, trackAvailability;
     private Integer mountainId;
+    public static final String TRACK_CHILD = "tracks";
+    private DatabaseReference mFirebaseDatabaseReference;
+    private Query mQuery;
 
-    private NewDatabaseHelper factoryDatabase;
+    //private NewDatabaseHelper factoryDatabase;
 
-    public FactoryTrack(Context context){
+    public FactoryTrack(){
         super();
-        factoryDatabase = new NewDatabaseHelper(context);
+        //factoryDatabase = new NewDatabaseHelper(context);
     }
+
+    public FactoryTrack(Integer trackId){
+        super(trackId);
+
+        /*mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mQuery = mFirebaseDatabaseReference.child(TRACK_CHILD).equalTo(trackId.toString(), "trackId");
+        mQuery.*/
+
+    }
+
 
     public FactoryTrack(Integer trackId, Context context){
         super(trackId);
-        factoryDatabase = new NewDatabaseHelper(context);
-        this.fromFactoryDatabase(trackId, context);
+        //factoryDatabase = new NewDatabaseHelper(context);
+        //this.fromFactoryDatabase(trackId, context);
     }
 
     public String getTrackDifficulty() {
@@ -77,7 +93,7 @@ public class FactoryTrack extends Track {
         this.trackAvailability = trackAvailability;
     }
 
-    public void fromFactoryDatabase(Integer trackId, Context context){
+    /*public void fromFactoryDatabase(Integer trackId, Context context){
         TrackPoint newTrackPoint;
         String selection, table, sortOrder;
         String[] selectionArgs;
@@ -124,6 +140,6 @@ public class FactoryTrack extends Track {
 
         factoryDatabase.close();
 
-    }
+    }*/
 
 }
