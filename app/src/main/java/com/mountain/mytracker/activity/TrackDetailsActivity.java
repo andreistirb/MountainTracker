@@ -51,7 +51,7 @@ public class TrackDetailsActivity extends Activity {
         if(this.getIntent().hasExtra("factoryTrackId")) {
             factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
             //factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
-            mQuery = mFirebaseDatabaseReference.child(TRACK_CHILD).equalTo(factoryTrackId, "trackId");
+            mQuery = mFirebaseDatabaseReference.child(TRACK_CHILD).child(factoryTrackId.toString());
             mQuery.addValueEventListener(trackListener);
             setTitle(factoryTrack.getTrackName());
         }

@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
 		this.setContentView(R.layout.main_layout);
 
         if (!FirebaseOfflineState) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             FirebaseOfflineState = true;
         }
 

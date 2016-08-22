@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -46,6 +47,7 @@ public class MountainTrackListActivity extends ListActivity {
 		this.setTitle(mountainName);
 
 		mountainId = this.getIntent().getExtras().getInt(DatabaseEntry.COL_MOUNTAIN_ID);
+        Log.w("MountainTrackListActivi",mountainId.toString());
 
         mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -53,7 +55,7 @@ public class MountainTrackListActivity extends ListActivity {
                 this,
                 FactoryTrack.class,
                 R.layout.mountain_track_list_item,
-                mFireBaseDatabaseReference.child(TRACK_CHILD).equalTo(mountainId, "mountainId")
+                mFireBaseDatabaseReference.child(TRACK_CHILD).child(mountainId.toString())
         ) {
             @Override
             protected void populateView(View v, FactoryTrack model, int position) {

@@ -26,6 +26,13 @@ public class Track{
         trackGeoPoints = new ArrayList<GeoPoint>();
     }
 
+    public Track(Integer trackId, String trackName){
+        this.trackId = trackId;
+        this.trackName = trackName;
+        trackPoints = new ArrayList<TrackPoint>();
+        trackGeoPoints = new ArrayList<GeoPoint>();
+    }
+
     public Integer getTrackId() {
         return trackId;
     }

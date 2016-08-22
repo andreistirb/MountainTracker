@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
@@ -55,6 +56,7 @@ public class MountainListActivity extends ListActivity {
 		Intent i;
 		String mountainName;
         Integer mountainId;
+        Long mountainID;
 
 		i = new Intent(this, MountainTrackListActivity.class);
 
@@ -63,6 +65,7 @@ public class MountainListActivity extends ListActivity {
 
         i.putExtra(DatabaseContract.DatabaseEntry.COL_MOUNTAIN_NAME, mountainName);
 		i.putExtra(DatabaseContract.DatabaseEntry.COL_MOUNTAIN_ID, mountainId);
-		this.startActivity(i);
+        Log.i(TAG, mountainId.toString());
+        this.startActivity(i);
 	}
 }
