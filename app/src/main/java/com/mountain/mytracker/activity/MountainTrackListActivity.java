@@ -15,14 +15,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.MountainTrackListAdapter;
 import com.mountain.mytracker.db.NewDatabaseHelper;
+
+import java.util.Map;
 
 public class MountainTrackListActivity extends ListActivity {
 
@@ -51,23 +56,13 @@ public class MountainTrackListActivity extends ListActivity {
 
         mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-        mFirebaseListAdapter = new FirebaseListAdapter<FactoryTrack>(
+        mFirebaseListAdapter = new MountainTrackListAdapter(
                 this,
                 FactoryTrack.class,
                 R.layout.mountain_track_list_item,
                 mFireBaseDatabaseReference.child(TRACK_CHILD).child(mountainId.toString())
-        ) {
-            @Override
-            protected void populateView(View v, FactoryTrack model, int position) {
-                ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
-                ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
-                ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());
-                ((ImageView) v.findViewById(R.id.mountain_track_list_pic)).setImageResource(v.getResources()
-                        .getIdentifier(model.getTrackMark(),
-                        "drawable","com.mountain.mytracker.activity"));
-            }
-        };
-
+        );
+        
         this.setListAdapter(mFirebaseListAdapter);
 		this.registerForContextMenu(this.getListView());
 	}

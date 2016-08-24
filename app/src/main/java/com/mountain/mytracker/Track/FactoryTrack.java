@@ -19,6 +19,14 @@ public class FactoryTrack extends Track {
         super(trackId, trackName);
     }
 
+    public Integer getTrackId(){
+        return super.getTrackId();
+    }
+
+    public String getTrackName(){
+        return super.getTrackName();
+    }
+
     public String getTrackDifficulty() {
         return trackDifficulty;
     }
