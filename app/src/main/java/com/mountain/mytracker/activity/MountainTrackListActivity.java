@@ -62,7 +62,7 @@ public class MountainTrackListActivity extends ListActivity {
                 R.layout.mountain_track_list_item,
                 mFireBaseDatabaseReference.child(TRACK_CHILD).child(mountainId.toString())
         );
-        
+
         this.setListAdapter(mFirebaseListAdapter);
 		this.registerForContextMenu(this.getListView());
 	}
