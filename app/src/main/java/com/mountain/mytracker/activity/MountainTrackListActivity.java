@@ -2,7 +2,6 @@ package com.mountain.mytracker.activity;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -13,21 +12,15 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.mountain.mytracker.Track.FactoryTrack;
-import com.mountain.mytracker.Track.Track;
 import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 import com.mountain.mytracker.db.MountainTrackListAdapter;
-import com.mountain.mytracker.db.NewDatabaseHelper;
-
-import java.util.Map;
 
 public class MountainTrackListActivity extends ListActivity {
 
@@ -37,6 +30,8 @@ public class MountainTrackListActivity extends ListActivity {
     public static final String SORT_BY_NAME = "trackName";
     public static final String SORT_BY_DURATION = "trackDuration";
     public static final String SORT_BY_DIFFICULTY = "trackDifficulty";
+
+    private ProgressBar mProgressBar;
 
     String mountainName;
     Integer mountainId;
@@ -56,19 +51,33 @@ public class MountainTrackListActivity extends ListActivity {
 
         mFireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
+        mProgressBar = (ProgressBar) this.findViewById(R.id.mountain_track_list_progressBar);
+
         mFirebaseListAdapter = new MountainTrackListAdapter(
                 this,
                 FactoryTrack.class,
                 R.layout.mountain_track_list_item,
-                mFireBaseDatabaseReference.child(TRACK_CHILD).child(mountainId.toString())
+                mFireBaseDatabaseReference.child(TRACK_CHILD).child(mountainId.toString()),
+                mProgressBar
         );
 
         this.setListAdapter(mFirebaseListAdapter);
 		this.registerForContextMenu(this.getListView());
 	}
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        this.setListAdapter(mFirebaseListAdapter);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+    }
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-		this.getMenuInflater().inflate(R.menu.mountain_track_list_menu, menu);
+		//this.getMenuInflater().inflate(R.menu.mountain_track_list_menu, menu);
 		return true;
 	}
 	
@@ -92,22 +101,13 @@ public class MountainTrackListActivity extends ListActivity {
             sortOrder = SORT_BY_NAME;
 		}
 
-        mFirebaseListAdapter = new FirebaseListAdapter<FactoryTrack>(
+
+        mFirebaseListAdapter = new MountainTrackListAdapter(
                 this,
                 FactoryTrack.class,
                 R.layout.mountain_track_list_item,
-                mFireBaseDatabaseReference.child(TRACK_CHILD).equalTo(mountainId, "mountainId").orderByChild(sortOrder)
-        ) {
-            @Override
-            protected void populateView(View v, FactoryTrack model, int position) {
-                ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
-                ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
-                ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());
-                ((ImageView) v.findViewById(R.id.mountain_track_list_pic)).setImageResource(v.getResources()
-                        .getIdentifier(model.getTrackMark(),
-                                "drawable","com.mountain.mytracker.activity"));
-            }
-        };
+                mFireBaseDatabaseReference.child(TRACK_CHILD).equalTo(mountainId, "mountainId").orderByChild(sortOrder),
+                mProgressBar);
 
 		this.setListAdapter(mFirebaseListAdapter);
 		return super.onOptionsItemSelected(item);
@@ -138,12 +138,14 @@ public class MountainTrackListActivity extends ListActivity {
 		}
 		case R.id.mountain_track_list_contextmenu_details: {
 			i = new Intent(this, TrackDetailsActivity.class);
+			i.putExtra("mountainId", mountainId);
             i.putExtra("factoryTrackId", factoryTrackId);
             this.startActivity(i);
 			break;
 		}
 		case R.id.mountain_track_list_contextmenu_try:{
 			i = new Intent(this, TrackLoggerActivity.class);
+            i.putExtra("mountainId", mountainId);
             i.putExtra("factoryTrackId", factoryTrackId);
             this.startActivity(i);
             break;

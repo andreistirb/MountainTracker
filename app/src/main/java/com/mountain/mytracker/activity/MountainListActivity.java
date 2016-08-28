@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.*;
@@ -28,10 +29,14 @@ public class MountainListActivity extends ListActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseListAdapter<Mountain> mFireBaseListAdapter;
 
+    private ProgressBar mProgressBar;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.mountain_list_layout);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.mountain_list_progressBar);
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -43,6 +48,7 @@ public class MountainListActivity extends ListActivity {
         ) {
             @Override
             protected void populateView(View v, Mountain model, int position) {
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 ((TextView) v.findViewById(R.id.mountain_list_text)).setText(model.getName());
             }
         };

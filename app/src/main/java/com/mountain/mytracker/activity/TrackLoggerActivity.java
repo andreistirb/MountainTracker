@@ -27,7 +27,7 @@ public class TrackLoggerActivity extends Activity {
 
 	private Intent MapViewActivityIntent, TrackDetailsActivityIntent, GPSLoggerServiceIntent, TrackerManagerActivityIntent;
 	boolean GPSflag = false;
-	private Integer factoryTrackId, userTrackId;
+	private Integer factoryTrackId, userTrackId, mountainId;
     private ImageButton harta,detalii,trekking, start, stop;
 	private TextView alt, lat, lon, speed, dist, timp;
 	private Context context;
@@ -85,8 +85,9 @@ public class TrackLoggerActivity extends Activity {
 
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-            factoryTrack = new FactoryTrack(/*factoryTrackId, this.getApplicationContext()*/);
-            setTitle(factoryTrack.getTrackName());
+			mountainId = this.getIntent().getExtras().getInt("mountainId");
+            //factoryTrack = new FactoryTrack(/*factoryTrackId, this.getApplicationContext()*/);
+            //setTitle(factoryTrack.getTrackName());
 		}
 
 		detalii_btn = this.getIntent().hasExtra("detalii") && this.getIntent().getExtras().getBoolean("detalii");
@@ -132,8 +133,9 @@ public class TrackLoggerActivity extends Activity {
 
                 @Override
                 public void onClick(View arg0) {
-                    if (factoryTrack != null) {
+                    if (factoryTrackId != null) {
                         TrackDetailsActivityIntent.putExtra("factoryTrackId", factoryTrackId);
+                        TrackDetailsActivityIntent.putExtra("mountainId", mountainId);
                         activity.startActivity(TrackDetailsActivityIntent);
                     }
                 }
@@ -146,7 +148,7 @@ public class TrackLoggerActivity extends Activity {
 
                 Log.v("in trackloggeractivity", "click");
 				
-                if(factoryTrack != null)
+                if(factoryTrackId != null)
 				    GPSLoggerServiceIntent.putExtra("factoryTrackId", factoryTrackId);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -174,7 +176,7 @@ public class TrackLoggerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-                if(factoryTrack != null)
+                if(factoryTrackId != null)
                     MapViewActivityIntent.putExtra("factoryTrackId", factoryTrackId);
                 if(userTrackId != null) {
                     MapViewActivityIntent.putExtra("userTrackId", userTrackId);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,18 +18,25 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.activity.R;
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
 import java.util.Map;
 
 public class MountainTrackListAdapter extends FirebaseListAdapter<FactoryTrack> {
 
-    public MountainTrackListAdapter(Activity activity, Class<FactoryTrack> modelClass, int modelLayout, Query ref){
+    private ProgressBar mProgressBar;
+
+    public MountainTrackListAdapter(Activity activity, Class<FactoryTrack> modelClass,
+                                    int modelLayout,
+                                    Query ref,
+                                    ProgressBar progressBar){
         super(activity,modelClass, modelLayout, ref);
+        mProgressBar = progressBar;
     }
 
     @Override
     protected void populateView(View v, FactoryTrack model, int position) {
+
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
         ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
         ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());

@@ -22,7 +22,7 @@ public class TrackDetailsActivity extends Activity {
 
     private FactoryTrack factoryTrack;
     private DatabaseReference mFirebaseDatabaseReference;
-    private Integer factoryTrackId;
+    private Integer factoryTrackId, mountainId;
 
     TextView track_details_duration, track_details_difficulty, track_details_mark,
             track_details_description, track_details_availability;
@@ -45,7 +45,12 @@ public class TrackDetailsActivity extends Activity {
 
         if(this.getIntent().hasExtra("factoryTrackId")) {
             factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-            mFirebaseDatabaseReference.child(TRACK_CHILD).child(factoryTrackId.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mountainId = this.getIntent().getExtras().getInt("mountainId");
+            Log.v("factoryId",factoryTrackId.toString());
+            mFirebaseDatabaseReference.child(TRACK_CHILD)
+                    .child(mountainId.toString())
+                    .child(factoryTrackId.toString())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ObjectMapper mapper = new ObjectMapper();
