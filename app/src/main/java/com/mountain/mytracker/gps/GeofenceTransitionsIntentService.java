@@ -12,8 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingEvent;
+/*import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingEvent;*/
 import com.mountain.mytracker.activity.MainActivity;
 import com.mountain.mytracker.activity.R;
 
@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Set;
 
 
-public class GeofenceTransitionsIntentService extends IntentService {
+public class GeofenceTransitionsIntentService /*extends IntentService */{
 
-    private static int exitCounter = 0;
+    /*private static int exitCounter = 0;
     private static int dwellCounter = 0;
 
     private static Set<Geofence> currentArea = new HashSet<>();
@@ -90,7 +90,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             }
 
         }
-        /*if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT){
+        *//*if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT){
             List<Geofence> triggeringGeofences = mGeofencingEvent.getTriggeringGeofences();
             String geofenceTransitionDetails = getGeofenceTransitionDetails(this,
                     geofenceTransition, triggeringGeofences);
@@ -99,7 +99,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
         else{
             Log.i(TAG, "invalid transition type");
-        }*/
+        }*//*
     }
 
     private String getGeofenceTransitionDetails(Context context, int geoFenceTransition,
@@ -167,5 +167,5 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Issue the notification
         mNotificationManager.notify(0, builder.build());
-    }
+    }*/
 }

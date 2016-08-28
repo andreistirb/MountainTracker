@@ -1,6 +1,7 @@
 package com.mountain.mytracker.activity;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.mountain.mytracker.Track.FactoryTrack;
+import com.mountain.mytracker.Track.FactoryTrackPoint;
 import com.mountain.mytracker.Track.UserTrack;
 import com.mountain.mytracker.gps.GPSLogger;
 
@@ -30,6 +39,7 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MapViewActivity extends Activity {
 
@@ -40,10 +50,18 @@ public class MapViewActivity extends Activity {
 	private Integer userTrackId;
 	private boolean has_track = false;
 	private FactoryTrack factoryTrack;
+    private ArrayList<FactoryTrackPoint> mFactoryTrackPointList;
+    private ArrayList<GeoPoint> mFactoryTrackPointGeoList;
     private UserTrack userTrack;
 	private SharedPreferences mSharedPreferences;
+    private Integer factoryTrackId;
+    private Context context;
 
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private DatabaseReference mFirebaseDatabaseReference;
+
+    private static final String TRACKPOINTS_CHILD = "trackpoints";
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -74,18 +92,23 @@ public class MapViewActivity extends Activity {
 	};
 
 	public void onCreate(Bundle savedInstanceState) {
-        Integer factoryTrackId;
 
 		super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.display_track_map);
 		this.registerReceiver(receiver, new IntentFilter("broadcastGPS"));
 
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+        context = this.getApplicationContext();
+
 		if(this.getIntent().hasExtra("factoryTrackId")){
 			factoryTrackId = this.getIntent().getExtras().getInt("factoryTrackId");
-			factoryTrack = new FactoryTrack(factoryTrackId, this.getApplicationContext());
+			//factoryTrack = new FactoryTrack(/*factoryTrackId, this.getApplicationContext()*/);
 			has_track = true;
-            setTitle(factoryTrack.getTrackName());
+            mFactoryTrackPointList = new ArrayList<>();
+            mFactoryTrackPointGeoList = new ArrayList<>();
+            //setTitle(factoryTrack.getTrackName());
 		}
 
 		if(this.getIntent().hasExtra("userTrackId")){
@@ -109,9 +132,40 @@ public class MapViewActivity extends Activity {
 	public void onResume() {
 
         if(has_track){
-            mMapView.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
+            mFirebaseDatabaseReference.child(TRACKPOINTS_CHILD).child(factoryTrackId.toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    FactoryTrackPoint mFactoryTrackPoint;
+                    GeoPoint mFactoryGeoPoint;
+                    for(DataSnapshot i : dataSnapshot.getChildren()) {
+                        ObjectMapper mapper = new ObjectMapper();
+                        GenericTypeIndicator<Map<String, Object>> indicator = new GenericTypeIndicator<Map<String, Object>>() {};
+                        mFactoryTrackPoint = mapper.convertValue(i.getValue(indicator), FactoryTrackPoint.class);
+                        mFactoryGeoPoint = new GeoPoint(Double.parseDouble(mFactoryTrackPoint.getLatitude()),
+                                Double.parseDouble(mFactoryTrackPoint.getLongitude()));
+
+                        Log.v("in for", mFactoryTrackPoint.getLatitude());
+
+                        mFactoryTrackPointGeoList.add(mFactoryGeoPoint);
+                        mFactoryTrackPointList.add(mFactoryTrackPoint);
+
+                    }
+                    mMapView.getOverlays().add(buildPolyline(context, mFactoryTrackPointGeoList, Color.BLUE));
+                    mapController.setZoom(16);
+                    mapController.setCenter(mFactoryTrackPointGeoList.get(0));
+
+                    if(factoryTrack!= null) {
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            /*mMapView.getOverlays().add(buildPolyline(this, factoryTrack.getTrackGeoPoints(), Color.BLUE));
             mapController.setZoom(16);
-            mapController.setCenter(factoryTrack.getTrackGeoPoints().get(0));
+            mapController.setCenter(factoryTrack.getTrackGeoPoints().get(0));*/
         }
 
         if (GPSLogger.isTracking()) {

@@ -1,5 +1,6 @@
 package com.mountain.mytracker.db;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -7,35 +8,49 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
+import com.mountain.mytracker.Track.FactoryTrack;
 import com.mountain.mytracker.activity.R;
-import com.mountain.mytracker.db.DatabaseContract.DatabaseEntry;
 
-public class MountainTrackListAdapter extends CursorAdapter {
-	
-	public MountainTrackListAdapter(Context context, Cursor cursor){
-		super(context, cursor, 1);
-	}
-	
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup vg){
-		return LayoutInflater.from(vg.getContext()).inflate(R.layout.mountain_track_list_item, vg, false);
-	}
-	
-	@Override
-	public void bindView(View view, Context context, Cursor cursor){
-		TextView vName = (TextView) view.findViewById(R.id.mountain_track_list_text);
-		TextView vDiff = (TextView) view.findViewById(R.id.mountain_track_list_diff);
-		TextView vLength = (TextView) view.findViewById(R.id.mountain_track_list_length);
-		ImageView vImg = (ImageView) view.findViewById(R.id.mountain_track_list_pic);
-	
-		vName.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_TRACK_NAME)));
-		vDiff.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_DIFF)));
-		vLength.setText(cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_LENGTH)));
-		
-		String imgName = cursor.getString(cursor.getColumnIndex(DatabaseEntry.COL_MRK));
-		int id = context.getResources().getIdentifier(imgName, "drawable","com.mountain.mytracker.activity");
-		vImg.setImageResource(id);	
-	}
+import java.util.Map;
+
+public class MountainTrackListAdapter extends FirebaseListAdapter<FactoryTrack> {
+
+    private ProgressBar mProgressBar;
+
+    public MountainTrackListAdapter(Activity activity, Class<FactoryTrack> modelClass,
+                                    int modelLayout,
+                                    Query ref,
+                                    ProgressBar progressBar){
+        super(activity,modelClass, modelLayout, ref);
+        mProgressBar = progressBar;
+    }
+
+    @Override
+    protected void populateView(View v, FactoryTrack model, int position) {
+
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        ((TextView) v.findViewById(R.id.mountain_track_list_text)).setText(model.getTrackName());
+        ((TextView) v.findViewById(R.id.mountain_track_list_diff)).setText(model.getTrackDifficulty());
+        ((TextView) v.findViewById(R.id.mountain_track_list_length)).setText(model.getTrackLength());
+        ((ImageView) v.findViewById(R.id.mountain_track_list_pic)).setImageResource(v.getResources()
+                .getIdentifier(model.getTrackMark(),
+                        "drawable","com.mountain.mytracker.activity"));
+    }
+
+    @Override
+    protected FactoryTrack parseSnapshot(DataSnapshot snapshot) {
+        ObjectMapper mapper = new ObjectMapper();
+        GenericTypeIndicator<Map<String,Object>> indicator = new GenericTypeIndicator<Map<String, Object>>() {};
+        FactoryTrack value = mapper.convertValue(snapshot.getValue(indicator), FactoryTrack.class);
+
+        return value;
+    }
 }

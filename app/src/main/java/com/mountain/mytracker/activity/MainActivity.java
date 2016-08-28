@@ -16,9 +16,10 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mountain.mytracker.other.NavigationDrawerItemClickListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
 	private Button my_tracks, mountain_list, map_button;
     private DrawerLayout mDrawerLayout;
@@ -30,8 +31,6 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main_layout);
-
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
 
         mNavigationDrawerItems = getResources().getStringArray(R.array.navigation_drawer_items);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.navigation_drawer_layout);
