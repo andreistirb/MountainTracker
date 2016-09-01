@@ -16,6 +16,15 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 	private static final String DB_NAME = "MyTracks.db";
 	private static final int DB_VERSION = 1;
 
+	//Mountains table
+    private static final String SQL_CREATE_MOUNTAINS_TABLE = "CREATE TABLE "
+            + DatabaseEntry.TABLE_MOUNTAIN + " ( "
+            + DatabaseEntry._ID + " integer primary key autoincrement, "
+            + DatabaseEntry.COL_MOUNTAIN_ID + " , "   //String
+            + DatabaseEntry.COL_MOUNTAIN_NAME + " , " //String
+            + DatabaseEntry.COL_MOUNTAIN_DESCRIPTION  //String
+            + " ) ";
+
 	//Table cu traseele create de utilizator
 	private static final String SQL_CREATE_TABLE_TRACK = "CREATE TABLE "
 			+ DatabaseEntry.TABLE_MY_TRACKS + " ( "
@@ -53,6 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements Serializable {
 	}
 
 	public void onCreate(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_MOUNTAINS_TABLE);
 		db.execSQL(SQL_CREATE_TABLE_TRACK);
 		db.execSQL(SQL_CREATE_TABLE_TRACK_POINT);
 

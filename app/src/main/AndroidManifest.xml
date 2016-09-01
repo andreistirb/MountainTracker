@@ -19,6 +19,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="com.mountain.mytracker.other.MountainTrackerApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
@@ -70,9 +71,6 @@
                 <action android:name="com.mountain.mytracker.activity.intent.GPS_SERVICE"/>
             </intent-filter>
         </service>
-        <service
-            android:name="com.mountain.mytracker.gps.GeofenceTransitionsIntentService"
-            android:exported="false"/>
 
         <provider
             android:name="com.mountain.mytracker.db.MountainTrackerContentProvider"

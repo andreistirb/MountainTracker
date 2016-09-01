@@ -20,6 +20,7 @@ public class DatabaseContract {
 
 		public static final String COL_MOUNTAIN_NAME = "mountain_name";
 		public static final String COL_MOUNTAIN_ID = "mountain_id";
+		public static final String COL_MOUNTAIN_DESCRIPTION = "mountain_description";
 
 		public static final String COL_TRACK_ID = "track_id";
 		public static final String COL_TRACK_NAME = "track_name";
